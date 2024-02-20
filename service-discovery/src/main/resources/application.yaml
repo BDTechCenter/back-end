@@ -1,0 +1,14 @@
+server:
+  port: 8765
+
+spring:
+  application:
+    name: service-discovery
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+    serviceUrl:
+      defaultZone: http://localhost:8765/eureka
