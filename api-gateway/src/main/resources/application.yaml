@@ -1,0 +1,18 @@
+server:
+  port: 8766
+
+spring:
+  profiles:
+    active: local
+#    active: docker
+
+  application:
+    name: gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+          lower-case-service-id: true
