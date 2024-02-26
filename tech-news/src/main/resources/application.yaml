@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: local
+#    active: docker
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  application:
+    name: tech-news
+
+server:
+  error:
+    include-stacktrace: never
+
+  port: 0
