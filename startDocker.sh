@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mvn_command="mvn clean package -DskipTests"
-services=("service-discovery" "api-gateway")
+services=("service-discovery" "api-gateway" "tech-news")
 
 for service in "${services[@]}"
 do
