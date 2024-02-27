@@ -24,5 +24,5 @@ public class Tag {
     private String name;
 
     @ManyToMany(mappedBy = "tags")
-    private Set<InternalNews> news = new HashSet<>();
+    private Set<News> news = new HashSet<>();
 }
