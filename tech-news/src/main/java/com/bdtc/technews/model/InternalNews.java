@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -21,6 +23,10 @@ public class InternalNews {
     @Id
     @GeneratedValue
     private UUID id;
+
+    private String author;
+
+    private String collaborators;
 
     private LocalDateTime creationDate;
 
@@ -36,5 +42,16 @@ public class InternalNews {
 
     @Column(columnDefinition = "TEXT")
     private String body;
+
+    @ManyToMany
+    @JoinTable(
+            name = "news_tags",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tag", referencedColumnName = "name")
+    )
+    private Set<Tag> tags = new HashSet<>();
+
+    // need review (this is a link)
+    private String source;
 
 }

@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "tag")
 @NoArgsConstructor
@@ -20,4 +23,6 @@ public class Tag {
 
     private String name;
 
+    @ManyToMany(mappedBy = "tags")
+    private Set<InternalNews> news = new HashSet<>();
 }
