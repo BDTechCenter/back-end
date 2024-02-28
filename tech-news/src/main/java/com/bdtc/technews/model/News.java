@@ -50,7 +50,6 @@ public class News {
     )
     private Set<Tag> tags = new HashSet<>();
 
-    // need review (this is a link)
     private String source;
 
 }
