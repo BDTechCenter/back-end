@@ -1,5 +1,6 @@
 package com.bdtc.technews.model;
 
+import com.bdtc.technews.dto.TagDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -25,4 +26,8 @@ public class Tag {
 
     @ManyToMany(mappedBy = "tags")
     private Set<News> news = new HashSet<>();
+
+    public Tag(TagDto tagDto) {
+        this.name = tagDto.tag();
+    }
 }
