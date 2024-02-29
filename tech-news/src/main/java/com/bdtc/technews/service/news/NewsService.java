@@ -4,6 +4,7 @@ import com.bdtc.technews.dto.NewsDetailingDto;
 import com.bdtc.technews.dto.NewsRequestDto;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.NewsRepository;
+import com.bdtc.technews.service.news.utils.DateHandler;
 import com.bdtc.technews.service.tag.TagService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,13 @@ public class NewsService {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private DateHandler dateHandler;
+
     @Transactional
     public NewsDetailingDto createNews(NewsRequestDto newsDto) {
         var news = new News(newsDto);
-        var dateNow = getCurrentDateTime();
+        var dateNow = dateHandler.getCurrentDateTime();
         news.setCreationDate(dateNow);
         news.setUpdateDate(dateNow);
 
@@ -34,15 +38,6 @@ public class NewsService {
         news.setTags(tagSet);
 
         newsRepository.save(news);
-        return new NewsDetailingDto(news, newsDto.tags(), formatDate(dateNow));
-    }
-
-    private LocalDateTime getCurrentDateTime() {
-        return LocalDateTime.now();
-    }
-
-    private String formatDate(LocalDateTime dateNow) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
-        return dateNow.format(formatter);
+        return new NewsDetailingDto(news, newsDto.tags(), dateHandler.formatDate(dateNow));
     }
 }
