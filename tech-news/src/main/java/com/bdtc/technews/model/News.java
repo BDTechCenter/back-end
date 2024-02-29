@@ -1,5 +1,6 @@
 package com.bdtc.technews.model;
 
+import com.bdtc.technews.dto.NewsRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "internal-news")
+@Table(name = "news")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -24,8 +25,6 @@ public class News {
     private UUID id;
 
     private String author;
-
-    private String collaborators;
 
     private LocalDateTime creationDate;
 
@@ -50,6 +49,26 @@ public class News {
     )
     private Set<Tag> tags = new HashSet<>();
 
-    private String source;
+    public News(NewsRequestDto newsDto) {
+        this.author = newsDto.author();
+        this.title = newsDto.title();
+        this.summary = newsDto.summary();
+        this.body = newsDto.body();
+    }
 
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setPublicationDate(LocalDateTime publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
 }
