@@ -1,6 +1,7 @@
 package com.bdtc.technews.service.news;
 
 import com.bdtc.technews.dto.NewsDetailingDto;
+import com.bdtc.technews.dto.NewsPreviewDto;
 import com.bdtc.technews.dto.NewsRequestDto;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.NewsRepository;
@@ -8,6 +9,8 @@ import com.bdtc.technews.service.news.utils.DateHandler;
 import com.bdtc.technews.service.tag.TagService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +42,10 @@ public class NewsService {
 
         newsRepository.save(news);
         return new NewsDetailingDto(news, newsDto.tags(), dateHandler.formatDate(dateNow));
+    }
+
+    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable) {
+        var newsPage = newsRepository.findAll(pageable);
+        return newsPage.map(news -> new NewsPreviewDto(news, dateHandler.formatDate(news.getUpdateDate())));
     }
 }
