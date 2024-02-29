@@ -10,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TagService {
@@ -36,6 +38,17 @@ public class TagService {
     public List<TagDto> getAllTags() {
         var tags = tagRepository.findAll();
         return tags.stream().map(TagDto::new).toList();
+    }
+
+    // NEED FIX, WHEN TAG == NULL NEED TO CREATE ABD GET THE REFERENCE TO ADD IN TAGSET (probably can create in validator)
+    public Set<Tag> getTagSet(Set<String> tagsStringList) {
+        Set<Tag> tagSet = new HashSet<>();
+        for (String tagName : tagsStringList) {
+            Tag tagEntity = tagRepository.findByName(tagName);
+            if(tagEntity == null) createTag(new TagDto(tagName));
+            tagSet.add(tagEntity);
+        }
+        return tagSet;
     }
 
 }
