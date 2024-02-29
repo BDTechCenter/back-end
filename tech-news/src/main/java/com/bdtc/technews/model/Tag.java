@@ -30,4 +30,8 @@ public class Tag {
     public Tag(TagDto tagDto) {
         this.name = tagDto.tag();
     }
+
+    public Tag(String tagName) {
+        this.name = tagName;
+    }
 }
