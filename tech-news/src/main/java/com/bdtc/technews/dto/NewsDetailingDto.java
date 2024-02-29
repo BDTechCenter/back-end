@@ -12,19 +12,19 @@ import java.util.UUID;
 public record NewsDetailingDto(
         UUID id,
         String author,
-        LocalDateTime creationDate,
-        LocalDateTime updateDate,
+        String creationDate,
+        String updateDate,
         String title,
         String summary,
         String body,
         Set<String> tags
 ) {
-    public NewsDetailingDto(News news, Set<String> tags) {
+    public NewsDetailingDto(News news, Set<String> tags, String date) {
         this(
                 news.getId(),
                 news.getAuthor(),
-                news.getCreationDate(),
-                news.getUpdateDate(),
+                date,
+                date,
                 news.getTitle(),
                 news.getSummary(),
                 news.getBody(),
