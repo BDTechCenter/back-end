@@ -6,6 +6,7 @@ import com.bdtc.technews.dto.NewsRequestDto;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.service.news.utils.DateHandler;
+import com.bdtc.technews.service.news.utils.TagHandler;
 import com.bdtc.technews.service.tag.TagService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.UUID;
 
 @Service
 public class NewsService {
@@ -30,6 +32,9 @@ public class NewsService {
     @Autowired
     private DateHandler dateHandler;
 
+    @Autowired
+    private TagHandler tagHandler;
+
     @Transactional
     public NewsDetailingDto createNews(NewsRequestDto newsDto) {
         var news = new News(newsDto);
@@ -41,11 +46,28 @@ public class NewsService {
         news.setTags(tagSet);
 
         newsRepository.save(news);
-        return new NewsDetailingDto(news, newsDto.tags(), dateHandler.formatDate(dateNow));
+        return new NewsDetailingDto(
+                news,
+                tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(dateNow)
+        );
     }
 
     public Page<NewsPreviewDto> getNewsPreview(Pageable pageable) {
         var newsPage = newsRepository.findAll(pageable);
-        return newsPage.map(news -> new NewsPreviewDto(news, dateHandler.formatDate(news.getUpdateDate())));
+        return newsPage.map(news -> new NewsPreviewDto(
+                news,
+                dateHandler.formatDate(news.getUpdateDate())
+                )
+        );
+    }
+
+    public NewsDetailingDto getNewsById(UUID newsId) {
+        var news = newsRepository.getReferenceById(newsId);
+        return new NewsDetailingDto(
+                news,
+                tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getUpdateDate())
+        );
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/news")
 public class NewsController {
@@ -32,5 +34,11 @@ public class NewsController {
         pageable = PageRequest.ofSize(amount);
         var page = newsService.getNewsPreview(pageable);
         return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getNewsById(@PathVariable UUID id) {
+        var news = newsService.getNewsById(id);
+        return ResponseEntity.ok(news);
     }
 }
