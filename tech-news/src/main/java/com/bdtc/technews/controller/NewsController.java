@@ -30,8 +30,7 @@ public class NewsController {
     }
 
     @GetMapping("/preview")
-    public ResponseEntity getNewsPreview(@RequestParam int amount, @PageableDefault() Pageable pageable) {
-        pageable = PageRequest.ofSize(amount);
+    public ResponseEntity getNewsPreview(@PageableDefault() Pageable pageable) {
         var page = newsService.getNewsPreview(pageable);
         return ResponseEntity.ok(page);
     }
