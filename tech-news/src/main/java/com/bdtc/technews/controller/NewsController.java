@@ -30,9 +30,8 @@ public class NewsController {
     }
 
     @GetMapping("/preview")
-    public ResponseEntity getNewsPreview(@PageableDefault() Pageable pageable, @RequestParam(name = "orderByView", required = false, defaultValue = "false") boolean orderByView) {
-        System.out.println(orderByView);
-        var page = newsService.getNewsPreview(pageable, orderByView);
+    public ResponseEntity getNewsPreview(@PageableDefault() Pageable pageable, @RequestParam(name = "sortByView", required = false, defaultValue = "false") boolean sortByView) {
+        var page = newsService.getNewsPreview(pageable, sortByView);
         return ResponseEntity.ok(page);
     }
 

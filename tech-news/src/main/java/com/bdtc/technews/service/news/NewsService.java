@@ -49,9 +49,9 @@ public class NewsService {
         );
     }
 
-    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, boolean orderByView) {
+    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, boolean sortByView) {
         Page<News> newsPage;
-        if(orderByView) {
+        if(sortByView) {
             newsPage = newsRepository.findByOrderByViewsDesc(pageable);
         } else {
             newsPage = newsRepository.findAll(pageable);
