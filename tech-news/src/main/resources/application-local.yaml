@@ -8,3 +8,6 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8765/eureka
+
+gateway:
+  url: http://127.0.0.1:8766/tech-news

@@ -15,6 +15,9 @@ public class ImageHandler {
     @Value("${upload.dir}")
     private String uploadDir;
 
+    @Value("${gateway.url}")
+    private String gatewayUrl;
+
     public String saveImageToUploadDir(MultipartFile image) {
         String fileName = null;
         if(image != null && !image.isEmpty()) {
@@ -26,6 +29,6 @@ public class ImageHandler {
                 throw new RuntimeException(e);
             }
         }
-        return fileName;
+        return String.format("%s/images/%s", gatewayUrl, fileName);
     }
 }
