@@ -9,14 +9,16 @@ public record NewsPreviewDto(
         UUID id,
         String updateDate,
         String title,
-        String author
+        String author,
+        String imageUrl
 ) {
     public NewsPreviewDto(News news, String date) {
         this(
                 news.getId(),
                 date,
                 news.getTitle(),
-                news.getAuthor()
+                news.getAuthor(),
+                news.getImageUrl()
         );
     }
 }

@@ -23,7 +23,7 @@ public class NewsController {
     private NewsService newsService;
 
     @PostMapping
-    public ResponseEntity createNews(@RequestBody @Valid NewsRequestDto newsRequestDto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity createNews(@ModelAttribute @Valid NewsRequestDto newsRequestDto, UriComponentsBuilder uriBuilder) {
         var news = newsService.createNews(newsRequestDto);
         var uri = uriBuilder.path("tech-news/news/{id}").build(news.id());
         return ResponseEntity.created(uri).body(news);

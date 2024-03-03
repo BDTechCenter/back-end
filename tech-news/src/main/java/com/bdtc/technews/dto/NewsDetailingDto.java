@@ -17,7 +17,8 @@ public record NewsDetailingDto(
         String title,
         String summary,
         String body,
-        Set<String> tags
+        Set<String> tags,
+        String imageUrl
 ) {
     public NewsDetailingDto(News news, Set<String> tags, String date) {
         this(
@@ -28,7 +29,8 @@ public record NewsDetailingDto(
                 news.getTitle(),
                 news.getSummary(),
                 news.getBody(),
-                tags
+                tags,
+                news.getImageUrl()
         );
     }
 }

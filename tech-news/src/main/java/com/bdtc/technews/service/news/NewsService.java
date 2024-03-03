@@ -6,6 +6,7 @@ import com.bdtc.technews.dto.NewsRequestDto;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.service.news.utils.DateHandler;
+import com.bdtc.technews.service.news.utils.ImageHandler;
 import com.bdtc.technews.service.news.utils.TagHandler;
 import com.bdtc.technews.service.tag.TagService;
 import jakarta.transaction.Transactional;
@@ -31,12 +32,18 @@ public class NewsService {
     @Autowired
     private TagHandler tagHandler;
 
+    @Autowired
+    private ImageHandler imageHandler;
+
     @Transactional
     public NewsDetailingDto createNews(NewsRequestDto newsDto) {
         var news = new News(newsDto);
         var dateNow = dateHandler.getCurrentDateTime();
+        var imageUrl = imageHandler.saveImageToUploadDir(newsDto.image());
+
         news.setCreationDate(dateNow);
         news.setUpdateDate(dateNow);
+        news.setImageUrl(imageUrl);
 
         var tagSet = tagService.getTagSet(newsDto.tags());
         news.setTags(tagSet);

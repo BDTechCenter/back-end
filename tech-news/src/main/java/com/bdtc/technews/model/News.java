@@ -43,6 +43,8 @@ public class News {
 
     private Long views;
 
+    private String imageUrl;
+
     @ManyToMany
     @JoinTable(
             name = "news_tags",
@@ -77,5 +79,9 @@ public class News {
 
     public void addAView() {
         this.views += 1;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
