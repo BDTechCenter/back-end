@@ -49,8 +49,13 @@ public class NewsService {
         );
     }
 
-    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable) {
-        var newsPage = newsRepository.findAll(pageable);
+    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, boolean orderByView) {
+        Page<News> newsPage;
+        if(orderByView) {
+            newsPage = newsRepository.findByOrderByViewsDesc(pageable);
+        } else {
+            newsPage = newsRepository.findAll(pageable);
+        }
         return newsPage.map(news -> new NewsPreviewDto(
                 news,
                 dateHandler.formatDate(news.getUpdateDate())
@@ -66,6 +71,15 @@ public class NewsService {
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
                 dateHandler.formatDate(news.getUpdateDate())
+        );
+    }
+
+    public Page<NewsPreviewDto> getNewsPreviewByTheMostViewed(Pageable pageable) {
+        var newsPage = newsRepository.findByOrderByViewsDesc(pageable);
+        return newsPage.map(news -> new NewsPreviewDto(
+                        news,
+                        dateHandler.formatDate(news.getUpdateDate())
+                )
         );
     }
 }
