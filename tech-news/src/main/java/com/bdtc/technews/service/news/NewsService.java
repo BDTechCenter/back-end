@@ -7,19 +7,13 @@ import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.service.news.utils.DateHandler;
 import com.bdtc.technews.service.news.utils.TagHandler;
-import com.bdtc.technews.service.news.validation.getMethod.GetNewsValidators;
 import com.bdtc.technews.service.tag.TagService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -36,9 +30,6 @@ public class NewsService {
 
     @Autowired
     private TagHandler tagHandler;
-
-    @Autowired
-    private List<GetNewsValidators> validators;
 
     @Transactional
     public NewsDetailingDto createNews(NewsRequestDto newsDto) {
@@ -68,8 +59,6 @@ public class NewsService {
     }
 
     public NewsDetailingDto getNewsById(UUID newsId) {
-        validators.forEach(v -> v.validate(newsId));
-
         var news = newsRepository.getReferenceById(newsId);
         return new NewsDetailingDto(
                 news,

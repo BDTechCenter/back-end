@@ -39,7 +39,7 @@ public class TagService {
         var tags = tagRepository.findAll();
         return tags.stream().map(TagDto::new).toList();
     }
-    
+
     public Set<Tag> getTagSet(Set<String> tagsStringList) {
         Set<Tag> tagSet = new HashSet<>();
         for (String tagName : tagsStringList) {
