@@ -15,3 +15,6 @@ server:
     include-stacktrace: never
 
   port: 0
+
+upload:
+  dir: ${user.dir}/newsUpload
