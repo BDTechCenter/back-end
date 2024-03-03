@@ -58,8 +58,10 @@ public class NewsService {
         );
     }
 
+    @Transactional
     public NewsDetailingDto getNewsById(UUID newsId) {
         var news = newsRepository.getReferenceById(newsId);
+        news.addAView();
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),

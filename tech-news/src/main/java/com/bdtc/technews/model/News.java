@@ -41,6 +41,8 @@ public class News {
     @Column(columnDefinition = "TEXT")
     private String body;
 
+    private Long views;
+
     @ManyToMany
     @JoinTable(
             name = "news_tags",
@@ -54,6 +56,7 @@ public class News {
         this.title = newsDto.title();
         this.summary = newsDto.summary();
         this.body = newsDto.body();
+        this.views = 0L;
     }
 
     public void setCreationDate(LocalDateTime creationDate) {
@@ -70,5 +73,9 @@ public class News {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public void addAView() {
+        this.views += 1;
     }
 }
