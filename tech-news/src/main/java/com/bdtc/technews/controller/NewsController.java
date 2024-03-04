@@ -1,8 +1,10 @@
 package com.bdtc.technews.controller;
 
 import com.bdtc.technews.dto.NewsRequestDto;
+import com.bdtc.technews.dto.NewsUpdateDto;
 import com.bdtc.technews.service.news.NewsService;
 import jakarta.validation.Valid;
+import jakarta.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -41,6 +43,12 @@ public class NewsController {
     @GetMapping()
     public ResponseEntity getNewsFilteringByTags(@RequestParam(name = "tags") String tags, @PageableDefault() Pageable pageable) {
         var news = newsService.getNewsPreviewFilteringByTags(pageable, tags);
+        return ResponseEntity.ok(news);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity updateNews(@ModelAttribute NewsUpdateDto updateDto, @PathVariable UUID id) {
+        var news = newsService.updateNews(id, updateDto);
         return ResponseEntity.ok(news);
     }
 }

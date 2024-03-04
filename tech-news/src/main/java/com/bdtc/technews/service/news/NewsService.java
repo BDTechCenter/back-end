@@ -3,6 +3,7 @@ package com.bdtc.technews.service.news;
 import com.bdtc.technews.dto.NewsDetailingDto;
 import com.bdtc.technews.dto.NewsPreviewDto;
 import com.bdtc.technews.dto.NewsRequestDto;
+import com.bdtc.technews.dto.NewsUpdateDto;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.service.news.utils.DateHandler;
@@ -41,20 +42,19 @@ public class NewsService {
     public NewsDetailingDto createNews(NewsRequestDto newsDto) {
         var news = new News(newsDto);
         var dateNow = dateHandler.getCurrentDateTime();
+        var tagSet = tagService.getTagSet(newsDto.tags());
         var imageUrl = imageHandler.saveImageToUploadDir(newsDto.image());
 
         news.setCreationDate(dateNow);
         news.setUpdateDate(dateNow);
-        news.setImageUrl(imageUrl);
-
-        var tagSet = tagService.getTagSet(newsDto.tags());
         news.setTags(tagSet);
+        news.setImageUrl(imageUrl);
 
         newsRepository.save(news);
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
-                dateHandler.formatDate(dateNow)
+                dateHandler.formatDate(news.getUpdateDate())
         );
     }
 
@@ -90,6 +90,33 @@ public class NewsService {
                         news,
                         dateHandler.formatDate(news.getUpdateDate())
                 )
+        );
+    }
+
+    @Transactional
+    public NewsDetailingDto updateNews(UUID newsId, NewsUpdateDto updateDto) {
+        var news = newsRepository.getReferenceById(newsId);
+
+        if(updateDto.title() !=null) news.updateTitle(updateDto.title());
+        if(updateDto.summary() !=null) news.updateSummary(updateDto.summary());
+        if(updateDto.body() !=null) news.updateBody(updateDto.body());
+
+        if(updateDto.tags() !=null) {
+            var tagSet = tagService.getTagSet(updateDto.tags());
+            news.setTags(tagSet);
+        }
+
+        if(updateDto.image() !=null) {
+            var imageUrl = imageHandler.saveImageToUploadDir(updateDto.image());
+            news.setImageUrl(imageUrl);
+        }
+
+        news.setUpdateDate(dateHandler.getCurrentDateTime());
+
+        return new NewsDetailingDto(
+                news,
+                tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getUpdateDate())
         );
     }
 }

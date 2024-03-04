@@ -84,4 +84,16 @@ public class News {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public void updateBody(String body) {
+        this.body = body;
+    }
 }
