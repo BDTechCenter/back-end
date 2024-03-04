@@ -22,7 +22,7 @@ public class ImageHandler {
         String fileName = null;
         if(image != null && !image.isEmpty()) {
             try {
-                fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+                fileName = String.format("%s-%s", System.currentTimeMillis(), image.getOriginalFilename().replace(" ", "_"));
                 Path filePath = Paths.get(uploadDir, fileName);
                 Files.write(filePath, image.getBytes());
             } catch (IOException e) {
