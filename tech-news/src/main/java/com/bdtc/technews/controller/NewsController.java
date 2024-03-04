@@ -1,13 +1,9 @@
 package com.bdtc.technews.controller;
 
-import com.bdtc.technews.dto.NewsDetailingDto;
-import com.bdtc.technews.dto.NewsPreviewDto;
 import com.bdtc.technews.dto.NewsRequestDto;
-import com.bdtc.technews.dto.NewsTagsFilterDto;
 import com.bdtc.technews.service.news.NewsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +38,9 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
-    @GetMapping("/filterByTags")
-    public ResponseEntity getNewsFilteringByTags(@PageableDefault() Pageable pageable, @RequestBody NewsTagsFilterDto tagsDto) {
-        var news = newsService.getNewsPreviewFilteringByTags(pageable, tagsDto.tags());
+    @GetMapping()
+    public ResponseEntity getNewsFilteringByTags(@RequestParam(name = "tags") String tags, @PageableDefault() Pageable pageable) {
+        var news = newsService.getNewsPreviewFilteringByTags(pageable, tags);
         return ResponseEntity.ok(news);
     }
 }
