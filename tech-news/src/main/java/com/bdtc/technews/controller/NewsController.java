@@ -3,6 +3,7 @@ package com.bdtc.technews.controller;
 import com.bdtc.technews.dto.NewsDetailingDto;
 import com.bdtc.technews.dto.NewsPreviewDto;
 import com.bdtc.technews.dto.NewsRequestDto;
+import com.bdtc.technews.dto.NewsTagsFilterDto;
 import com.bdtc.technews.service.news.NewsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,12 @@ public class NewsController {
     @GetMapping("/{id}")
     public ResponseEntity getNewsById(@PathVariable UUID id) {
         var news = newsService.getNewsById(id);
+        return ResponseEntity.ok(news);
+    }
+
+    @GetMapping("/filterByTags")
+    public ResponseEntity getNewsFilteringByTags(@PageableDefault() Pageable pageable, @RequestBody NewsTagsFilterDto tagsDto) {
+        var news = newsService.getNewsPreviewFilteringByTags(pageable, tagsDto.tags());
         return ResponseEntity.ok(news);
     }
 }

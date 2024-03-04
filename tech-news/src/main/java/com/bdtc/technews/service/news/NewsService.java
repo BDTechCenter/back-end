@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -83,6 +84,15 @@ public class NewsService {
 
     public Page<NewsPreviewDto> getNewsPreviewByTheMostViewed(Pageable pageable) {
         var newsPage = newsRepository.findByOrderByViewsDesc(pageable);
+        return newsPage.map(news -> new NewsPreviewDto(
+                        news,
+                        dateHandler.formatDate(news.getUpdateDate())
+                )
+        );
+    }
+
+    public Page<NewsPreviewDto> getNewsPreviewFilteringByTags(Pageable pageable, List<String> tags) {
+        var newsPage = newsRepository.findByTagNames(pageable, tags, (long) tags.size());
         return newsPage.map(news -> new NewsPreviewDto(
                         news,
                         dateHandler.formatDate(news.getUpdateDate())
