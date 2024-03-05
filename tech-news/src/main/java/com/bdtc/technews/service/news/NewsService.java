@@ -6,6 +6,7 @@ import com.bdtc.technews.dto.NewsRequestDto;
 import com.bdtc.technews.dto.NewsUpdateDto;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.NewsRepository;
+import com.bdtc.technews.service.news.backup.NewsBackupService;
 import com.bdtc.technews.service.news.utils.DateHandler;
 import com.bdtc.technews.service.news.utils.ImageHandler;
 import com.bdtc.technews.service.news.utils.TagHandler;
@@ -37,6 +38,9 @@ public class NewsService {
 
     @Autowired
     private ImageHandler imageHandler;
+
+    @Autowired
+    private NewsBackupService newsBackupService;
 
     @Transactional
     public NewsDetailingDto createNews(NewsRequestDto newsDto) {
@@ -96,6 +100,7 @@ public class NewsService {
     @Transactional
     public NewsDetailingDto updateNews(UUID newsId, NewsUpdateDto updateDto) {
         var news = newsRepository.getReferenceById(newsId);
+        newsBackupService.createNewsBackup(news);
 
         if(updateDto.title() !=null) news.updateTitle(updateDto.title());
         if(updateDto.summary() !=null) news.updateSummary(updateDto.summary());
