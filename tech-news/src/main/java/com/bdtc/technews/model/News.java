@@ -96,4 +96,11 @@ public class News {
     public void updateBody(String body) {
         this.body = body;
     }
+
+    public void restoreBackup(NewsBackup newsBackup) {
+        this.title = newsBackup.getTitle();
+        this.summary = newsBackup.getSummary();
+        this.body = newsBackup.getBody();
+        this.imageUrl = newsBackup.getImageUrl();
+    }
 }

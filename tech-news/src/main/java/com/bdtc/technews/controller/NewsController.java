@@ -61,4 +61,10 @@ public class NewsController {
         var news = newsBackupService.getNewsBackup(id, backupLevel);
         return ResponseEntity.ok(news);
     }
+
+    @PutMapping("/{id}/backup/{backupId}/restore")
+    public ResponseEntity restoreNewsFromABackup(@PathVariable UUID id, @PathVariable Long backupId) {
+        var news = newsBackupService.restoreNewsFromABackup(id, backupId);
+        return ResponseEntity.ok(news);
+    }
 }

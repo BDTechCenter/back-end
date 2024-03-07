@@ -1,10 +1,14 @@
 package com.bdtc.technews.service.news.backup;
 
 import com.bdtc.technews.dto.NewsBackupDto;
+import com.bdtc.technews.dto.NewsDetailingDto;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.model.NewsBackup;
 import com.bdtc.technews.repository.NewsBackupRepository;
+import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.service.news.backup.utils.BackupLevelHandler;
+import com.bdtc.technews.service.news.utils.DateHandler;
+import com.bdtc.technews.service.news.utils.TagHandler;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +23,16 @@ public class NewsBackupService {
     private NewsBackupRepository newsBackupRepository;
 
     @Autowired
+    private NewsRepository newsRepository;
+
+    @Autowired
     private BackupLevelHandler backupLevelHandler;
+
+    @Autowired
+    private TagHandler tagHandler;
+
+    @Autowired
+    private DateHandler dateHandler;
 
     @Transactional
     public void createNewsBackup(News news) {
@@ -48,5 +61,19 @@ public class NewsBackupService {
                 news = backupList.get(0);
         }
         return new NewsBackupDto(news);
+    }
+
+    @Transactional
+    public NewsDetailingDto restoreNewsFromABackup(UUID newsId, Long backupId) {
+        News news = newsRepository.getReferenceById(newsId);
+        createNewsBackup(news);
+
+        NewsBackup newsBackup = newsBackupRepository.getReferenceById(backupId);
+        news.restoreBackup(newsBackup);
+        return new NewsDetailingDto(
+                news,
+                tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getUpdateDate())
+        );
     }
 }
