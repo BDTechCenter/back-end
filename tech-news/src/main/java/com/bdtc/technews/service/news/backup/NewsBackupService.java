@@ -4,6 +4,7 @@ import com.bdtc.technews.dto.NewsBackupDto;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.model.NewsBackup;
 import com.bdtc.technews.repository.NewsBackupRepository;
+import com.bdtc.technews.service.news.backup.utils.BackupLevelHandler;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ public class NewsBackupService {
 
     @Autowired
     private NewsBackupRepository newsBackupRepository;
+
+    @Autowired
+    private BackupLevelHandler backupLevelHandler;
 
     @Transactional
     public void createNewsBackup(News news) {
@@ -30,6 +34,7 @@ public class NewsBackupService {
 
     public NewsBackupDto getNewsBackup(UUID newsId, int backupLevel) {
         List<NewsBackup> backupList = newsBackupRepository.findAllByNewsId(newsId);
+        backupLevelHandler.verifyIdBackupLevelExist(backupList.size(), backupLevel, newsId);
         NewsBackup news;
 
         switch (backupLevel) {
