@@ -3,6 +3,7 @@ package com.bdtc.technews.controller;
 import com.bdtc.technews.dto.NewsRequestDto;
 import com.bdtc.technews.dto.NewsUpdateDto;
 import com.bdtc.technews.service.news.NewsService;
+import com.bdtc.technews.service.news.backup.NewsBackupService;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class NewsController {
 
     @Autowired
     private NewsService newsService;
+
+    @Autowired
+    private NewsBackupService newsBackupService;
 
     @PostMapping
     public ResponseEntity createNews(@ModelAttribute @Valid NewsRequestDto newsRequestDto, UriComponentsBuilder uriBuilder) {
@@ -49,6 +53,12 @@ public class NewsController {
     @PatchMapping("/{id}")
     public ResponseEntity updateNews(@ModelAttribute NewsUpdateDto updateDto, @PathVariable UUID id) {
         var news = newsService.updateNews(id, updateDto);
+        return ResponseEntity.ok(news);
+    }
+
+    @GetMapping("/{id}/backup")
+    public ResponseEntity getNewsBackup(@PathVariable UUID id, @RequestParam(name = "level") int backupLevel) {
+        var news = newsBackupService.getNewsBackup(id, backupLevel);
         return ResponseEntity.ok(news);
     }
 }
