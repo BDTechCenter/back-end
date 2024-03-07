@@ -34,7 +34,7 @@ public class NewsBackupService {
 
     public NewsBackupDto getNewsBackup(UUID newsId, int backupLevel) {
         List<NewsBackup> backupList = newsBackupRepository.findAllByNewsId(newsId);
-        backupLevelHandler.verifyIdBackupLevelExist(backupList.size(), backupLevel, newsId);
+        backupLevelHandler.verifyIdBackupLevelExist(backupList.size(), backupLevel, newsId  );
         NewsBackup news;
 
         switch (backupLevel) {
@@ -43,9 +43,6 @@ public class NewsBackupService {
                 break;
             case 2:
                 news = backupList.get(1);
-                break;
-            case 3:
-                news = backupList.get(0);
                 break;
             default:
                 news = backupList.get(0);
