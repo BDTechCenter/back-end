@@ -5,6 +5,7 @@ import com.bdtc.technews.dto.NewsPreviewDto;
 import com.bdtc.technews.dto.NewsRequestDto;
 import com.bdtc.technews.dto.NewsUpdateDto;
 import com.bdtc.technews.model.News;
+import com.bdtc.technews.model.Tag;
 import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
 import com.bdtc.technews.service.news.utils.DateHandler;
@@ -17,8 +18,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -44,10 +47,10 @@ public class NewsService {
 
     @Transactional
     public NewsDetailingDto createNews(NewsRequestDto newsDto) {
-        var news = new News(newsDto);
-        var dateNow = dateHandler.getCurrentDateTime();
-        var tagSet = tagService.getTagSet(newsDto.tags());
-        var imageUrl = imageHandler.saveImageToUploadDir(newsDto.image());
+        News news = new News(newsDto);
+        LocalDateTime dateNow = dateHandler.getCurrentDateTime();
+        Set<Tag> tagSet = tagService.getTagSet(newsDto.tags());
+        String imageUrl = imageHandler.saveImageToUploadDir(newsDto.image());
 
         news.setCreationDate(dateNow);
         news.setUpdateDate(dateNow);
@@ -79,7 +82,7 @@ public class NewsService {
 
     @Transactional
     public NewsDetailingDto getNewsById(UUID newsId) {
-        var news = newsRepository.getReferenceById(newsId);
+        News news = newsRepository.getReferenceById(newsId);
         news.addAView();
         return new NewsDetailingDto(
                 news,
@@ -90,7 +93,7 @@ public class NewsService {
 
     public Page<NewsPreviewDto> getNewsPreviewFilteringByTags(Pageable pageable, String tags) {
         List<String> tagList = Arrays.asList(tags.split(","));
-        var newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
+        Page<News> newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
         return newsPage.map(news -> new NewsPreviewDto(
                         news,
                         dateHandler.formatDate(news.getUpdateDate())
@@ -133,7 +136,7 @@ public class NewsService {
 
     @Transactional
     public NewsDetailingDto updateNews(UUID newsId, NewsUpdateDto updateDto) {
-        var news = newsRepository.getReferenceById(newsId);
+        News news = newsRepository.getReferenceById(newsId);
         newsBackupService.createNewsBackup(news, null);
 
         if(updateDto.title() !=null) news.updateTitle(updateDto.title());
@@ -141,12 +144,12 @@ public class NewsService {
         if(updateDto.body() !=null) news.updateBody(updateDto.body());
 
         if(updateDto.tags() !=null) {
-            var tagSet = tagService.getTagSet(updateDto.tags());
+            Set<Tag> tagSet = tagService.getTagSet(updateDto.tags());
             news.setTags(tagSet);
         }
 
         if(updateDto.image() !=null) {
-            var imageUrl = imageHandler.saveImageToUploadDir(updateDto.image());
+            String imageUrl = imageHandler.saveImageToUploadDir(updateDto.image());
             news.setImageUrl(imageUrl);
         }
 
