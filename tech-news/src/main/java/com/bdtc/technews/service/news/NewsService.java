@@ -100,7 +100,7 @@ public class NewsService {
     @Transactional
     public NewsDetailingDto updateNews(UUID newsId, NewsUpdateDto updateDto) {
         var news = newsRepository.getReferenceById(newsId);
-        newsBackupService.createNewsBackup(news);
+        newsBackupService.createNewsBackup(news, null);
 
         if(updateDto.title() !=null) news.updateTitle(updateDto.title());
         if(updateDto.summary() !=null) news.updateSummary(updateDto.summary());

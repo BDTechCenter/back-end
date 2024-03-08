@@ -35,11 +35,15 @@ public class NewsBackupService {
     private DateHandler dateHandler;
 
     @Transactional
-    public void createNewsBackup(News news) {
+    public void createNewsBackup(News news, Long backupId) {
         var exceededBackupLimit = newsBackupRepository.hasMoreThanBackupLimit(news.getId(), 2);
         if(exceededBackupLimit) {
             var backupList = newsBackupRepository.findAllByNewsId(news.getId());
-            newsBackupRepository.delete(backupList.get(0));
+            if(backupId == null) {
+                newsBackupRepository.delete(backupList.get(0));
+            } else {
+                newsBackupRepository.deleteById(backupId);
+            }
         }
 
         newsBackupRepository.save(new NewsBackup(news));
@@ -66,9 +70,9 @@ public class NewsBackupService {
     @Transactional
     public NewsDetailingDto restoreNewsFromABackup(UUID newsId, Long backupId) {
         News news = newsRepository.getReferenceById(newsId);
-        createNewsBackup(news);
-
         NewsBackup newsBackup = newsBackupRepository.getReferenceById(backupId);
+        createNewsBackup(news, backupId);
+
         news.restoreBackup(newsBackup);
         return new NewsDetailingDto(
                 news,
