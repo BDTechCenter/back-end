@@ -23,19 +23,19 @@ public class TagController {
 
     @PostMapping()
     public ResponseEntity createTag(@RequestBody @Valid TagDto tagDto, UriComponentsBuilder uriBuilder) {
-        var tag = tagService.createTag(tagDto);
+        TagDto tag = tagService.createTag(tagDto);
         return ResponseEntity.ok(tag);
     }
 
     @GetMapping()
     public ResponseEntity getTags(@PageableDefault(sort = {"id"}) Pageable pageable) {
-        var tagsPage = tagService.getTagsPage(pageable);
+        Page<TagDto> tagsPage = tagService.getTagsPage(pageable);
         return ResponseEntity.ok(tagsPage);
     }
 
     @GetMapping("/all")
     public ResponseEntity getAllTags() {
-        var tagsList = tagService.getAllTags();
+        List<TagDto> tagsList = tagService.getAllTags();
         return ResponseEntity.ok(tagsList);
     }
 }
