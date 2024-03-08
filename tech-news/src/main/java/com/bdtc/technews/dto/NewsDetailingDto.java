@@ -18,7 +18,8 @@ public record NewsDetailingDto(
         String summary,
         String body,
         Set<String> tags,
-        String imageUrl
+        String imageUrl,
+        boolean isPublished
 ) {
     public NewsDetailingDto(News news, Set<String> tags, String date) {
         this(
@@ -30,7 +31,8 @@ public record NewsDetailingDto(
                 news.getSummary(),
                 news.getBody(),
                 tags,
-                news.getImageUrl()
+                news.getImageUrl(),
+                news.isPublished()
         );
     }
 }

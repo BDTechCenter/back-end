@@ -53,6 +53,7 @@ public class NewsService {
         news.setUpdateDate(dateNow);
         news.setTags(tagSet);
         news.setImageUrl(imageUrl);
+        if(news.isPublished()) news.setPublicationDate(dateNow);
 
         newsRepository.save(news);
         return new NewsDetailingDto(
@@ -96,6 +97,30 @@ public class NewsService {
                 )
         );
     }
+
+    @Transactional
+    public NewsDetailingDto publishNews(UUID newsId) {
+        News news = newsRepository.getReferenceById(newsId);
+        news.publishNews();
+        news.setPublicationDate(dateHandler.getCurrentDateTime());
+        return new NewsDetailingDto(
+                news,
+                tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getUpdateDate())
+        );
+    }
+
+    @Transactional
+    public NewsDetailingDto archiveNews(UUID newsId) {
+        News news = newsRepository.getReferenceById(newsId);
+        news.archiveNews();
+        return new NewsDetailingDto(
+                news,
+                tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getUpdateDate())
+        );
+    }
+
 
     @Transactional
     public NewsDetailingDto updateNews(UUID newsId, NewsUpdateDto updateDto) {

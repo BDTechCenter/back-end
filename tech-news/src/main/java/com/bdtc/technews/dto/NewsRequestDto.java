@@ -1,5 +1,6 @@
 package com.bdtc.technews.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +19,9 @@ public record NewsRequestDto(
         String body,
         @NotEmpty
         Set<String> tags,
-        MultipartFile image
+        MultipartFile image,
+        @NotNull
+        @JsonAlias({"post", "visible"})
+        boolean isPublished
 ) {
 }

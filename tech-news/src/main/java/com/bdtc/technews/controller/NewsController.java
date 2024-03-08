@@ -50,6 +50,18 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
+    @PatchMapping("/{id}/publish")
+    public ResponseEntity publishNews(@PathVariable UUID id) {
+        var news = newsService.publishNews(id);
+        return ResponseEntity.ok(news);
+    }
+
+    @PatchMapping("/{id}/archive")
+    public ResponseEntity archiveNews(@PathVariable UUID id) {
+        var news = newsService.archiveNews(id);
+        return ResponseEntity.ok(news);
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity updateNews(@ModelAttribute NewsUpdateDto updateDto, @PathVariable UUID id) {
         var news = newsService.updateNews(id, updateDto);
