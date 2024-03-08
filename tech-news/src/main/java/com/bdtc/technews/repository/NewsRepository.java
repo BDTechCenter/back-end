@@ -11,14 +11,15 @@ import java.util.List;
 import java.util.UUID;
 
 public interface NewsRepository extends JpaRepository<News, UUID> {
-    Page<News> findByOrderByViewsDesc(Pageable pageable);
+
+    Page<News> findByIsPublishedTrueOrderByViewsDesc(Pageable pageable);
 
     @Query(
             """
             SELECT DISTINCT n FROM News n
             JOIN n.tags t
-            WHERE t.name  
-            IN :tagNames
+            WHERE t.name IN :tagNames
+            AND n.isPublished = true
             GROUP BY n
             HAVING COUNT(DISTINCT t) = :tagCount
             """
@@ -26,4 +27,6 @@ public interface NewsRepository extends JpaRepository<News, UUID> {
     Page<News> findByTagNames(Pageable pageable,
                               @Param("tagNames") List<String> tags,
                               @Param("tagCount") Long tagCount);
+
+    Page<News> findAllByIsPublishedTrue(Pageable pageable);
 }
