@@ -5,7 +5,6 @@ import com.bdtc.technews.dto.NewsUpdateDto;
 import com.bdtc.technews.service.news.NewsService;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -59,6 +58,12 @@ public class NewsController {
     @PatchMapping("/{id}/archive")
     public ResponseEntity archiveNews(@PathVariable UUID id) {
         var news = newsService.archiveNews(id);
+        return ResponseEntity.ok(news);
+    }
+
+    @GetMapping("/archived")
+    public ResponseEntity getArchivedNews(@PageableDefault() Pageable pageable) {
+        var news = newsService.getArchivedNewsPreview(pageable);
         return ResponseEntity.ok(news);
     }
 

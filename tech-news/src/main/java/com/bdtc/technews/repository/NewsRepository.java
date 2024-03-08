@@ -29,4 +29,6 @@ public interface NewsRepository extends JpaRepository<News, UUID> {
                               @Param("tagCount") Long tagCount);
 
     Page<News> findAllByIsPublishedTrue(Pageable pageable);
+
+    Page<News> findAllByIsPublishedFalse(Pageable pageable);
 }

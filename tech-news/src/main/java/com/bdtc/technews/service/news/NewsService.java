@@ -121,6 +121,15 @@ public class NewsService {
         );
     }
 
+    public Page<NewsPreviewDto> getArchivedNewsPreview(Pageable pageable) {
+        Page<News> newsPage = newsRepository.findAllByIsPublishedFalse(pageable);
+        return newsPage.map(news -> new NewsPreviewDto(
+                        news,
+                        dateHandler.formatDate(news.getUpdateDate())
+                )
+        );
+    }
+
 
     @Transactional
     public NewsDetailingDto updateNews(UUID newsId, NewsUpdateDto updateDto) {
