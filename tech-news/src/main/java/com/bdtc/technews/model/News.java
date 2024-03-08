@@ -1,6 +1,7 @@
 package com.bdtc.technews.model;
 
 import com.bdtc.technews.dto.NewsRequestDto;
+import com.bdtc.technews.service.news.utils.DateHandler;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -53,12 +54,15 @@ public class News {
     )
     private Set<Tag> tags = new HashSet<>();
 
+    private boolean isPublished;
+
     public News(NewsRequestDto newsDto) {
         this.author = newsDto.author();
         this.title = newsDto.title();
         this.summary = newsDto.summary();
         this.body = newsDto.body();
         this.views = 0L;
+        this.isPublished = newsDto.isPublished();
     }
 
     public void setCreationDate(LocalDateTime creationDate) {
@@ -102,5 +106,13 @@ public class News {
         this.summary = newsBackup.getSummary();
         this.body = newsBackup.getBody();
         this.imageUrl = newsBackup.getImageUrl();
+    }
+
+    public void archiveNews() {
+        this.isPublished = false;
+    }
+
+    public void publishNews() {
+        this.isPublished = true;
     }
 }

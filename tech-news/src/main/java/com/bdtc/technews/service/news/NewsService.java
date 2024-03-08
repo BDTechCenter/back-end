@@ -53,6 +53,7 @@ public class NewsService {
         news.setUpdateDate(dateNow);
         news.setTags(tagSet);
         news.setImageUrl(imageUrl);
+        if(news.isPublished()) news.setPublicationDate(dateNow);
 
         newsRepository.save(news);
         return new NewsDetailingDto(
@@ -65,9 +66,9 @@ public class NewsService {
     public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, boolean sortByView) {
         Page<News> newsPage;
         if(sortByView) {
-            newsPage = newsRepository.findByOrderByViewsDesc(pageable);
+            newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
         } else {
-            newsPage = newsRepository.findAll(pageable);
+            newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
         }
         return newsPage.map(news -> new NewsPreviewDto(
                 news,
@@ -96,6 +97,39 @@ public class NewsService {
                 )
         );
     }
+
+    @Transactional
+    public NewsDetailingDto publishNews(UUID newsId) {
+        News news = newsRepository.getReferenceById(newsId);
+        news.publishNews();
+        news.setPublicationDate(dateHandler.getCurrentDateTime());
+        return new NewsDetailingDto(
+                news,
+                tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getUpdateDate())
+        );
+    }
+
+    @Transactional
+    public NewsDetailingDto archiveNews(UUID newsId) {
+        News news = newsRepository.getReferenceById(newsId);
+        news.archiveNews();
+        return new NewsDetailingDto(
+                news,
+                tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getUpdateDate())
+        );
+    }
+
+    public Page<NewsPreviewDto> getArchivedNewsPreview(Pageable pageable) {
+        Page<News> newsPage = newsRepository.findAllByIsPublishedFalse(pageable);
+        return newsPage.map(news -> new NewsPreviewDto(
+                        news,
+                        dateHandler.formatDate(news.getUpdateDate())
+                )
+        );
+    }
+
 
     @Transactional
     public NewsDetailingDto updateNews(UUID newsId, NewsUpdateDto updateDto) {
