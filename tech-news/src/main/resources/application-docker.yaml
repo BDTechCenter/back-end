@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    username: postgres
+    url: ${DATABASE_URL}
+    password: root
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL}

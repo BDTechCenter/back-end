@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/tech_news
+    password: root
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8765/eureka
+
+gateway:
+  url: http://127.0.0.1:8766/tech-news
