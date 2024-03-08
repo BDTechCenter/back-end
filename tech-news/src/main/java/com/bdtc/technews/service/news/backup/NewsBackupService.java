@@ -36,9 +36,9 @@ public class NewsBackupService {
 
     @Transactional
     public void createNewsBackup(News news, Long backupId) {
-        var exceededBackupLimit = newsBackupRepository.hasMoreThanBackupLimit(news.getId(), 2);
+        boolean exceededBackupLimit = newsBackupRepository.hasMoreThanBackupLimit(news.getId(), 2);
         if(exceededBackupLimit) {
-            var backupList = newsBackupRepository.findAllByNewsId(news.getId());
+            List<NewsBackup> backupList = newsBackupRepository.findAllByNewsId(news.getId());
             if(backupId == null) {
                 newsBackupRepository.delete(backupList.get(0));
             } else {
