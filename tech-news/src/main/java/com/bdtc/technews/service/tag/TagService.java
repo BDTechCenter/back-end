@@ -31,12 +31,12 @@ public class TagService {
     }
 
     public Page<TagDto> getTagsPage(Pageable pageable) {
-        var tags = tagRepository.findAll(pageable);
+        Page<Tag> tags = tagRepository.findAll(pageable);
         return tags.map(TagDto::new);
     }
 
     public List<TagDto> getAllTags() {
-        var tags = tagRepository.findAll();
+        List<Tag> tags = tagRepository.findAll();
         return tags.stream().map(TagDto::new).toList();
     }
 
