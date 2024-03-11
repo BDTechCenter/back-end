@@ -12,6 +12,8 @@ services:
       - bdtc-net
 
   api-gateway:
+    depends_on:
+      - service-discovery
     container_name: api-gateway
     build:
       context: ./api-gateway
@@ -24,11 +26,44 @@ services:
     networks:
       - bdtc-net
 
+  tech-news:
+    depends_on:
+      - api-gateway
+      - tech-news-db
+    container_name: tech-news
+    build:
+      context: ./tech-news
+    environment:
+      - DATABASE_URL=jdbc:postgresql://tech-news-db:5432/tech_news
+      - EUREKA_URL=http://service-discovery:8765/eureka
+    volumes:
+      - tech-news-volume
+    networks:
+      - bdtc-net
+
+  tech-news-db:
+    image: postgres
+    container_name: tech-news-db
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+      POSTGRES_DB: tech_news
+    ports:
+      - 6968:5432
+    volumes:
+      - tech-news-db-volume:/var/lib/postgresql/data/
+    networks:
+      - bdtc-net
+
 
 volumes:
   service-discovery-volume:
 
   api-gateway-volume:
+
+  tech-news-volume:
+
+  tech-news-db-volume:
 
 
 networks:
