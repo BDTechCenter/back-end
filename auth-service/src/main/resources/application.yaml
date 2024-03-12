@@ -27,8 +27,8 @@ server:
   error:
     include-stacktrace: never
 
-  port: 0
-#  port: 9000
+#  port: 0
+  port: 9000
   forward-headers-strategy: native
 
 eureka:
