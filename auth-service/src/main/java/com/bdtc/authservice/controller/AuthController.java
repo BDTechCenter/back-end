@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @GetMapping("/test")
-    public ResponseEntity test(@AuthenticationPrincipal(expression = "claims['name']") String claims) {
-        return ResponseEntity.ok(claims);
+    public ResponseEntity test(@AuthenticationPrincipal Object authenticatedUser) {
+        return ResponseEntity.ok(authenticatedUser);
     }
 }
