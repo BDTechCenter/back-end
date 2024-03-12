@@ -1,15 +1,15 @@
-version: '3.9'
+version: '3.3'
 services:
   service-discovery:
     container_name: service-discovery
     build:
       context: ./service-discovery
     ports:
-      - 8765:8765
-    volumes:
-      - service-discovery-volume
-    networks:
-      - bdtc-net
+      - "0.0.0.0:8765:8765"
+#    volumes:
+#      - service-discovery-volume
+#    networks:
+#      - bdtc-net
 
   api-gateway:
     depends_on:
@@ -20,11 +20,25 @@ services:
     environment:
       - EUREKA_URL=http://service-discovery:8765/eureka
     ports:
-      - 8766:8766
-    volumes:
-      - api-gateway-volume
-    networks:
-      - bdtc-net
+      - "0.0.0.0:8766:8766"
+#    volumes:
+#      - api-gateway-volume
+#    networks:
+#      - bdtc-net
+
+  auth-service:
+    depends_on:
+      - service-discovery
+      - api-gateway
+    container_name: auth-service
+    build:
+      context: ./auth-service
+    environment:
+      - EUREKA_URL=http://service-discovery:8765/eureka
+    env_file:
+      - ./auth-service/.env
+#    networks:
+#      - bdtc-net
 
   tech-news:
     depends_on:
@@ -36,10 +50,11 @@ services:
     environment:
       - DATABASE_URL=jdbc:postgresql://tech-news-db:5432/tech_news
       - EUREKA_URL=http://service-discovery:8765/eureka
-    volumes:
-      - tech-news-volume
-    networks:
-      - bdtc-net
+      - GATEWAY_URL=http://api-gateway:8766/tech-news
+#    volumes:
+#      - tech-news-volume
+#    networks:
+#      - bdtc-net
 
   tech-news-db:
     image: postgres
@@ -52,20 +67,20 @@ services:
       - 6968:5432
     volumes:
       - tech-news-db-volume:/var/lib/postgresql/data/
-    networks:
-      - bdtc-net
+#    networks:
+#      - bdtc-net
 
 
 volumes:
-  service-discovery-volume:
-
-  api-gateway-volume:
-
-  tech-news-volume:
+#  service-discovery-volume:
+#
+#  api-gateway-volume:
+#
+#  tech-news-volume:
 
   tech-news-db-volume:
 
 
-networks:
-  bdtc-net:
-    driver: bridge
+#networks:
+#  bdtc-net:
+#    driver: bridge
