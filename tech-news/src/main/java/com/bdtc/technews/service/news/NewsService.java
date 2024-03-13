@@ -66,10 +66,12 @@ public class NewsService {
         );
     }
 
-    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, boolean sortByView) {
+    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, boolean sortByView, boolean latest) {
         Page<News> newsPage;
         if(sortByView) {
             newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
+        } else if (latest) {
+            newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
         } else {
             newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
         }
