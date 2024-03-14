@@ -1,6 +1,7 @@
 package com.bdtc.technews.infra.exception.error;
 
 import com.bdtc.technews.infra.exception.validation.BusinessRuleException;
+import com.bdtc.technews.infra.exception.validation.ConflictInPathParameters;
 import com.bdtc.technews.infra.exception.validation.ExceededTheExistingBackupLevelException;
 import com.bdtc.technews.infra.exception.validation.ThereIsNoBackupForThisNewsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -38,5 +39,10 @@ public class ErrorHandler {
     @ExceptionHandler(ExceededTheExistingBackupLevelException.class)
     public ResponseEntity noBackupLevelForNewsHandler(ExceededTheExistingBackupLevelException exception) {
         return ResponseEntity.badRequest().body(new ValidationErrorData("level", exception.getMessage()));
+    }
+
+    @ExceptionHandler(ConflictInPathParameters.class)
+    public ResponseEntity ConflictPathParametersHandler(ConflictInPathParameters exception) {
+        return ResponseEntity.badRequest().body(new ValidationErrorData("pathParameters", exception.getMessage()));
     }
 }

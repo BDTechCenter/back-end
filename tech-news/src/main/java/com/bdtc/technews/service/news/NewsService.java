@@ -4,6 +4,7 @@ import com.bdtc.technews.dto.NewsDetailingDto;
 import com.bdtc.technews.dto.NewsPreviewDto;
 import com.bdtc.technews.dto.NewsRequestDto;
 import com.bdtc.technews.dto.NewsUpdateDto;
+import com.bdtc.technews.infra.exception.validation.ConflictInPathParameters;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.model.Tag;
 import com.bdtc.technews.repository.NewsRepository;
@@ -68,6 +69,9 @@ public class NewsService {
 
     public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, boolean sortByView, boolean latest) {
         Page<News> newsPage;
+
+        if(sortByView && latest) throw new ConflictInPathParameters("We can't sort by viewed and most recent at the same time. Choose just one of the parameters 'sortByView' or 'latest'");
+
         if(sortByView) {
             newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
         } else if (latest) {
