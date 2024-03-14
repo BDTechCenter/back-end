@@ -20,10 +20,13 @@ public class NewsBackup {
 
     private UUID newsId;
 
+    @Column(length = 100)
     private String title;
 
+    @Column(length = 255)
     private String summary;
 
+    @Column(columnDefinition = "TEXT")
     private String body;
 
     private String imageUrl;
