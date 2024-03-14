@@ -31,4 +31,13 @@ public interface NewsRepository extends JpaRepository<News, UUID> {
     Page<News> findAllByIsPublishedTrue(Pageable pageable);
 
     Page<News> findAllByIsPublishedFalse(Pageable pageable);
+
+    @Query(
+            """
+            SELECT n FROM News n
+            WHERE n.isPublished = true
+            ORDER BY n.updateDate DESC
+            """
+    )
+    Page<News> findByIsPublishedTrueAndLatestUpdate(Pageable pageable);
 }
