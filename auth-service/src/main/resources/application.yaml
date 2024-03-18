@@ -1,7 +1,7 @@
 spring:
   profiles:
-    active: local
-  #    active: docker
+#    active: local
+    active: docker
 
   application:
     name: auth-service
@@ -27,11 +27,5 @@ server:
   error:
     include-stacktrace: never
 
-#  port: 0
-  port: 9000
+  port: 0
   forward-headers-strategy: native
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://10.234.90.77:8765/eureka
