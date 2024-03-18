@@ -22,19 +22,19 @@ services:
     networks:
       - bdtc-net
 
-#  auth-service:
-#    depends_on:
-#      - service-discovery
-#      - api-gateway
-#    container_name: auth-service
-#    build:
-#      context: ./auth-service
-#    environment:
-#      - EUREKA_URL=http://service-discovery:8765/eureka
-#    env_file:
-#      - ./auth-service/.env
-#    networks:
-#      - bdtc-net
+  auth-service:
+    depends_on:
+      - service-discovery
+      - api-gateway
+    container_name: auth-service
+    build:
+      context: ./auth-service
+    environment:
+      - EUREKA_URL=http://service-discovery:8765/eureka
+    env_file:
+      - ./auth-service/.env
+    networks:
+      - bdtc-net
 
   tech-news:
     depends_on:
@@ -46,7 +46,7 @@ services:
     environment:
       - DATABASE_URL=jdbc:postgresql://tech-news-db:5432/tech_news
       - EUREKA_URL=http://service-discovery:8765/eureka
-      - GATEWAY_URL=http://api-gateway:8766/tech-news
+      - GATEWAY_URL=http://10.234.90.77:8766/tech-news
     networks:
       - bdtc-net
 
