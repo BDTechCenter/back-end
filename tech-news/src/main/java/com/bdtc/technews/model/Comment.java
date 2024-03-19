@@ -26,7 +26,7 @@ public class Comment {
     private LocalDateTime publicationDate;
 
     @Column(columnDefinition = "TEXT")
-    private String body;
+    private String comment;
 
     @ManyToOne
     @JoinColumn(name = "news_id")
@@ -34,7 +34,7 @@ public class Comment {
 
     public Comment(CommentRequestDto commentDto) {
         this.author = commentDto.author();
-        this.body = commentDto.body();
+        this.comment = commentDto.comment();
     }
 
     public void setPublicationDate(LocalDateTime publicationDate) {

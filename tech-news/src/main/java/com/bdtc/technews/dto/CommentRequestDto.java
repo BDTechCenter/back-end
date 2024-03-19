@@ -8,7 +8,6 @@ public record CommentRequestDto(
         String author,
 
         @NotBlank
-        @JsonAlias({"comment"})
-        String body
+        String comment
 ) {
 }
