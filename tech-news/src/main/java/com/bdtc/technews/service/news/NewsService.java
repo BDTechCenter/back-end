@@ -169,6 +169,7 @@ public class NewsService {
     }
 
     public News getNews(UUID id) {
-        return newsRepository.getReferenceById(id);
+        News news = newsRepository.getReferenceById(id);
+        return news;
     }
 }

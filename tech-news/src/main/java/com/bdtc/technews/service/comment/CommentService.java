@@ -32,9 +32,10 @@ public class CommentService {
     public CommentDetailingDto createComment(UUID newsId, CommentRequestDto commentRequestDto) {
         Comment comment = new Comment(commentRequestDto);
         LocalDateTime date = dateHandler.getCurrentDateTime();
+        News news = newsService.getNews(newsId);
 
         comment.setPublicationDate(date);
-        comment.setNews(newsService.getNews(newsId));
+        comment.setNews(news);
         commentRepository.save(comment);
 
         return new CommentDetailingDto(comment, dateHandler.formatDate(comment.getPublicationDate()));
