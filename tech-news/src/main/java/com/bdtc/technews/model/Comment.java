@@ -32,4 +32,8 @@ public class Comment {
         this.author = commentDto.author();
         this.body = commentDto.body();
     }
+
+    public void setNews(News news) {
+        this.news = news;
+    }
 }
