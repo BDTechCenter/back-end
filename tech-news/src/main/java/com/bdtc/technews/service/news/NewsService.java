@@ -167,4 +167,8 @@ public class NewsService {
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }
+
+    public News getNews(UUID id) {
+        return newsRepository.getReferenceById(id);
+    }
 }
