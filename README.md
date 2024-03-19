@@ -5,6 +5,8 @@ To run the backend you need WSL2 with Docker and CNTLM installed
 
 Follow the next steps: 
 
+first verify all services **application.yaml**, the property **spring.profiles.active** needs to be **docker**
+
 allow file execution
 
 ````ps
