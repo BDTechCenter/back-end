@@ -17,6 +17,9 @@ import java.util.List;
 public class Populate {
 
     public static void main(String[] args) throws IOException {
+        String baseUrl = System.getenv("BASE_URL");
+        System.out.println(baseUrl);
+
         // Creating variables
         String author = "Raphael";
         String title = "Title Test API";
@@ -45,7 +48,7 @@ public class Populate {
         builder.addPart("isPublished", isPublishedBody);
         final HttpEntity entity = builder.build();
 
-        HttpPost post = new HttpPost("http://10.234.90.77:8766/tech-news/news");
+        HttpPost post = new HttpPost(baseUrl);
 
         post.setEntity(entity);
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
@@ -56,4 +59,3 @@ public class Populate {
         }
     }
 }
-
