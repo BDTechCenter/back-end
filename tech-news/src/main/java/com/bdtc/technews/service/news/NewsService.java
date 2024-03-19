@@ -13,6 +13,7 @@ import com.bdtc.technews.service.news.utils.DateHandler;
 import com.bdtc.technews.service.news.utils.ImageHandler;
 import com.bdtc.technews.service.news.utils.TagHandler;
 import com.bdtc.technews.service.tag.TagService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -166,5 +167,11 @@ public class NewsService {
                 tagHandler.convertSetTagToSetString(news.getTags()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
+    }
+
+    public News getNews(UUID id) {
+        if(!newsRepository.existsById(id)) throw new EntityNotFoundException();
+        News news = newsRepository.getReferenceById(id);
+        return news;
     }
 }

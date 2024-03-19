@@ -1,1 +1,643 @@
-{"_type":"export","__export_format":4,"__export_date":"2024-03-08T01:52:01.923Z","__export_source":"insomnia.desktop.app:v8.4.5","resources":[{"_id":"req_7d1a0a0efb5646f08f0b5cc6f554cc38","parentId":"fld_f3c2ce8d13fd4715a67782b99cda7e16","modified":1709078578020,"created":1709075652713,"url":"{{ _.url }}/tags","name":"CREATE TAG","description":"","method":"POST","body":{"mimeType":"application/json","text":"{\n\t\"tag\": \"springboot\"\n}"},"parameters":[],"headers":[{"name":"Content-Type","value":"application/json"},{"name":"User-Agent","value":"insomnia/8.4.5"}],"authentication":{},"metaSortKey":-1709075652713,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"fld_f3c2ce8d13fd4715a67782b99cda7e16","parentId":"wrk_a81f117a4e024874a129a95a75ffcef1","modified":1709167228743,"created":1709075650302,"name":"TAG","description":"","environment":{},"environmentPropertyOrder":null,"metaSortKey":-1709075650502,"_type":"request_group"},{"_id":"wrk_a81f117a4e024874a129a95a75ffcef1","parentId":null,"modified":1709593680992,"created":1709593680992,"name":"tech-news","description":"","scope":"collection","_type":"workspace"},{"_id":"req_5303d1601027420aaca80f6ca6fc44c7","parentId":"fld_f3c2ce8d13fd4715a67782b99cda7e16","modified":1709078006778,"created":1709077979722,"url":"{{ _.url }}/tags/all","name":"GET ALL TAGS","description":"","method":"GET","body":{},"parameters":[],"headers":[{"name":"User-Agent","value":"insomnia/8.4.5"}],"authentication":{},"metaSortKey":-1709075652613,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_a239547deadc4a8189c95e3fe1db6cf7","parentId":"fld_19377b44332c4ed5960270264bb4d07d","modified":1709855410257,"created":1709851079152,"url":"{{ _.url }}/news/7663f73c-070a-4908-9a05-9e42e6eb8559/backup?level=1","name":"GET NEWS BACKUPS","description":"","method":"GET","body":{},"parameters":[],"headers":[{"name":"User-Agent","value":"insomnia/8.4.5"}],"authentication":{},"metaSortKey":-1709851079152,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"fld_19377b44332c4ed5960270264bb4d07d","parentId":"fld_9b11aaae69274938904794680661f0d2","modified":1709851072000,"created":1709851069358,"name":"BACKUP","description":"","environment":{},"environmentPropertyOrder":null,"metaSortKey":-1709167237195,"_type":"request_group"},{"_id":"fld_9b11aaae69274938904794680661f0d2","parentId":"wrk_a81f117a4e024874a129a95a75ffcef1","modified":1709167227036,"created":1709167218810,"name":"NEWS","description":"","environment":{},"environmentPropertyOrder":null,"metaSortKey":-1709075650402,"_type":"request_group"},{"_id":"req_199c0df6939c487a98f26a17796a3e4e","parentId":"fld_19377b44332c4ed5960270264bb4d07d","modified":1709856143867,"created":1709851751872,"url":"{{ _.url }}/news/7663f73c-070a-4908-9a05-9e42e6eb8559/backup/1/restore","name":"RESTORE NEWS FROM BACKUP","description":"","method":"PUT","body":{},"parameters":[],"headers":[{"name":"User-Agent","value":"insomnia/8.4.5"}],"authentication":{},"metaSortKey":-1709851079052,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_2bdc51bcf1834d6087233c3af0f66702","parentId":"fld_9b11aaae69274938904794680661f0d2","modified":1709860619702,"created":1709490754065,"url":"{{ _.url }}/news","name":"CREATE NEWS W IMG","description":"","method":"POST","body":{"mimeType":"multipart/form-data","params":[{"id":"pair_d414d1c717e04a398212346aed06e7cd","name":"author","value":"Luís Beck","description":""},{"id":"pair_f60804041fc74ccdb0b84494536d8576","name":"title","value":"News #1","description":""},{"id":"pair_cc631090c12b4bd6b776f959e1d71228","name":"summary","value":"Teste com upload de imagem","description":""},{"id":"pair_a8fa118cc1dc4988a36c692a98a0e4cf","name":"body","value":"Espero muito que esteja funcionando o upload de imagens na minha api rest","description":""},{"id":"pair_0e4f043e0d7d448b9cbfeb51005a351a","name":"tags","value":"docker","description":"","type":"text","multiline":false},{"id":"pair_8e02337d0fa74838bb15ea98a4a82b5d","name":"image","value":"","description":"","type":"file","fileName":"/home/luis/Downloads/imagem teste.png"},{"id":"pair_6f3f18220cbd41b5b0474c4727a88bdf","name":"isPublished","value":"false","description":""}]},"parameters":[],"headers":[{"name":"Content-Type","value":"multipart/form-data"},{"name":"User-Agent","value":"insomnia/8.4.5","id":"pair_22fb3fe092b54b6a942bc3c64f8d8322"}],"authentication":{},"metaSortKey":-1709167237095,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_5bc7e806967c41069bac1e438b85b3d2","parentId":"fld_9b11aaae69274938904794680661f0d2","modified":1709553197657,"created":1709226579222,"url":"{{ _.url }}/news/preview?sortByView=true&size=3","name":"GET NEWS PREVIEW","description":"","method":"GET","body":{},"parameters":[],"headers":[{"name":"User-Agent","value":"insomnia/8.6.1"}],"authentication":{},"metaSortKey":-1709167237045,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_e313fd7af34b49f6844e315a5f90d432","parentId":"fld_9b11aaae69274938904794680661f0d2","modified":1709862515768,"created":1709862489253,"url":"{{ _.url }}/news/archived","name":"GET ARCHIVED NEW PREVIEW","description":"","method":"GET","body":{},"parameters":[],"headers":[{"name":"User-Agent","value":"insomnia/8.4.5"}],"authentication":{},"metaSortKey":-1709167236995,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_86aefdd275e241f984c708069d43f2a4","parentId":"fld_9b11aaae69274938904794680661f0d2","modified":1709862666353,"created":1709229242335,"url":"{{ _.url }}/news/21be4ae1-1eab-44fb-8779-0c59ba16587c","name":"GET NEW BY UUID","description":"","method":"GET","body":{},"parameters":[],"headers":[{"name":"User-Agent","value":"insomnia/8.6.1"}],"authentication":{},"metaSortKey":-1709167236945,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_c730752c3ed64d25ade269e3ab698974","parentId":"fld_9b11aaae69274938904794680661f0d2","modified":1709861852084,"created":1709561150741,"url":"{{ _.url }}/news?tags=docker","name":"GET NEWS BY TAGS","description":"","method":"GET","body":{},"parameters":[],"headers":[{"name":"User-Agent","value":"insomnia/8.6.1"}],"authentication":{},"metaSortKey":-1709167236895,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_1299e64380d442e7b10f288c5249defe","parentId":"fld_9b11aaae69274938904794680661f0d2","modified":1709508570692,"created":1709508505781,"url":"{{ _.url }}/images/1709508555044_1966.png","name":"GET IMAGE","description":"","method":"GET","body":{},"parameters":[],"headers":[{"name":"User-Agent","value":"insomnia/8.4.5"}],"authentication":{},"metaSortKey":-1709167236845,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_c83950345bc94a0c8da1a3b03953b29a","parentId":"fld_9b11aaae69274938904794680661f0d2","modified":1709860695214,"created":1709860648102,"url":"{{ _.url }}/news/21be4ae1-1eab-44fb-8779-0c59ba16587c/publish","name":"PUBLISH NEWS","description":"","method":"PATCH","body":{},"parameters":[],"headers":[{"name":"User-Agent","value":"insomnia/8.4.5"}],"authentication":{},"metaSortKey":-1709167236795,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_beac61d68b5d4c61a0c97cec3868ac15","parentId":"fld_9b11aaae69274938904794680661f0d2","modified":1709860736289,"created":1709860703834,"url":"{{ _.url }}/news/21be4ae1-1eab-44fb-8779-0c59ba16587c/archive","name":"ARCHIVE NEWS","description":"","method":"PATCH","body":{},"parameters":[],"headers":[{"name":"User-Agent","value":"insomnia/8.4.5"}],"authentication":{},"metaSortKey":-1709167236770,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"req_56e4a938663d4081a6feeeee9fe04c8c","parentId":"fld_9b11aaae69274938904794680661f0d2","modified":1709855206729,"created":1709579359223,"url":"{{ _.url }}/news/7663f73c-070a-4908-9a05-9e42e6eb8559","name":"UPDATE NEWS","description":"","method":"PATCH","body":{"mimeType":"multipart/form-data","params":[{"id":"pair_3dbe2b18b0d34eda92b2b991836268a4","name":"title","value":"News update #3","description":"","disabled":false},{"id":"pair_18da3b6fde4247d79563995750fcfd69","name":"summary","value":"update summary test","description":"","disabled":true},{"id":"pair_6de0bf9590ad47898fa9dd9969ec7a02","name":"body","value":"update body test","description":"","disabled":true},{"id":"pair_0831efa719b145f1a96642c3cbf7813a","name":"tags","value":"test,update,docker,luis","description":"","disabled":true},{"id":"pair_2f3e5bfc51d24bbaa161589c97557395","name":"image","value":"","description":"","type":"file","fileName":"C:\\Users\\beu7ca\\Downloads\\Sem título.png","disabled":true}]},"parameters":[],"headers":[{"name":"Content-Type","value":"multipart/form-data"},{"name":"User-Agent","value":"insomnia/8.6.1"}],"authentication":{},"metaSortKey":-1709167236745,"isPrivate":false,"settingStoreCookies":true,"settingSendCookies":true,"settingDisableRenderRequestBody":false,"settingEncodeUrl":true,"settingRebuildPath":true,"settingFollowRedirects":"global","_type":"request"},{"_id":"env_dcaf4b223c24491a900f3c8ce0fa8b25","parentId":"wrk_a81f117a4e024874a129a95a75ffcef1","modified":1709075643766,"created":1709075613623,"name":"Base Environment","data":{"url":"http://127.0.0.1:8766/tech-news"},"dataPropertyOrder":{"&":["url"]},"color":null,"isPrivate":false,"metaSortKey":1709075613623,"_type":"environment"},{"_id":"jar_a8d4898490234cea8921a2510c73a91e","parentId":"wrk_a81f117a4e024874a129a95a75ffcef1","modified":1709075613625,"created":1709075613625,"name":"Default Jar","cookies":[],"_type":"cookie_jar"}]}
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-03-19T15:47:45.188Z",
+  "__export_source": "insomnia.desktop.app:v8.6.1",
+  "resources": [
+    {
+      "_id": "req_fd3ffc03e6cd48a081d88c4fbbc36faf",
+      "parentId": "fld_02a39e9c49784622a6f3db5d97c80106",
+      "modified": 1709078578020,
+      "created": 1709075652713,
+      "url": "{{ _.url }}/tags",
+      "name": "CREATE TAG",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"tag\": \"springboot\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.4.5"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709075652713,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_02a39e9c49784622a6f3db5d97c80106",
+      "parentId": "wrk_77ffed7262b1464a9fc6bd5e2abf2c73",
+      "modified": 1709167228743,
+      "created": 1709075650302,
+      "name": "TAG",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1709075650502,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_77ffed7262b1464a9fc6bd5e2abf2c73",
+      "parentId": null,
+      "modified": 1710847310172,
+      "created": 1710847302011,
+      "name": "tech-news local",
+      "description": "",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "req_e2230ab555a04c9fa5d9273b1d91764f",
+      "parentId": "fld_02a39e9c49784622a6f3db5d97c80106",
+      "modified": 1709078006778,
+      "created": 1709077979722,
+      "url": "{{ _.url }}/tags/all",
+      "name": "GET ALL TAGS",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.4.5"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709075652613,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_c7e16a00bf634fe68eded2f6d6041870",
+      "parentId": "fld_e3ec2859ffb94a11bec3023caecd829b",
+      "modified": 1710857668090,
+      "created": 1710857562434,
+      "url": "{{ _.url }}/comments/786526a1-b204-4b73-8374-fac7b4a84e0d",
+      "name": "CREATE COMMENT",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"author\": \"Luís Beck\",\n\t\"comment\": \"nice news\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.6.1"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1710857562434,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_e3ec2859ffb94a11bec3023caecd829b",
+      "parentId": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "modified": 1710857559824,
+      "created": 1710857559824,
+      "name": "COMMENTS",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1710857559824,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "parentId": "wrk_77ffed7262b1464a9fc6bd5e2abf2c73",
+      "modified": 1709167227036,
+      "created": 1709167218810,
+      "name": "NEWS",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1709075650402,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_21b90e04bd3b4296927b893d9c0ad716",
+      "parentId": "fld_e3ec2859ffb94a11bec3023caecd829b",
+      "modified": 1710858673333,
+      "created": 1710858614732,
+      "url": "{{ _.url }}/comments/786526a1-b204-4b73-8374-fac7b4a84e0d",
+      "name": "GET NEWS COMMENTS",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.6.1"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1710857562334,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_cec2128acf6b4d369c35cb9336cfeb33",
+      "parentId": "fld_f0d968ccd5714f8c802cc4c9cc49ca74",
+      "modified": 1709855410257,
+      "created": 1709851079152,
+      "url": "{{ _.url }}/news/7663f73c-070a-4908-9a05-9e42e6eb8559/backup?level=1",
+      "name": "GET NEWS BACKUPS",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.4.5"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709851079152,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_f0d968ccd5714f8c802cc4c9cc49ca74",
+      "parentId": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "modified": 1709851072000,
+      "created": 1709851069358,
+      "name": "BACKUP",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1709167237195,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_bb58b211fd33496591ecfd640fc77ea3",
+      "parentId": "fld_f0d968ccd5714f8c802cc4c9cc49ca74",
+      "modified": 1709856143867,
+      "created": 1709851751872,
+      "url": "{{ _.url }}/news/7663f73c-070a-4908-9a05-9e42e6eb8559/backup/1/restore",
+      "name": "RESTORE NEWS FROM BACKUP",
+      "description": "",
+      "method": "PUT",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.4.5"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709851079052,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_f479be5194b645d3b0ea42189ec8d168",
+      "parentId": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "modified": 1710847332458,
+      "created": 1709490754065,
+      "url": "{{ _.url }}/news",
+      "name": "CREATE NEWS W IMG",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "pair_d414d1c717e04a398212346aed06e7cd",
+            "name": "author",
+            "value": "Luís Beck",
+            "description": ""
+          },
+          {
+            "id": "pair_f60804041fc74ccdb0b84494536d8576",
+            "name": "title",
+            "value": "News #1",
+            "description": ""
+          },
+          {
+            "id": "pair_cc631090c12b4bd6b776f959e1d71228",
+            "name": "summary",
+            "value": "Teste com upload de imagem",
+            "description": ""
+          },
+          {
+            "id": "pair_a8fa118cc1dc4988a36c692a98a0e4cf",
+            "name": "body",
+            "value": "Espero muito que esteja funcionando o upload de imagens na minha api rest",
+            "description": ""
+          },
+          {
+            "id": "pair_0e4f043e0d7d448b9cbfeb51005a351a",
+            "name": "tags",
+            "value": "docker",
+            "description": "",
+            "type": "text",
+            "multiline": false
+          },
+          {
+            "id": "pair_8e02337d0fa74838bb15ea98a4a82b5d",
+            "name": "image",
+            "value": "",
+            "description": "",
+            "type": "file",
+            "fileName": "C:\\Users\\beu7ca\\Downloads\\docker_facebook_share.png"
+          },
+          {
+            "id": "pair_6f3f18220cbd41b5b0474c4727a88bdf",
+            "name": "isPublished",
+            "value": "false",
+            "description": ""
+          }
+        ]
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "multipart/form-data"
+        },
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.4.5",
+          "id": "pair_22fb3fe092b54b6a942bc3c64f8d8322"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709167237095,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_72846cbaed574f8fa480e890f0ab16a3",
+      "parentId": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "modified": 1709553197657,
+      "created": 1709226579222,
+      "url": "{{ _.url }}/news/preview?sortByView=true&size=3",
+      "name": "GET NEWS PREVIEW",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.6.1"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709167237045,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_71e8106297ba466fa2d96760664b6137",
+      "parentId": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "modified": 1709862515768,
+      "created": 1709862489253,
+      "url": "{{ _.url }}/news/archived",
+      "name": "GET ARCHIVED NEW PREVIEW",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.4.5"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709167236995,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_0aac3280cb4f4757a49cc6f4fa17377c",
+      "parentId": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "modified": 1709862666353,
+      "created": 1709229242335,
+      "url": "{{ _.url }}/news/21be4ae1-1eab-44fb-8779-0c59ba16587c",
+      "name": "GET NEW BY UUID",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.6.1"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709167236945,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_58fa36b5605641769ea6e25db206f5ed",
+      "parentId": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "modified": 1709861852084,
+      "created": 1709561150741,
+      "url": "{{ _.url }}/news?tags=docker",
+      "name": "GET NEWS BY TAGS",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.6.1"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709167236895,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_4bcfcdf7d44345919af2f8eacc675633",
+      "parentId": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "modified": 1709508570692,
+      "created": 1709508505781,
+      "url": "{{ _.url }}/images/1709508555044_1966.png",
+      "name": "GET IMAGE",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.4.5"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709167236845,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_54f939e93c194dbba3ef6a1ba42fd734",
+      "parentId": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "modified": 1710847373103,
+      "created": 1709860648102,
+      "url": "{{ _.url }}/news/786526a1-b204-4b73-8374-fac7b4a84e0d/publish",
+      "name": "PUBLISH NEWS",
+      "description": "",
+      "method": "PATCH",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.4.5"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709167236795,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_b1c5ddabaeb94f0990b52242768647b9",
+      "parentId": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "modified": 1709860736289,
+      "created": 1709860703834,
+      "url": "{{ _.url }}/news/21be4ae1-1eab-44fb-8779-0c59ba16587c/archive",
+      "name": "ARCHIVE NEWS",
+      "description": "",
+      "method": "PATCH",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.4.5"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709167236770,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_3b106f1b2b7e417f80673316fa2a57d7",
+      "parentId": "fld_97d8c6b7296b4118948103ac7a43c14b",
+      "modified": 1709855206729,
+      "created": 1709579359223,
+      "url": "{{ _.url }}/news/7663f73c-070a-4908-9a05-9e42e6eb8559",
+      "name": "UPDATE NEWS",
+      "description": "",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "pair_3dbe2b18b0d34eda92b2b991836268a4",
+            "name": "title",
+            "value": "News update #3",
+            "description": "",
+            "disabled": false
+          },
+          {
+            "id": "pair_18da3b6fde4247d79563995750fcfd69",
+            "name": "summary",
+            "value": "update summary test",
+            "description": "",
+            "disabled": true
+          },
+          {
+            "id": "pair_6de0bf9590ad47898fa9dd9969ec7a02",
+            "name": "body",
+            "value": "update body test",
+            "description": "",
+            "disabled": true
+          },
+          {
+            "id": "pair_0831efa719b145f1a96642c3cbf7813a",
+            "name": "tags",
+            "value": "test,update,docker,luis",
+            "description": "",
+            "disabled": true
+          },
+          {
+            "id": "pair_2f3e5bfc51d24bbaa161589c97557395",
+            "name": "image",
+            "value": "",
+            "description": "",
+            "type": "file",
+            "fileName": "C:\\Users\\beu7ca\\Downloads\\Sem título.png",
+            "disabled": true
+          }
+        ]
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "multipart/form-data"
+        },
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.6.1"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1709167236745,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "env_bc1c6f40817b46cdaad2671846496408",
+      "parentId": "wrk_77ffed7262b1464a9fc6bd5e2abf2c73",
+      "modified": 1710847317292,
+      "created": 1709075613623,
+      "name": "Base Environment",
+      "data": {
+        "url": "http://127.0.0.1:8762/tech-news"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "url"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1709075613623,
+      "_type": "environment"
+    },
+    {
+      "_id": "jar_b898e76612d7411d92fcc4cc83ef9483",
+      "parentId": "wrk_77ffed7262b1464a9fc6bd5e2abf2c73",
+      "modified": 1709075613625,
+      "created": 1709075613625,
+      "name": "Default Jar",
+      "cookies": [],
+      "_type": "cookie_jar"
+    }
+  ]
+}
