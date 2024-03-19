@@ -1,6 +1,6 @@
 # TECH NEWS API DOCUMENTATION 📃
 
-baseUrl: Ihttp://10.234.90.77:8766/tech-news`
+baseUrl: `http://10.234.90.77:8766/tech-news`
 
 
 ## NEWS: 📰
