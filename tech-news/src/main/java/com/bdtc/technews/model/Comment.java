@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "comment")
 @NoArgsConstructor
@@ -21,6 +23,8 @@ public class Comment {
 
     private String author;
 
+    private LocalDateTime publicationDate;
+
     @Column(columnDefinition = "TEXT")
     private String body;
 
@@ -31,6 +35,10 @@ public class Comment {
     public Comment(CommentRequestDto commentDto) {
         this.author = commentDto.author();
         this.body = commentDto.body();
+    }
+
+    public void setPublicationDate(LocalDateTime publicationDate) {
+        this.publicationDate = publicationDate;
     }
 
     public void setNews(News news) {

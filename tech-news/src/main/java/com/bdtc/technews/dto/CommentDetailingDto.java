@@ -8,9 +8,10 @@ public record CommentDetailingDto(
         Long id,
         UUID newsId,
         String author,
+        String publicationDate,
         String body
 ) {
-    public CommentDetailingDto(Comment comment) {
-        this(comment.getId(), comment.getNews().getId(), comment.getAuthor(), comment.getBody());
+    public CommentDetailingDto(Comment comment, String publicationDate) {
+        this(comment.getId(), comment.getNews().getId(), comment.getAuthor(), publicationDate, comment.getBody());
     }
 }
