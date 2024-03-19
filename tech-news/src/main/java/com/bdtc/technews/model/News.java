@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -53,6 +54,12 @@ public class News {
             inverseJoinColumns = @JoinColumn(name = "tag", referencedColumnName = "name")
     )
     private Set<Tag> tags = new HashSet<>();
+
+    @OneToMany(
+            mappedBy = "news",
+            cascade = CascadeType.REMOVE
+    )
+    private List<Comment> comments;
 
     private boolean isPublished;
 
