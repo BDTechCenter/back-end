@@ -148,6 +148,7 @@ Return:
     "summary": "String" (need to review)**
     "body": "Text"
     "imageUrl": "url"
+}
 ```
             
 ### PUT restore news from a backup:
