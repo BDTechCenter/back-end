@@ -33,4 +33,10 @@ public class CommentController {
         Page<CommentDetailingDto> commentsPage = commentService.getCommentsByNewsId(newsId, pageable);
         return ResponseEntity.ok(commentsPage);
     }
+
+    @PostMapping("/{id}/upvote")
+    public ResponseEntity addUpVoteToComment(@PathVariable Long id) {
+        commentService.addUpVoteToComment(id);
+        return ResponseEntity.ok().build();
+    }
 }

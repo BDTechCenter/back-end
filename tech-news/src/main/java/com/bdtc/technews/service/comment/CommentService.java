@@ -50,5 +50,9 @@ public class CommentService {
         ));
     }
 
-
+    @Transactional
+    public void addUpVoteToComment(Long id) {
+        Comment comment = commentRepository.getReferenceById(id);
+        comment.addUpVote();
+    }
 }
