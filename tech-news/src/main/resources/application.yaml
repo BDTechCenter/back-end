@@ -18,3 +18,6 @@ server:
 
 upload:
   dir: ${user.dir}/newsUpload
+
+populate:
+  url: ${BASE_URL}
