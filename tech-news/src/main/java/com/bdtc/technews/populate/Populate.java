@@ -21,15 +21,38 @@ public class Populate {
         System.out.println(baseUrl);
 
         // Creating variables
-        String author = "Raphael";
-        String title = "Title Test API";
-        String summary = "Sumary test api";
-        String body = "Here you can read the body";
-        List<String> tags = List.of("rest-api", "java", "springboot", "microservices");
-        File imageFile = new File("src/main/java/com/bdtc/technews/populate/images/spring.png");
-        boolean isPublished = true;
+        String author1 = "Hermes Renan";
+        String title1 = "The power of Spring Boot";
+        String summary1 = "The reasons to learn SpringBoot to save your project";
+        String body1 = NewsBody.BODY1.getTxt();
+        List<String> tags1 = List.of("ETS", "apprentices", "bosch", "technical-course");
+        File imageFile1 = new File("src/main/java/com/bdtc/technews/populate/images/new1-image.png");
+        boolean isPublished1 = true;
 
-        // Setting up multipart/form-data body
+        String author2 = "Jonatan";
+        String title2 = "AI in Bosch";
+        String summary2 = "How AI can be your best coworker";
+        String body2 = NewsBody.BODY2.getTxt();
+        List<String> tags2 = List.of("ai", "faster-working", "development", "machine-learning");
+        File imageFile2 = new File("src/main/java/com/bdtc/technews/populate/images/new2-image.jfif");
+        boolean isPublished2 = true;
+
+        String author3 = "Astolfo Valeri";
+        String title3 = "The advantages of home office";
+        String summary3 = "Discover how home office can benefit companies and employees";
+        String body3 = NewsBody.BODY3.getTxt();
+        List<String> tags3 = List.of("home-office", "flexible");
+        File imageFile3 = new File("src/main/java/com/bdtc/technews/populate/images/new3-image.jfif");
+        boolean isPublished3 = true;
+
+        createNews(baseUrl, author1, title1, summary1, body1, tags1, imageFile1, isPublished1);
+        createNews(baseUrl, author2, title2, summary2, body2, tags2, imageFile2, isPublished2);
+        createNews(baseUrl, author3, title3, summary3, body3, tags3, imageFile3, isPublished3);
+    }
+
+
+    private static void createNews(String baseUrl, String author, String title, String summary, String body, List<String> tags, File imageFile, boolean isPublished) throws IOException {
+// Setting up multipart/form-data body
         final FileBody fileBody = new FileBody(imageFile, ContentType.DEFAULT_BINARY);
         final StringBody authorBody = new StringBody(author, ContentType.MULTIPART_FORM_DATA);
         final StringBody titleBody = new StringBody(title, ContentType.MULTIPART_FORM_DATA);
