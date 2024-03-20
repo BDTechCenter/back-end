@@ -34,7 +34,7 @@ public class Populate {
         String summary2 = "How AI can be your best coworker";
         String body2 = NewsBody.BODY2.getTxt();
         List<String> tags2 = List.of("ai", "faster-working", "development", "machine-learning");
-        File imageFile2 = new File("src/main/java/com/bdtc/technews/populate/images/new2-image.jfif");
+        File imageFile2 = new File("src/main/java/com/bdtc/technews/populate/images/new2-image.png");
         boolean isPublished2 = true;
 
         String author3 = "Astolfo Valeri";
@@ -42,7 +42,7 @@ public class Populate {
         String summary3 = "Discover how home office can benefit companies and employees";
         String body3 = NewsBody.BODY3.getTxt();
         List<String> tags3 = List.of("home-office", "flexible");
-        File imageFile3 = new File("src/main/java/com/bdtc/technews/populate/images/new3-image.jfif");
+        File imageFile3 = new File("src/main/java/com/bdtc/technews/populate/images/new3-image.png");
         boolean isPublished3 = true;
 
         createNews(baseUrl, author1, title1, summary1, body1, tags1, imageFile1, isPublished1);
