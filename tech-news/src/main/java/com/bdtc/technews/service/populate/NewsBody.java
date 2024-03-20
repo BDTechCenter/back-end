@@ -1,4 +1,4 @@
-package com.bdtc.technews.populate;
+package com.bdtc.technews.service.populate;
 
 public enum NewsBody {
     BODY1("Lorem ipsum dolor sit amet"),

@@ -1,4 +1,4 @@
-package com.bdtc.technews.populate;
+package com.bdtc.technews.service.populate;
 
 import org.apache.hc.client5.http.entity.mime.FileBody;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
@@ -26,7 +26,7 @@ public class Populate {
         String summary1 = "The reasons to learn SpringBoot to save your project";
         String body1 = NewsBody.BODY1.getTxt();
         List<String> tags1 = List.of("ETS", "apprentices", "bosch", "technical-course");
-        File imageFile1 = new File("src/main/java/com/bdtc/technews/populate/images/new1-image.png");
+        File imageFile1 = new File("src/main/java/com/bdtc/technews/service/populate/images/new1-image.png");
         boolean isPublished1 = true;
 
         String author2 = "Jonatan";
@@ -34,7 +34,7 @@ public class Populate {
         String summary2 = "How AI can be your best coworker";
         String body2 = NewsBody.BODY2.getTxt();
         List<String> tags2 = List.of("ai", "faster-working", "development", "machine-learning");
-        File imageFile2 = new File("src/main/java/com/bdtc/technews/populate/images/new2-image.png");
+        File imageFile2 = new File("src/main/java/com/bdtc/technews/service/populate/images/new2-image.png");
         boolean isPublished2 = true;
 
         String author3 = "Astolfo Valeri";
@@ -42,7 +42,7 @@ public class Populate {
         String summary3 = "Discover how home office can benefit companies and employees";
         String body3 = NewsBody.BODY3.getTxt();
         List<String> tags3 = List.of("home-office", "flexible");
-        File imageFile3 = new File("src/main/java/com/bdtc/technews/populate/images/new3-image.png");
+        File imageFile3 = new File("src/main/java/com/bdtc/technews/service/populate/images/new3-image.png");
         boolean isPublished3 = true;
 
         createNews(baseUrl, author1, title1, summary1, body1, tags1, imageFile1, isPublished1);
