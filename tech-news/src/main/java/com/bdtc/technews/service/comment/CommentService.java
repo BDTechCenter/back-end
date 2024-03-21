@@ -3,9 +3,12 @@ package com.bdtc.technews.service.comment;
 import com.bdtc.technews.dto.CommentDetailingDto;
 import com.bdtc.technews.dto.CommentRequestDto;
 import com.bdtc.technews.http.auth.service.AuthClientService;
+import com.bdtc.technews.infra.exception.validation.BusinessRuleException;
 import com.bdtc.technews.model.Comment;
+import com.bdtc.technews.model.CommentUpVoter;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.CommentRepository;
+import com.bdtc.technews.repository.CommentUpVoterRepository;
 import com.bdtc.technews.service.news.NewsService;
 import com.bdtc.technews.service.news.utils.DateHandler;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,6 +26,9 @@ public class CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private CommentUpVoterRepository commentUpVoterRepository;
 
     @Autowired
     private NewsService newsService;
@@ -56,10 +62,19 @@ public class CommentService {
     }
 
     @Transactional
-    public void addUpVoteToComment(Long id) {
+    public void addUpVoteToComment(String tokenJWT, Long id) {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
         Comment comment = commentRepository.getReferenceById(id);
+        String currentUserEmail = authService.getNtwUser(tokenJWT);
+
+        if(commentUpVoterRepository.existsByVoterEmailAndCommentId(currentUserEmail, comment.getId())) {
+            throw new BusinessRuleException("You cant upVote twice!");
+        }
+
+        CommentUpVoter commentUpVoter = new CommentUpVoter(currentUserEmail, comment);
+        comment.getCommentUpVoters().add(commentUpVoter);
+        commentUpVoterRepository.save(commentUpVoter);
 
         comment.addUpVote();
     }
