@@ -36,8 +36,8 @@ public class CommentController {
     }
 
     @PostMapping("/{id}/upvote")
-    public ResponseEntity addUpVoteToComment(@PathVariable Long id) {
-        commentService.addUpVoteToComment(id);
+    public ResponseEntity addUpVoteToComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id) {
+        commentService.addUpVoteToComment(tokenJWT, id);
         return ResponseEntity.ok().build();
     }
 }
