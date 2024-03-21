@@ -13,6 +13,6 @@ public class AuthClientService {
 
     public String getNtwUser(String tokenJWT) {
         UserDto userDetails = authClient.getUserDetails(tokenJWT);
-        return userDetails.ntwUser();
+        return userDetails.networkUser();
     }
 }
