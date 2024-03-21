@@ -2,11 +2,13 @@ package com.bdtc.technews.service.comment;
 
 import com.bdtc.technews.dto.CommentDetailingDto;
 import com.bdtc.technews.dto.CommentRequestDto;
+import com.bdtc.technews.http.auth.service.AuthClientService;
 import com.bdtc.technews.model.Comment;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.CommentRepository;
 import com.bdtc.technews.service.news.NewsService;
 import com.bdtc.technews.service.news.utils.DateHandler;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,9 @@ public class CommentService {
 
     @Autowired
     private DateHandler dateHandler;
+
+    @Autowired
+    private AuthClientService authService;
 
     @Transactional
     public CommentDetailingDto createComment(UUID newsId, CommentRequestDto commentRequestDto) {
@@ -52,7 +57,10 @@ public class CommentService {
 
     @Transactional
     public void addUpVoteToComment(Long id) {
+        if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
+
         Comment comment = commentRepository.getReferenceById(id);
+
         comment.addUpVote();
     }
 }
