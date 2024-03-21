@@ -21,4 +21,9 @@ public class CommentUpVoter {
     @ManyToOne
     @JoinColumn(name = "comment_id")
     private Comment comment;
+
+    public CommentUpVoter(String voterEmail, Comment comment) {
+        this.voterEmail = voterEmail;
+        this.comment = comment;
+    }
 }
