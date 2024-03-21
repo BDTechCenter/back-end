@@ -36,6 +36,7 @@ public class CommentController {
     }
 
     @PostMapping("/{id}/upvote")
+    @Transactional
     public ResponseEntity addUpVoteToComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id) {
         commentService.addUpVoteToComment(tokenJWT, id);
         return ResponseEntity.ok().build();
