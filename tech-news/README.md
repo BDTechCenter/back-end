@@ -124,6 +124,42 @@ Endpoint: `/news/{uuid}/publish`
 Endpoint: `/news/{uuid}/archive`
 
 
+## NEWS COMMENTS:
+
+### POST comment:
+Endpoint: `/news/comments/{newsId}`
+
+Type: Json
+
+Attributes: 
+    
+    author: String (temporarily)**
+    comment: String
+
+
+### GET comments:
+Obs: always returning base on upVotes (relevance)
+
+Endpoint: `/news/comments/{newsId}`
+
+Return:
+```json
+{
+    "id": long
+    "newsId": "uuid"
+    "author": "String"
+    "publicationDate": "String"
+    "comment": "String",
+    "upVotes": int
+}
+```
+
+### POST comment upVote
+Endpoint: `/news/comments/{id}/upvote`
+
+Return: HTTP.Status.OK
+
+
 ## NEWS BACKUP:
 
 ### GET news backup by ID:
