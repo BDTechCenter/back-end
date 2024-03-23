@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "comment")
@@ -32,6 +33,14 @@ public class Comment {
     @JoinColumn(name = "news_id")
     private News news;
 
+    private int upVotes;
+
+    @OneToMany(
+            mappedBy = "comment",
+            cascade = CascadeType.REMOVE
+    )
+    private List<CommentUpVoter> commentUpVoters;
+
     public Comment(CommentRequestDto commentDto) {
         this.author = commentDto.author();
         this.comment = commentDto.comment();
@@ -43,5 +52,9 @@ public class Comment {
 
     public void setNews(News news) {
         this.news = news;
+    }
+
+    public void addUpVote() {
+        this.upVotes += 1;
     }
 }
