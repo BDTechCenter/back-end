@@ -23,9 +23,6 @@ public class NewsBackup {
     @Column(length = 100)
     private String title;
 
-    @Column(length = 255)
-    private String summary;
-
     @Column(columnDefinition = "TEXT")
     private String body;
 
@@ -34,7 +31,6 @@ public class NewsBackup {
     public NewsBackup(News news) {
         this.newsId = news.getId();
         this.title = news.getTitle();
-        this.summary = news.getSummary();
         this.body = news.getBody();
         this.imageUrl = news.getImageUrl();
     }
