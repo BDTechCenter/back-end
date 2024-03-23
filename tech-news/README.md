@@ -14,11 +14,10 @@ Attributes:
 
     author: String (temporarily)**
     title: String
-    summary: String (need to review)**
     body: Text
     tags: List<String>
-    image: file
-    isPublished: boolean
+    image: file (optional)
+    isPublished: boolean (optional)
 
 
 ### GET news preview:
@@ -26,12 +25,11 @@ Endpoint: `/news/preview`
 
 Type: pathParameters
 
-    latest: boolean (optional)
-    sortByView: boolean (optional)
+    sortBy: String (optional) ['view' or 'latest']
     size: int (optional)
     page: int (optional)
 
-e.g.: `/news/preview?latest=true&size=5&page=2`
+e.g.: `/news/preview?sortBy=latest&size=5&page=2`
     
 Obs: can't use latest and sortByView together
 
@@ -50,14 +48,13 @@ Return:
 Endpoint: `/news/{uuid}`
 
 Return:
-```
+```json
 {
     "id": UUID
     "author": "String" 
     "creationDate": "String"
     "updateDate": "String"
     "title": "String"
-    "summary": "String" (need to review)**
     "body": "Text"
     "tags": List<String>
     "imageUrl": "url"
@@ -114,7 +111,6 @@ Type: Multpartform
 Attributes:
 
     title: String (optional)
-    summary: String (optional)
     body: Text (optional)
     tags: List<String> (optional)
     image: file (optional) 
@@ -140,12 +136,11 @@ Type: pathParameters
 e.g.: `/news/ne7uhd-75h/backup?level=2`
 
 Return: 
-```
+```json
 {
     "id": long
     "newsId": "uuid"
     "title": "String"
-    "summary": "String" (need to review)**
     "body": "Text"
     "imageUrl": "url"
 }
@@ -155,14 +150,13 @@ Return:
 Endpoint: `/news/{uuid}/backup/{backupId}/restore`
 
 Return:
-```
+```json
 {
     "id": UUID
     "author": "String" 
     "creationDate": "String"
     "updateDate": "String"
     "title": "String"
-    "summary": "String" (need to review)**
     "body": "Text"
     "tags": List<String>
     "imageUrl": "url"
