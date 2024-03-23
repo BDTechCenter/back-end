@@ -4,12 +4,12 @@ import com.bdtc.technews.dto.NewsDetailingDto;
 import com.bdtc.technews.dto.NewsPreviewDto;
 import com.bdtc.technews.dto.NewsRequestDto;
 import com.bdtc.technews.dto.NewsUpdateDto;
-import com.bdtc.technews.infra.exception.validation.ConflictInPathParameters;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.model.Tag;
 import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
 import com.bdtc.technews.service.news.utils.DateHandler;
+import com.bdtc.technews.service.news.utils.FilterHandler;
 import com.bdtc.technews.service.news.utils.ImageHandler;
 import com.bdtc.technews.service.news.utils.TagHandler;
 import com.bdtc.technews.service.tag.TagService;
@@ -47,6 +47,9 @@ public class NewsService {
     @Autowired
     private NewsBackupService newsBackupService;
 
+    @Autowired
+    private FilterHandler filterHandler;
+
     @Transactional
     public NewsDetailingDto createNews(NewsRequestDto newsDto) {
         News news = new News(newsDto);
@@ -68,18 +71,15 @@ public class NewsService {
         );
     }
 
-    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, boolean sortByView, boolean latest) {
+    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String sortBy) {
         Page<News> newsPage;
 
-        if(sortByView && latest) throw new ConflictInPathParameters("We can't sort by viewed and most recent at the same time. Choose just one of the parameters 'sortByView' or 'latest'");
+        filterHandler.validateFilter(sortBy);
 
-        if(sortByView) {
-            newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
-        } else if (latest) {
-            newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
-        } else {
-            newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
-        }
+        if(sortBy.equals("view")) newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
+        else if (sortBy.equals("latest")) newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
+        else newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
+
         return newsPage.map(news -> new NewsPreviewDto(
                 news,
                 dateHandler.formatDate(news.getUpdateDate())
