@@ -69,7 +69,7 @@ public class News {
         this.summary = newsDto.summary();
         this.body = newsDto.body();
         this.views = 0L;
-        this.isPublished = newsDto.isPublished();
+        this.isPublished = Boolean.parseBoolean(newsDto.isPublished());
     }
 
     public void setCreationDate(LocalDateTime creationDate) {
