@@ -37,9 +37,6 @@ public class News {
     @Column(length = 100)
     private String title;
 
-    @Column(length = 255)
-    private String summary;
-
     @Column(columnDefinition = "TEXT")
     private String body;
 
@@ -66,7 +63,6 @@ public class News {
     public News(NewsRequestDto newsDto) {
         this.author = newsDto.author();
         this.title = newsDto.title();
-        this.summary = newsDto.summary();
         this.body = newsDto.body();
         this.views = 0L;
         this.isPublished = Boolean.parseBoolean(newsDto.isPublished());
@@ -100,9 +96,6 @@ public class News {
         this.title = title;
     }
 
-    public void updateSummary(String summary) {
-        this.summary = summary;
-    }
 
     public void updateBody(String body) {
         this.body = body;
@@ -110,7 +103,6 @@ public class News {
 
     public void restoreBackup(NewsBackup newsBackup) {
         this.title = newsBackup.getTitle();
-        this.summary = newsBackup.getSummary();
         this.body = newsBackup.getBody();
         this.imageUrl = newsBackup.getImageUrl();
     }

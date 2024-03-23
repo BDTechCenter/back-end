@@ -12,8 +12,6 @@ public record NewsRequestDto(
         @NotBlank
         String title,
         @NotBlank
-        String summary,
-        @NotBlank
         String body,
         @NotEmpty
         Set<String> tags,

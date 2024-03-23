@@ -147,7 +147,6 @@ public class NewsService {
         newsBackupService.createNewsBackup(news, null);
 
         if(updateDto.title() !=null) news.updateTitle(updateDto.title());
-        if(updateDto.summary() !=null) news.updateSummary(updateDto.summary());
         if(updateDto.body() !=null) news.updateBody(updateDto.body());
 
         if(updateDto.tags() !=null) {
