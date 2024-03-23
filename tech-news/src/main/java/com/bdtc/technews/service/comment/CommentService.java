@@ -54,7 +54,7 @@ public class CommentService {
 
     public Page<CommentDetailingDto> getCommentsByNewsId(UUID newsId, Pageable pageable) {
         News news = newsService.getNews(newsId);
-        Page<Comment> commentsPage = commentRepository.findAllByNews(news, pageable);
+        Page<Comment> commentsPage = commentRepository.getCommentByRelevance(news, pageable);
         return commentsPage.map(comment -> new CommentDetailingDto(
                 comment,
                 dateHandler.formatDate(comment.getPublicationDate())
