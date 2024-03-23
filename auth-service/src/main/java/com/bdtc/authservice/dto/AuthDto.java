@@ -3,7 +3,7 @@ package com.bdtc.authservice.dto;
 import com.bdtc.authservice.model.Auth;
 
 public record AuthDto(
-        String network_user,
+        String networkUser,
         String username
 ) {
     public AuthDto(Auth auth) {
