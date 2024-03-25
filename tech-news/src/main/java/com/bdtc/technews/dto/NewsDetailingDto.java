@@ -17,6 +17,8 @@ public record NewsDetailingDto(
         String title,
         String body,
         Set<String> tags,
+        Long views,
+        int upVotes,
         String imageUrl,
         boolean isPublished
 ) {
@@ -29,6 +31,8 @@ public record NewsDetailingDto(
                 news.getTitle(),
                 news.getBody(),
                 tags,
+                news.getViews(),
+                news.getUpVotes(),
                 news.getImageUrl(),
                 news.isPublished()
         );
