@@ -87,7 +87,8 @@ public class NewsService {
         filterHandler.validateFilter(sortBy);
 
         if(sortBy.equals("view")) newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
-        else if (sortBy.equals("latest")) newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
+        else if(sortBy.equals("latest")) newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
+        else if(sortBy.equals("relevance")) newsPage = newsRepository.getNewsByRelevance(pageable);
         else newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
 
         return newsPage.map(news -> new NewsPreviewDto(

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Component
 public class FilterHandler {
-    private List<String> filterOptions = List.of("view", "latest");
+    private List<String> filterOptions = List.of("view", "latest", "relevance");
 
     public void validateFilter(String sortBy) {
         boolean validOption=false;
@@ -17,6 +17,6 @@ public class FilterHandler {
                 break;
             }
         }
-        if(!validOption) throw new ConflictInPathParameters("Invalid option for filter! Choose between 'view' and 'latest'!");
+        if(!validOption) throw new ConflictInPathParameters("Invalid option for filter! Choose between 'view', 'latest' and 'relevance'!");
     }
 }
