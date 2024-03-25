@@ -60,6 +60,14 @@ public class News {
 
     private boolean isPublished;
 
+    private int upVotes;
+
+    @OneToMany(
+            mappedBy = "news",
+            cascade = CascadeType.REMOVE
+    )
+    private List<NewsUpVoter> newsUpVoters;
+
     public News(NewsRequestDto newsDto) {
         this.author = newsDto.author();
         this.title = newsDto.title();
@@ -113,5 +121,9 @@ public class News {
 
     public void publishNews() {
         this.isPublished = true;
+    }
+
+    public void addUpVote() {
+        this.upVotes += 1;
     }
 }
