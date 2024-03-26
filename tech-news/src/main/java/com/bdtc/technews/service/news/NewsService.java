@@ -4,9 +4,13 @@ import com.bdtc.technews.dto.NewsDetailingDto;
 import com.bdtc.technews.dto.NewsPreviewDto;
 import com.bdtc.technews.dto.NewsRequestDto;
 import com.bdtc.technews.dto.NewsUpdateDto;
+import com.bdtc.technews.http.auth.service.AuthClientService;
+import com.bdtc.technews.infra.exception.validation.BusinessRuleException;
 import com.bdtc.technews.model.News;
+import com.bdtc.technews.model.NewsUpVoter;
 import com.bdtc.technews.model.Tag;
 import com.bdtc.technews.repository.NewsRepository;
+import com.bdtc.technews.repository.NewsUpVoterRepository;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
 import com.bdtc.technews.service.news.utils.DateHandler;
 import com.bdtc.technews.service.news.utils.FilterHandler;
@@ -33,6 +37,9 @@ public class NewsService {
     private NewsRepository newsRepository;
 
     @Autowired
+    private NewsUpVoterRepository newsUpVoterRepository;
+
+    @Autowired
     private TagService tagService;
 
     @Autowired
@@ -49,6 +56,9 @@ public class NewsService {
 
     @Autowired
     private FilterHandler filterHandler;
+
+    @Autowired
+    private AuthClientService authService;
 
     @Transactional
     public NewsDetailingDto createNews(NewsRequestDto newsDto) {
@@ -77,7 +87,8 @@ public class NewsService {
         filterHandler.validateFilter(sortBy);
 
         if(sortBy.equals("view")) newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
-        else if (sortBy.equals("latest")) newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
+        else if(sortBy.equals("latest")) newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
+        else if(sortBy.equals("relevance")) newsPage = newsRepository.getNewsByRelevance(pageable);
         else newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
 
         return newsPage.map(news -> new NewsPreviewDto(
@@ -172,5 +183,23 @@ public class NewsService {
         if(!newsRepository.existsById(id)) throw new EntityNotFoundException();
         News news = newsRepository.getReferenceById(id);
         return news;
+    }
+
+    @Transactional
+    public void addUpVoteToNews(String tokenJWT, UUID newsId) {
+        if(!newsRepository.existsById(newsId)) throw new EntityNotFoundException();
+
+        News news = newsRepository.getReferenceById(newsId);
+        String currentUserEmail = authService.getNtwUser(tokenJWT);
+
+        if(newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId())) {
+            throw new BusinessRuleException("You cant upVote twice!");
+        }
+
+        NewsUpVoter newsUpVoter = new NewsUpVoter(currentUserEmail, news);
+        news.getNewsUpVoters().add(newsUpVoter);
+        newsUpVoterRepository.save(newsUpVoter);
+
+        news.addUpVote();
     }
 }

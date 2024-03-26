@@ -87,4 +87,10 @@ public class NewsController {
         NewsDetailingDto news = newsBackupService.restoreNewsFromABackup(id, backupId);
         return ResponseEntity.ok(news);
     }
+
+    @PostMapping("/{id}/upvote")
+    public ResponseEntity addUpVoteToNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+        newsService.addUpVoteToNews(tokenJWT, id);
+        return ResponseEntity.ok().build();
+    }
 }

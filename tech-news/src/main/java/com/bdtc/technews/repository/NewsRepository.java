@@ -40,4 +40,11 @@ public interface NewsRepository extends JpaRepository<News, UUID> {
             """
     )
     Page<News> findByIsPublishedTrueAndLatestUpdate(Pageable pageable);
+
+    @Query("""
+            SELECT n FROM News n
+            WHERE n.isPublished = true
+            ORDER BY n.upVotes DESC
+            """)
+    Page<News> getNewsByRelevance(Pageable pageable);
 }
