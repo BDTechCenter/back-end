@@ -1,9 +1,6 @@
 package com.bdtc.technews.infra.exception.error;
 
-import com.bdtc.technews.infra.exception.validation.BusinessRuleException;
-import com.bdtc.technews.infra.exception.validation.ConflictInPathParameters;
-import com.bdtc.technews.infra.exception.validation.ExceededTheExistingBackupLevelException;
-import com.bdtc.technews.infra.exception.validation.ThereIsNoBackupForThisNewsException;
+import com.bdtc.technews.infra.exception.validation.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -42,7 +39,17 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler(ConflictInPathParameters.class)
-    public ResponseEntity ConflictPathParametersHandler(ConflictInPathParameters exception) {
+    public ResponseEntity conflictPathParametersHandler(ConflictInPathParameters exception) {
         return ResponseEntity.badRequest().body(new ValidationErrorData("pathParameters", exception.getMessage()));
+    }
+
+    @ExceptionHandler(AlreadyUpVotedException.class)
+    public ResponseEntity alreadyUpVotedHandler(AlreadyUpVotedException exception) {
+        return ResponseEntity.badRequest().body(new ValidationErrorData("upVote", exception.getMessage()));
+    }
+
+    @ExceptionHandler(AuthClientInvalidTokenException.class)
+    public ResponseEntity invalidTokenHandler(AuthClientInvalidTokenException exception) {
+        return ResponseEntity.badRequest().body(new ValidationErrorData("token", exception.getMessage()));
     }
 }

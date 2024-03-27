@@ -3,6 +3,7 @@ package com.bdtc.technews.service.comment;
 import com.bdtc.technews.dto.CommentDetailingDto;
 import com.bdtc.technews.dto.CommentRequestDto;
 import com.bdtc.technews.http.auth.service.AuthClientService;
+import com.bdtc.technews.infra.exception.validation.AlreadyUpVotedException;
 import com.bdtc.technews.infra.exception.validation.BusinessRuleException;
 import com.bdtc.technews.model.Comment;
 import com.bdtc.technews.model.CommentUpVoter;
@@ -69,7 +70,7 @@ public class CommentService {
         String currentUserEmail = authService.getNtwUser(tokenJWT);
 
         if(commentUpVoterRepository.existsByVoterEmailAndCommentId(currentUserEmail, comment.getId())) {
-            throw new BusinessRuleException("You cant upVote twice!");
+            throw new AlreadyUpVotedException();
         }
 
         CommentUpVoter commentUpVoter = new CommentUpVoter(currentUserEmail, comment);
