@@ -14,7 +14,7 @@ sudo chmod +x ./startDocker.sh
 ```
 
 
-Fix possible interpretation errors
+Fix possible interpreter error
 ```powershell
 sed -i 's/\r$//' ./startDocker.sh
 ```
