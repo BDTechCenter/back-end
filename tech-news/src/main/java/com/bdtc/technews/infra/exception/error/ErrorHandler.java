@@ -43,6 +43,11 @@ public class ErrorHandler {
         return ResponseEntity.badRequest().body(new ValidationErrorData("pathParameters", exception.getMessage()));
     }
 
+    @ExceptionHandler(AlreadyUpVotedException.class)
+    public ResponseEntity alreadyUpVotedHandler(AlreadyUpVotedException exception) {
+        return ResponseEntity.badRequest().body(new ValidationErrorData("upVote", exception.getMessage()));
+    }
+
     @ExceptionHandler(AuthClientInvalidTokenException.class)
     public ResponseEntity invalidTokenHandler(AuthClientInvalidTokenException exception) {
         return ResponseEntity.badRequest().body(new ValidationErrorData("token", exception.getMessage()));

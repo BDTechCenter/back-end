@@ -5,6 +5,7 @@ import com.bdtc.technews.dto.NewsPreviewDto;
 import com.bdtc.technews.dto.NewsRequestDto;
 import com.bdtc.technews.dto.NewsUpdateDto;
 import com.bdtc.technews.http.auth.service.AuthClientService;
+import com.bdtc.technews.infra.exception.validation.AlreadyUpVotedException;
 import com.bdtc.technews.infra.exception.validation.BusinessRuleException;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.model.NewsUpVoter;
@@ -193,7 +194,7 @@ public class NewsService {
         String currentUserEmail = authService.getNtwUser(tokenJWT);
 
         if(newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId())) {
-            throw new BusinessRuleException("You cant upVote twice!");
+            throw new AlreadyUpVotedException();
         }
 
         NewsUpVoter newsUpVoter = new NewsUpVoter(currentUserEmail, news);
