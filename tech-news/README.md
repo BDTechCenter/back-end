@@ -25,13 +25,11 @@ Endpoint: `/news/preview`
 
 Type: pathParameters
 
-    sortBy: String (optional) ['view' or 'latest']
+    sortBy: String (optional) ['view', 'latest' or 'relevance']
     size: int (optional)
     page: int (optional)
 
-e.g.: `/news/preview?sortBy=latest&size=5&page=2`
-    
-Obs: can't use latest and sortByView together
+e.g.: `/news/preview?sortBy=relevance&size=5&page=2`
 
 Return:
 ```json
@@ -123,11 +121,18 @@ Endpoint: `/news/{uuid}/publish`
 ### PATCH archive news: 
 Endpoint: `/news/{uuid}/archive`
 
+### POST upVote for news
+Endpoint `/news/{uuid}/upvote`
+
+Type: Header
+
+    Authorization: Bearer token (azure)
+
 
 ## NEWS COMMENTS:
 
 ### POST comment:
-Endpoint: `/news/comments/{newsId}`
+Endpoint: `/comments/{newsId}`
 
 Type: Json
 
@@ -140,7 +145,7 @@ Attributes:
 ### GET comments:
 Obs: always returning base on upVotes (relevance)
 
-Endpoint: `/news/comments/{newsId}`
+Endpoint: `/comments/{newsId}`
 
 Return:
 ```json
@@ -149,15 +154,17 @@ Return:
     "newsId": "uuid"
     "author": "String"
     "publicationDate": "String"
-    "comment": "String",
+    "comment": "String"
     "upVotes": int
 }
 ```
 
-### POST comment upVote
-Endpoint: `/news/comments/{id}/upvote`
+### POST upVote for comments
+Endpoint `/comments/{id}/upvote`
 
-Return: HTTP.Status.OK
+Type: Header
+
+    Authorization: Bearer token (azure)
 
 
 ## NEWS BACKUP:
