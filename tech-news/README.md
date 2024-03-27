@@ -14,11 +14,10 @@ Attributes:
 
     author: String (temporarily)**
     title: String
-    summary: String (need to review)**
     body: Text
     tags: List<String>
-    image: file
-    isPublished: boolean
+    image: file (optional)
+    isPublished: boolean (optional)
 
 
 ### GET news preview:
@@ -26,14 +25,11 @@ Endpoint: `/news/preview`
 
 Type: pathParameters
 
-    latest: boolean (optional)
-    sortByView: boolean (optional)
+    sortBy: String (optional) ['view', 'latest' or 'relevance']
     size: int (optional)
     page: int (optional)
 
-e.g.: `/news/preview?latest=true&size=5&page=2`
-    
-Obs: can't use latest and sortByView together
+e.g.: `/news/preview?sortBy=relevance&size=5&page=2`
 
 Return:
 ```json
@@ -50,14 +46,13 @@ Return:
 Endpoint: `/news/{uuid}`
 
 Return:
-```
+```json
 {
     "id": UUID
     "author": "String" 
     "creationDate": "String"
     "updateDate": "String"
     "title": "String"
-    "summary": "String" (need to review)**
     "body": "Text"
     "tags": List<String>
     "imageUrl": "url"
@@ -114,7 +109,6 @@ Type: Multpartform
 Attributes:
 
     title: String (optional)
-    summary: String (optional)
     body: Text (optional)
     tags: List<String> (optional)
     image: file (optional) 
@@ -126,6 +120,51 @@ Endpoint: `/news/{uuid}/publish`
 
 ### PATCH archive news: 
 Endpoint: `/news/{uuid}/archive`
+
+### POST upVote for news
+Endpoint `/news/{uuid}/upvote`
+
+Type: Header
+
+    Authorization: Bearer token (azure)
+
+
+## NEWS COMMENTS:
+
+### POST comment:
+Endpoint: `/comments/{newsId}`
+
+Type: Json
+
+Attributes: 
+    
+    author: String (temporarily)**
+    comment: String
+
+
+### GET comments:
+Obs: always returning base on upVotes (relevance)
+
+Endpoint: `/comments/{newsId}`
+
+Return:
+```json
+{
+    "id": long
+    "newsId": "uuid"
+    "author": "String"
+    "publicationDate": "String"
+    "comment": "String"
+    "upVotes": int
+}
+```
+
+### POST upVote for comments
+Endpoint `/comments/{id}/upvote`
+
+Type: Header
+
+    Authorization: Bearer token (azure)
 
 
 ## NEWS BACKUP:
@@ -140,12 +179,11 @@ Type: pathParameters
 e.g.: `/news/ne7uhd-75h/backup?level=2`
 
 Return: 
-```
+```json
 {
     "id": long
     "newsId": "uuid"
     "title": "String"
-    "summary": "String" (need to review)**
     "body": "Text"
     "imageUrl": "url"
 }
@@ -155,14 +193,13 @@ Return:
 Endpoint: `/news/{uuid}/backup/{backupId}/restore`
 
 Return:
-```
+```json
 {
     "id": UUID
     "author": "String" 
     "creationDate": "String"
     "updateDate": "String"
     "title": "String"
-    "summary": "String" (need to review)**
     "body": "Text"
     "tags": List<String>
     "imageUrl": "url"
