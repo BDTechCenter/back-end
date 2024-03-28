@@ -6,6 +6,7 @@ import com.bdtc.technews.service.news.NewsService;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/news")
+@CrossOrigin(origins = "${frontend.host}")
 public class NewsController {
 
     @Autowired
