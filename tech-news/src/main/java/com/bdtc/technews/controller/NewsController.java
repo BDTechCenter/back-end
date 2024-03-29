@@ -1,12 +1,10 @@
 package com.bdtc.technews.controller;
 
 import com.bdtc.technews.dto.*;
-import com.bdtc.technews.model.News;
 import com.bdtc.technews.service.news.NewsService;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -18,7 +16,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/news")
-@CrossOrigin(origins = "${frontend.host}")
 public class NewsController {
 
     @Autowired
@@ -90,9 +87,9 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
-    @PostMapping("/{id}/upvote")
+    @PatchMapping("/{id}/upvote")
     public ResponseEntity addUpVoteToNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
-        newsService.addUpVoteToNews(tokenJWT, id);
+        newsService.addUpVoteToNews(id);
         return ResponseEntity.ok().build();
     }
 }

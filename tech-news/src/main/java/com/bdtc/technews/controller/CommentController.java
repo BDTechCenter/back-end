@@ -17,7 +17,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/comments")
-@CrossOrigin(origins = "${frontend.host}")
 public class CommentController {
 
     @Autowired

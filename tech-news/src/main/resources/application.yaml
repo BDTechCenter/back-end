@@ -10,11 +10,11 @@ spring:
   application:
     name: tech-news
 
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 100MB
-      max-request-size: 200MB
+#  servlet:
+#    multipart:
+#      enabled: true
+#      max-file-size: 100MB
+#      max-request-size: 200MB
 
 server:
   error:
@@ -29,4 +29,5 @@ populate:
   url: ${BASE_URL}
 
 frontend:
-  host: http://192.168.15.5:3000
+  host: http://127.0.0.1:3000
+

@@ -11,11 +11,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/images")
-@CrossOrigin(origins = "${frontend.host}")
 public class ImageController {
 
     // TEMPORARY CONTROLLER
