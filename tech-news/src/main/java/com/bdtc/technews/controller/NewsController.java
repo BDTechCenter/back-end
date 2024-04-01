@@ -89,9 +89,9 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
-    @GetMapping("/{id}/upvote")
+    @PatchMapping("/{id}/upvote")
     public ResponseEntity addUpVoteToNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
-        newsService.addUpVoteToNews(id);
+        newsService.addUpVoteToNews(tokenJWT, id);
         return ResponseEntity.ok().build();
     }
 }
