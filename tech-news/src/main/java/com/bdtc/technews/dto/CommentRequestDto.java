@@ -5,9 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 
 public record CommentRequestDto(
         @NotBlank
-        String author,
-
-        @NotBlank
         String comment
 ) {
 }

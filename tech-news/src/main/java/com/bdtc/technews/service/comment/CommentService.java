@@ -41,11 +41,13 @@ public class CommentService {
     private AuthClientService authService;
 
     @Transactional
-    public CommentDetailingDto createComment(UUID newsId, CommentRequestDto commentRequestDto) {
+    public CommentDetailingDto createComment(String tokenJWT, UUID newsId, CommentRequestDto commentRequestDto) {
         Comment comment = new Comment(commentRequestDto);
+        String currentUserEmail = authService.getNtwUser(tokenJWT);
         LocalDateTime date = dateHandler.getCurrentDateTime();
         News news = newsService.getNews(newsId);
 
+        comment.setAuthor(currentUserEmail);
         comment.setPublicationDate(date);
         comment.setNews(news);
         commentRepository.save(comment);
