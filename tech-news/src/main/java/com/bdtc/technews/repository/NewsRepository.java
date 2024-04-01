@@ -47,4 +47,11 @@ public interface NewsRepository extends JpaRepository<News, UUID> {
             ORDER BY n.upVotes DESC
             """)
     Page<News> getNewsByRelevance(Pageable pageable);
+
+    @Query("""
+           SELECT n FROM News n
+           WHERE n.isPublished = true
+           AND LOWER(n.title) LIKE LOWER(CONCAT('%', :titleFilter, '%')) 
+           """)
+    Page<News> findAllByLikeTitleFilter(Pageable pageable, String titleFilter);
 }
