@@ -1,6 +1,7 @@
 package com.bdtc.technews.controller;
 
 import com.bdtc.technews.dto.CommentDetailingDto;
+import com.bdtc.technews.dto.CommentDetailingWUpVoteDto;
 import com.bdtc.technews.dto.CommentRequestDto;
 import com.bdtc.technews.service.comment.CommentService;
 import jakarta.transaction.Transactional;
@@ -30,8 +31,8 @@ public class CommentController {
     }
 
     @GetMapping("/{newsId}")
-    public ResponseEntity getNewsComments(@PathVariable UUID newsId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<CommentDetailingDto> commentsPage = commentService.getCommentsByNewsId(newsId, pageable);
+    public ResponseEntity getNewsComments(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID newsId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<CommentDetailingWUpVoteDto> commentsPage = commentService.getCommentsByNewsId(tokenJWT, newsId, pageable);
         return ResponseEntity.ok(commentsPage);
     }
 

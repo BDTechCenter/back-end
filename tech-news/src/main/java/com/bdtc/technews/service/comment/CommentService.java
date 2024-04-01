@@ -1,6 +1,7 @@
 package com.bdtc.technews.service.comment;
 
 import com.bdtc.technews.dto.CommentDetailingDto;
+import com.bdtc.technews.dto.CommentDetailingWUpVoteDto;
 import com.bdtc.technews.dto.CommentRequestDto;
 import com.bdtc.technews.http.auth.service.AuthClientService;
 import com.bdtc.technews.infra.exception.validation.AlreadyUpVotedException;
@@ -53,12 +54,15 @@ public class CommentService {
         return new CommentDetailingDto(comment, dateHandler.formatDate(comment.getPublicationDate()));
     }
 
-    public Page<CommentDetailingDto> getCommentsByNewsId(UUID newsId, Pageable pageable) {
+    public Page<CommentDetailingWUpVoteDto> getCommentsByNewsId(String tokenJWT, UUID newsId, Pageable pageable) {
         News news = newsService.getNews(newsId);
         Page<Comment> commentsPage = commentRepository.getCommentByRelevance(news, pageable);
-        return commentsPage.map(comment -> new CommentDetailingDto(
+        String currentUserEmail = authService.getNtwUser(tokenJWT);
+
+        return commentsPage.map(comment -> new CommentDetailingWUpVoteDto(
                 comment,
-                dateHandler.formatDate(comment.getPublicationDate())
+                dateHandler.formatDate(comment.getPublicationDate()),
+                commentUpVoterRepository.existsByVoterEmailAndCommentId(currentUserEmail, comment.getId())
         ));
     }
 

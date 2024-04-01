@@ -42,8 +42,8 @@ public class NewsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getNewsById(@PathVariable UUID id) {
-        NewsDetailingDto news = newsService.getNewsById(id);
+    public ResponseEntity getNewsById(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+        NewsDetailingWUpVoteDto news = newsService.getNewsById(tokenJWT, id);
         return ResponseEntity.ok(news);
     }
 
