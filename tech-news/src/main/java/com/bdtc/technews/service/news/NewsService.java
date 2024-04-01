@@ -1,9 +1,6 @@
 package com.bdtc.technews.service.news;
 
-import com.bdtc.technews.dto.NewsDetailingDto;
-import com.bdtc.technews.dto.NewsPreviewDto;
-import com.bdtc.technews.dto.NewsRequestDto;
-import com.bdtc.technews.dto.NewsUpdateDto;
+import com.bdtc.technews.dto.*;
 import com.bdtc.technews.http.auth.service.AuthClientService;
 import com.bdtc.technews.infra.exception.validation.AlreadyUpVotedException;
 import com.bdtc.technews.infra.exception.validation.BusinessRuleException;
@@ -104,13 +101,16 @@ public class NewsService {
     }
 
     @Transactional
-    public NewsDetailingDto getNewsById(UUID newsId) {
+    public NewsDetailingWUpVoteDto getNewsById(String tokenJWT, UUID newsId) {
         News news = newsRepository.getReferenceById(newsId);
         news.addAView();
-        return new NewsDetailingDto(
+        String currentUserEmail = authService.getNtwUser(tokenJWT);
+        boolean alreadyUpVoted = newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId());
+        return new NewsDetailingWUpVoteDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
-                dateHandler.formatDate(news.getUpdateDate())
+                dateHandler.formatDate(news.getUpdateDate()),
+                alreadyUpVoted
         );
     }
 
