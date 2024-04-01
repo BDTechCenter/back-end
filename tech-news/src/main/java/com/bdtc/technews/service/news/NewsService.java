@@ -186,18 +186,36 @@ public class NewsService {
         return news;
     }
 
+//    @Transactional
+//    public void addUpVoteToNews(String tokenJWT, UUID newsId) {
+//        if(!newsRepository.existsById(newsId)) throw new EntityNotFoundException();
+//
+//        News news = newsRepository.getReferenceById(newsId);
+//        String currentUserEmail = authService.getNtwUser(tokenJWT);
+//
+//        if(newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId())) {
+//            throw new AlreadyUpVotedException();
+//        }
+//
+//        NewsUpVoter newsUpVoter = new NewsUpVoter(currentUserEmail, news);
+//        news.getNewsUpVoters().add(newsUpVoter);
+//        newsUpVoterRepository.save(newsUpVoter);
+//
+//        news.addUpVote();
+//    }
+
     @Transactional
-    public void addUpVoteToNews(String tokenJWT, UUID newsId) {
+    public void addUpVoteToNews(UUID newsId) {
         if(!newsRepository.existsById(newsId)) throw new EntityNotFoundException();
 
         News news = newsRepository.getReferenceById(newsId);
-        String currentUserEmail = authService.getNtwUser(tokenJWT);
+//        String currentUserEmail = authService.getNtwUser(tokenJWT);
 
-        if(newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId())) {
-            throw new AlreadyUpVotedException();
-        }
+//        if(newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId())) {
+//            throw new AlreadyUpVotedException();
+//        }
 
-        NewsUpVoter newsUpVoter = new NewsUpVoter(currentUserEmail, news);
+        NewsUpVoter newsUpVoter = new NewsUpVoter("currentUserEmail", news);
         news.getNewsUpVoters().add(newsUpVoter);
         newsUpVoterRepository.save(newsUpVoter);
 

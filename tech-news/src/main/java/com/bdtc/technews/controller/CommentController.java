@@ -24,7 +24,7 @@ public class CommentController {
 
     @PostMapping("/{newsId}")
     @Transactional
-    public ResponseEntity createComment(@PathVariable UUID newsId, @ModelAttribute @Valid CommentRequestDto commentRequestDto) {
+    public ResponseEntity createComment(@PathVariable UUID newsId, @RequestBody @Valid CommentRequestDto commentRequestDto) {
         CommentDetailingDto comment = commentService.createComment(newsId, commentRequestDto);
         return ResponseEntity.ok(comment);
     }

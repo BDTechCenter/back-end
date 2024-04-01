@@ -1,7 +1,6 @@
 package com.bdtc.technews.controller;
 
 import com.bdtc.technews.dto.*;
-import com.bdtc.technews.model.News;
 import com.bdtc.technews.service.news.NewsService;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
 import jakarta.validation.Valid;
@@ -88,9 +87,9 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
-    @PostMapping("/{id}/upvote")
+    @GetMapping("/{id}/upvote")
     public ResponseEntity addUpVoteToNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
-        newsService.addUpVoteToNews(tokenJWT, id);
+        newsService.addUpVoteToNews(id);
         return ResponseEntity.ok().build();
     }
 }
