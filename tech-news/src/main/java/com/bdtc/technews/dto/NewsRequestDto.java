@@ -8,8 +8,6 @@ import java.util.Set;
 
 public record NewsRequestDto(
         @NotBlank
-        String author,
-        @NotBlank
         String title,
         @NotBlank
         String body,
