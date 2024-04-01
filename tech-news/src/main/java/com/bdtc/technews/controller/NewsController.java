@@ -34,10 +34,8 @@ public class NewsController {
     @GetMapping("/preview")
     public ResponseEntity getNewsPreview(
             @PageableDefault() Pageable pageable,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "latest") String sortBy,
-            @RequestParam(name = "title", required = false, defaultValue = "") String titleFilter
-    ) {
-        Page<NewsPreviewDto> page = newsService.getNewsPreview(pageable, sortBy, titleFilter);
+            @RequestParam(name = "sortBy", required = false, defaultValue = "latest") String sortBy) {
+        Page<NewsPreviewDto> page = newsService.getNewsPreview(pageable, sortBy);
         return ResponseEntity.ok(page);
     }
 

@@ -82,19 +82,15 @@ public class NewsService {
         );
     }
 
-    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String sortBy, String titleFilter) {
+    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String sortBy) {
         Page<News> newsPage;
 
         filterHandler.validateFilter(sortBy);
 
-        if(titleFilter.equals("")) {
-            if(sortBy.equals("view")) newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
-            else if(sortBy.equals("latest")) newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
-            else if(sortBy.equals("relevance")) newsPage = newsRepository.getNewsByRelevance(pageable);
-            else newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
-        }else {
-            newsPage = newsRepository.findAllByLikeTitleFilter(pageable, titleFilter);
-        }
+        if(sortBy.equals("view")) newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
+        else if(sortBy.equals("latest")) newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
+        else if(sortBy.equals("relevance")) newsPage = newsRepository.getNewsByRelevance(pageable);
+        else newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
 
         return newsPage.map(news -> new NewsPreviewDto(
                 news,
