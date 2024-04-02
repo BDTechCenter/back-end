@@ -2,6 +2,7 @@ package com.bdtc.technews.infra.exception.error;
 
 import com.bdtc.technews.infra.exception.validation.*;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -51,5 +52,10 @@ public class ErrorHandler {
     @ExceptionHandler(AuthClientInvalidTokenException.class)
     public ResponseEntity invalidTokenHandler(AuthClientInvalidTokenException exception) {
         return ResponseEntity.badRequest().body(new ValidationErrorData("token", exception.getMessage()));
+    }
+
+    @ExceptionHandler(PermissionException.class)
+    public ResponseEntity permissionDeniedHandler(PermissionException exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ValidationErrorData("authorization", exception.getMessage()));
     }
 }
