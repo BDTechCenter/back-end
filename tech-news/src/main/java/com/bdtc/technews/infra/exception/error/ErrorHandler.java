@@ -26,7 +26,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(BusinessRuleException.class)
     public ResponseEntity businessRuleExceptionHandler(BusinessRuleException exception) {
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(new ValidationErrorData("", exception.getMessage()));
     }
 
     @ExceptionHandler(ThereIsNoBackupForThisNewsException.class)
