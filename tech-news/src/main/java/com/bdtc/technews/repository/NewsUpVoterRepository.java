@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface NewsUpVoterRepository extends JpaRepository<NewsUpVoter, Long> {
     boolean existsByVoterEmailAndNewsId(String email, UUID id);
 
-    void deleteByVoterEmail(String currentUserEmail);
+    void deleteByVoterEmailAndNewsId(String currentUserEmail, UUID id);
 }

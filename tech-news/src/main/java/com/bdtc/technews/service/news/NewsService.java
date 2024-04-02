@@ -205,21 +205,13 @@ public class NewsService {
         String currentUserEmail = authService.getNtwUser(tokenJWT);
 
         if(newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId())) {
-            throw new AlreadyUpVotedException();
+            newsUpVoterRepository.deleteByVoterEmailAndNewsId(currentUserEmail, newsId);
+            news.removeUpVote();
+        }else {
+            NewsUpVoter newsUpVoter = new NewsUpVoter(currentUserEmail, news);
+            news.getNewsUpVoters().add(newsUpVoter);
+            newsUpVoterRepository.save(newsUpVoter);
+            news.addUpVote();
         }
-
-        NewsUpVoter newsUpVoter = new NewsUpVoter(currentUserEmail, news);
-        news.getNewsUpVoters().add(newsUpVoter);
-        newsUpVoterRepository.save(newsUpVoter);
-
-        news.addUpVote();
-    }
-
-    @Transactional
-    public void removeUpVoteFromNews(String tokenJWT, UUID newsId) {
-        String currentUserEmail = authService.getNtwUser(tokenJWT);
-
-        if(!newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, newsId)) throw new EntityNotFoundException();
-        newsUpVoterRepository.deleteByVoterEmail(currentUserEmail);
     }
 }

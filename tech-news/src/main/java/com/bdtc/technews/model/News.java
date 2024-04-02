@@ -129,4 +129,8 @@ public class News {
     public void addUpVote() {
         this.upVotes += 1;
     }
+
+    public void removeUpVote() {
+        this.upVotes -=1;
+    }
 }
