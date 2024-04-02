@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentUpVoterRepository extends JpaRepository<CommentUpVoter, Long> {
     boolean existsByVoterEmailAndCommentId(String email, Long id);
+
+    void deleteByVoterEmail(String currentUserEmail);
 }

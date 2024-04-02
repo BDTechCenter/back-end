@@ -99,4 +99,12 @@ public class CommentService {
 
         return new CommentDetailingDto(comment, dateHandler.formatDate(comment.getPublicationDate()));
     }
+
+    @Transactional
+    public void removeUpVoteFromComment(String tokenJWT, Long commentId) {
+        String currentUserEmail = authService.getNtwUser(tokenJWT);
+
+        if(!commentUpVoterRepository.existsByVoterEmailAndCommentId(currentUserEmail, commentId)) throw new EntityNotFoundException();
+        commentUpVoterRepository.deleteByVoterEmail(currentUserEmail);
+    }
 }

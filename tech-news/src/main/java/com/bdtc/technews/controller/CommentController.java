@@ -47,4 +47,10 @@ public class CommentController {
         commentService.addUpVoteToComment(tokenJWT, id);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{id}/upvote")
+    public ResponseEntity removeUpVoteFromComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id) {
+        commentService.removeUpVoteFromComment(tokenJWT, id);
+        return ResponseEntity.ok().build();
+    }
 }

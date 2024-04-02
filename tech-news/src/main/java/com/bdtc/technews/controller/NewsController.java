@@ -94,4 +94,10 @@ public class NewsController {
         newsService.addUpVoteToNews(tokenJWT, id);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{id}/upvote")
+    public ResponseEntity removeUpVoteFromNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+        newsService.removeUpVoteFromNews(tokenJWT, id);
+        return ResponseEntity.ok().build();
+    }
 }
