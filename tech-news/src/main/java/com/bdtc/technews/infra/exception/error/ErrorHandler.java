@@ -26,32 +26,32 @@ public class ErrorHandler {
 
     @ExceptionHandler(BusinessRuleException.class)
     public ResponseEntity businessRuleExceptionHandler(BusinessRuleException exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(exception.getMessage());
     }
 
     @ExceptionHandler(ThereIsNoBackupForThisNewsException.class)
     public ResponseEntity noBackupForNewsHandler(ThereIsNoBackupForThisNewsException exception) {
-        return ResponseEntity.badRequest().body(new ValidationErrorData("newsId", exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ValidationErrorData("newsId", exception.getMessage()));
     }
 
     @ExceptionHandler(ExceededTheExistingBackupLevelException.class)
     public ResponseEntity noBackupLevelForNewsHandler(ExceededTheExistingBackupLevelException exception) {
-        return ResponseEntity.badRequest().body(new ValidationErrorData("level", exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ValidationErrorData("level", exception.getMessage()));
     }
 
     @ExceptionHandler(ConflictInPathParameters.class)
     public ResponseEntity conflictPathParametersHandler(ConflictInPathParameters exception) {
-        return ResponseEntity.badRequest().body(new ValidationErrorData("pathParameters", exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ValidationErrorData("pathParameters", exception.getMessage()));
     }
 
     @ExceptionHandler(AlreadyUpVotedException.class)
     public ResponseEntity alreadyUpVotedHandler(AlreadyUpVotedException exception) {
-        return ResponseEntity.badRequest().body(new ValidationErrorData("upVote", exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ValidationErrorData("upVote", exception.getMessage()));
     }
 
     @ExceptionHandler(AuthClientInvalidTokenException.class)
     public ResponseEntity invalidTokenHandler(AuthClientInvalidTokenException exception) {
-        return ResponseEntity.badRequest().body(new ValidationErrorData("token", exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ValidationErrorData("token", exception.getMessage()));
     }
 
     @ExceptionHandler(PermissionException.class)
