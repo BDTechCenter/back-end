@@ -5,7 +5,7 @@ import com.bdtc.technews.dto.CommentDetailingWUpVoteDto;
 import com.bdtc.technews.dto.CommentRequestDto;
 import com.bdtc.technews.http.auth.service.AuthClientService;
 import com.bdtc.technews.infra.exception.validation.AlreadyUpVotedException;
-import com.bdtc.technews.infra.exception.validation.BusinessRuleException;
+import com.bdtc.technews.infra.exception.validation.PermissionException;
 import com.bdtc.technews.model.Comment;
 import com.bdtc.technews.model.CommentUpVoter;
 import com.bdtc.technews.model.News;
@@ -82,5 +82,19 @@ public class CommentService {
         commentUpVoterRepository.save(commentUpVoter);
 
         comment.addUpVote();
+    }
+
+    @Transactional
+    public CommentDetailingDto updateComment(String tokenJWT, Long id, CommentRequestDto commentRequestDto) {
+        if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
+
+        Comment comment = commentRepository.getReferenceById(id);
+        String currentUserEmail = authService.getNtwUser(tokenJWT);
+
+        if(!currentUserEmail.equals(comment.getAuthor())) throw new PermissionException();
+
+        comment.updateComment(commentRequestDto.comment());
+
+        return new CommentDetailingDto(comment, dateHandler.formatDate(comment.getPublicationDate()));
     }
 }
