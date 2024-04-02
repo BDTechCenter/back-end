@@ -7,6 +7,7 @@ import com.bdtc.technews.service.comment.CommentService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,7 +25,6 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/{newsId}")
-    @Transactional
     public ResponseEntity createComment(@PathVariable UUID newsId, @RequestBody @Valid CommentRequestDto commentRequestDto) {
         CommentDetailingDto comment = commentService.createComment(newsId, commentRequestDto);
         return ResponseEntity.ok(comment);
@@ -36,8 +36,13 @@ public class CommentController {
         return ResponseEntity.ok(commentsPage);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity updateComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id, @RequestBody @Valid CommentRequestDto commentRequestDto) {
+        CommentDetailingDto comment = commentService.updateComment(tokenJWT, id, commentRequestDto);
+        return ResponseEntity.ok(comment);
+    }
+
     @PatchMapping("/{id}/upvote")
-    @Transactional
     public ResponseEntity addUpVoteToComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id) {
         commentService.addUpVoteToComment(tokenJWT, id);
         return ResponseEntity.ok().build();

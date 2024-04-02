@@ -57,4 +57,8 @@ public class Comment {
     public void addUpVote() {
         this.upVotes += 1;
     }
+
+    public void updateComment(String comment) {
+        this.comment = comment;
+    }
 }
