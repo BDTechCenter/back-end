@@ -38,7 +38,8 @@ Return:
     "updateDate": "String"
     "title": "String"
     "author": "String" 
-    "imageUrl": "url"
+    "imageUrl": "url",
+    "alreadyUpVoted": boolean
 }
 ```
 
@@ -56,7 +57,8 @@ Return:
     "body": "Text"
     "tags": List<String>
     "imageUrl": "url"
-    "isPublished": boolean
+    "isPublished": boolean,
+    "alreadyUpVoted": boolean
 }
 ```
 
@@ -155,6 +157,7 @@ Return:
     "publicationDate": "String"
     "comment": "String"
     "upVotes": int
+    "alreadyUpVoted": boolean
 }
 ```
 
