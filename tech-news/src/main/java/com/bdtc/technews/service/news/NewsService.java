@@ -3,7 +3,6 @@ package com.bdtc.technews.service.news;
 import com.bdtc.technews.dto.*;
 import com.bdtc.technews.http.auth.service.AuthClientService;
 import com.bdtc.technews.infra.exception.validation.AlreadyUpVotedException;
-import com.bdtc.technews.infra.exception.validation.BusinessRuleException;
 import com.bdtc.technews.infra.exception.validation.PermissionException;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.model.NewsUpVoter;
@@ -214,5 +213,13 @@ public class NewsService {
         newsUpVoterRepository.save(newsUpVoter);
 
         news.addUpVote();
+    }
+
+    @Transactional
+    public void removeUpVoteFromNews(String tokenJWT, UUID newsId) {
+        String currentUserEmail = authService.getNtwUser(tokenJWT);
+
+        if(!newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, newsId)) throw new EntityNotFoundException();
+        newsUpVoterRepository.deleteByVoterEmail(currentUserEmail);
     }
 }
