@@ -25,19 +25,24 @@ public class CommentController {
 
     @PostMapping("/{newsId}")
     @Transactional
-    public ResponseEntity createComment(@PathVariable UUID newsId, @RequestBody @Valid CommentRequestDto commentRequestDto) {
-        CommentDetailingDto comment = commentService.createComment(newsId, commentRequestDto);
+    public ResponseEntity createComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID newsId, @RequestBody @Valid CommentRequestDto commentRequestDto) {
+        CommentDetailingDto comment = commentService.createComment(tokenJWT, newsId, commentRequestDto);
         return ResponseEntity.ok(comment);
     }
 
     @GetMapping("/{newsId}")
-    public ResponseEntity getNewsComments(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID newsId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity getNewsComments(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID newsId, @PageableDefault() Pageable pageable) {
         Page<CommentDetailingWUpVoteDto> commentsPage = commentService.getCommentsByNewsId(tokenJWT, newsId, pageable);
         return ResponseEntity.ok(commentsPage);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity updateComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id, @RequestBody @Valid CommentRequestDto commentRequestDto) {
+        CommentDetailingDto comment = commentService.updateComment(tokenJWT, id, commentRequestDto);
+        return ResponseEntity.ok(comment);
+    }
+
     @PatchMapping("/{id}/upvote")
-    @Transactional
     public ResponseEntity addUpVoteToComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id) {
         commentService.addUpVoteToComment(tokenJWT, id);
         return ResponseEntity.ok().build();
