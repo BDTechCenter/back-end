@@ -12,7 +12,6 @@ Type: Multpartform
 
 Attributes:
 
-    author: String (temporarily)**
     title: String
     body: Text
     tags: List<String>
@@ -26,6 +25,7 @@ Endpoint: `/news/preview`
 Type: pathParameters
 
     sortBy: String (optional) ['view', 'latest' or 'relevance']
+    title: String (optional)
     size: int (optional)
     page: int (optional)
 
@@ -121,7 +121,7 @@ Endpoint: `/news/{uuid}/publish`
 ### PATCH archive news: 
 Endpoint: `/news/{uuid}/archive`
 
-### POST upVote for news
+### PATCH upVote for news
 Endpoint `/news/{uuid}/upvote`
 
 Type: Header
@@ -137,8 +137,7 @@ Endpoint: `/comments/{newsId}`
 Type: Json
 
 Attributes: 
-    
-    author: String (temporarily)**
+
     comment: String
 
 
@@ -159,7 +158,7 @@ Return:
 }
 ```
 
-### POST upVote for comments
+### PATCH upVote for comments
 Endpoint `/comments/{id}/upvote`
 
 Type: Header
