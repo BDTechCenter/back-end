@@ -4,6 +4,7 @@ import com.bdtc.technews.dto.*;
 import com.bdtc.technews.http.auth.service.AuthClientService;
 import com.bdtc.technews.infra.exception.validation.AlreadyUpVotedException;
 import com.bdtc.technews.infra.exception.validation.BusinessRuleException;
+import com.bdtc.technews.infra.exception.validation.PermissionException;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.model.NewsUpVoter;
 import com.bdtc.technews.model.Tag;
@@ -106,8 +107,10 @@ public class NewsService {
     public NewsDetailingWUpVoteDto getNewsById(String tokenJWT, UUID newsId) {
         News news = newsRepository.getReferenceById(newsId);
         news.addAView();
+
         String currentUserEmail = authService.getNtwUser(tokenJWT);
         boolean alreadyUpVoted = newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId());
+
         return new NewsDetailingWUpVoteDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
@@ -160,9 +163,12 @@ public class NewsService {
 
 
     @Transactional
-    public NewsDetailingDto updateNews(UUID newsId, NewsUpdateDto updateDto) {
+    public NewsDetailingDto updateNews(String tokenJWT, UUID newsId, NewsUpdateDto updateDto) {
         News news = newsRepository.getReferenceById(newsId);
         newsBackupService.createNewsBackup(news, null);
+
+        String currentUserEmail = authService.getNtwUser(tokenJWT);
+        if(!currentUserEmail.equals(news.getAuthor())) throw new PermissionException();
 
         if(updateDto.title() !=null) news.updateTitle(updateDto.title());
         if(updateDto.body() !=null) news.updateBody(updateDto.body());
