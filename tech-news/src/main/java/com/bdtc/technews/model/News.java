@@ -69,11 +69,14 @@ public class News {
     private List<NewsUpVoter> newsUpVoters;
 
     public News(NewsRequestDto newsDto) {
-        this.author = newsDto.author();
         this.title = newsDto.title();
         this.body = newsDto.body();
         this.views = 0L;
         this.isPublished = Boolean.parseBoolean(newsDto.isPublished());
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public void setCreationDate(LocalDateTime creationDate) {

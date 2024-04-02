@@ -7,7 +7,6 @@ import com.bdtc.technews.service.comment.CommentService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,13 +24,14 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/{newsId}")
-    public ResponseEntity createComment(@PathVariable UUID newsId, @RequestBody @Valid CommentRequestDto commentRequestDto) {
-        CommentDetailingDto comment = commentService.createComment(newsId, commentRequestDto);
+    @Transactional
+    public ResponseEntity createComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID newsId, @RequestBody @Valid CommentRequestDto commentRequestDto) {
+        CommentDetailingDto comment = commentService.createComment(tokenJWT, newsId, commentRequestDto);
         return ResponseEntity.ok(comment);
     }
 
     @GetMapping("/{newsId}")
-    public ResponseEntity getNewsComments(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID newsId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity getNewsComments(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID newsId, @PageableDefault() Pageable pageable) {
         Page<CommentDetailingWUpVoteDto> commentsPage = commentService.getCommentsByNewsId(tokenJWT, newsId, pageable);
         return ResponseEntity.ok(commentsPage);
     }

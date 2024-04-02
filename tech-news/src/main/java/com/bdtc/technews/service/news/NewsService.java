@@ -60,12 +60,14 @@ public class NewsService {
     private AuthClientService authService;
 
     @Transactional
-    public NewsDetailingDto createNews(NewsRequestDto newsDto) {
+    public NewsDetailingDto createNews(String tokenJWT, NewsRequestDto newsDto) {
         News news = new News(newsDto);
+        String currentUserEmail = authService.getNtwUser(tokenJWT);
         LocalDateTime dateNow = dateHandler.getCurrentDateTime();
         Set<Tag> tagSet = tagService.getTagSet(newsDto.tags());
         String imageUrl = imageHandler.saveImageToUploadDir(newsDto.image());
 
+        news.setAuthor(currentUserEmail);
         news.setCreationDate(dateNow);
         news.setUpdateDate(dateNow);
         news.setTags(tagSet);

@@ -42,8 +42,11 @@ public class Comment {
     private List<CommentUpVoter> commentUpVoters;
 
     public Comment(CommentRequestDto commentDto) {
-        this.author = commentDto.author();
         this.comment = commentDto.comment();
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public void setPublicationDate(LocalDateTime publicationDate) {
