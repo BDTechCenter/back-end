@@ -72,8 +72,8 @@ public class NewsController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity updateNews(@ModelAttribute NewsUpdateDto updateDto, @PathVariable UUID id) {
-        NewsDetailingDto news = newsService.updateNews(id, updateDto);
+    public ResponseEntity updateNews(@RequestHeader("Authorization") String tokenJWT, @ModelAttribute NewsUpdateDto updateDto, @PathVariable UUID id) {
+        NewsDetailingDto news = newsService.updateNews(tokenJWT, id, updateDto);
         return ResponseEntity.ok(news);
     }
 
