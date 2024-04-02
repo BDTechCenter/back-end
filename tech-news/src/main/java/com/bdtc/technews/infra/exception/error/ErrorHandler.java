@@ -52,4 +52,9 @@ public class ErrorHandler {
     public ResponseEntity invalidTokenHandler(AuthClientInvalidTokenException exception) {
         return ResponseEntity.badRequest().body(new ValidationErrorData("token", exception.getMessage()));
     }
+
+    @ExceptionHandler(PermissionException.class)
+    public ResponseEntity permissionDeniedHandler(PermissionException exception) {
+        return ResponseEntity.status(403).body(new ValidationErrorData("authorization", exception.getMessage()));
+    }
 }
