@@ -37,41 +37,46 @@ class NewsRepositoryTest {
 
     @Test
     @DisplayName("""
-                Should return Page<News>; 
-                First news needs to have title '#2' (inject more views into it);
+                Should return newsTwo(obj) as first news on Page<News> (injected more views into it)
                 """)
     void findByIsPublishedTrueOrderByViewsDescCase1() {
-        NewsRequestDto newsOne = new NewsRequestDto("#1", "body #1",
+        NewsRequestDto newsOneDto = new NewsRequestDto("#1", "body #1",
                 new HashSet<>(Set.of("test", "unit-test")), null, null);
-        this.createNews(newsOne, 10, 0);
+        News newsOne = this.createNews(newsOneDto, 10, 0);
 
-        NewsRequestDto newsTwo = new NewsRequestDto("#2", "body #2",
+        NewsRequestDto newsTwoDto = new NewsRequestDto("#2", "body #2",
                 new HashSet<>(Set.of("test", "unit-test")), null, null);
-        this.createNews(newsTwo, 275, 0);
+        News newsTwo = this.createNews(newsTwoDto, 275, 0);
 
         Pageable pageable = PageRequest.of(0, 2);
         Page<News> newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
 
         // VERIFYING IF RETURNED BASED ON VIEWS DESC
         News firstNews = newsPage.getContent().get(0);
-        Assertions.assertEquals("#2", firstNews.getTitle());
+        Assertions.assertEquals(newsTwo, firstNews);
     }
 
     @Test
-    void findByTagNames() {
+    @DisplayName("""
+                Should return newsOne(obj) as first news on Page<News> (injected more upVotes into it)
+                """)
+    void getNewsByRelevanceCase1() {
+        NewsRequestDto newsOneDto = new NewsRequestDto("#1", "body #1",
+                new HashSet<>(Set.of("test", "unit-test")), null, null);
+        News newsOne = this.createNews(newsOneDto, 0, 150);
+
+        NewsRequestDto newsTwoDto = new NewsRequestDto("#2", "body #2",
+                new HashSet<>(Set.of("test", "unit-test")), null, null);
+        News newsTwo = this.createNews(newsTwoDto, 275, 15);
+
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<News> newsPage = newsRepository.getNewsByRelevance(pageable);
+
+        // VERIFYING IF RETURNED BASED ON UPVOTE DESC
+        News firstNews = newsPage.getContent().get(0);
+        Assertions.assertEquals(newsOne, firstNews);
     }
 
-    @Test
-    void findByIsPublishedTrueAndLatestUpdate() {
-    }
-
-    @Test
-    void getNewsByRelevance() {
-    }
-
-    @Test
-    void findAllByLikeTitleFilter() {
-    }
 
     // SOME UTILS FUNCTIONS TO HELP ON TESTS
     private News createNews(NewsRequestDto newsRequestDto, int views, int upVotes) {
