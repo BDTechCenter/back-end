@@ -16,6 +16,7 @@ import com.bdtc.technews.service.news.utils.TagHandler;
 import com.bdtc.technews.service.tag.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -81,25 +82,58 @@ public class NewsService {
         );
     }
 
+//    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String sortBy, String titleFilter, String tags) {
+//        Page<News> newsPage;
+//
+//        filterHandler.validateFilter(sortBy);
+//
+//        if(titleFilter.equals("")) {
+//            if(tags.equals("")) {
+//                if(sortBy.equals("view")) newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
+//                else if(sortBy.equals("latest")) newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
+//                else if(sortBy.equals("relevance")) newsPage = newsRepository.getNewsByRelevance(pageable);
+//                else newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
+//            }else {
+//                List<String> tagList = Arrays.asList(tags.split(","));
+//                newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
+//            }
+//        }else {
+//            newsPage = newsRepository.findAllByLikeTitleFilter(pageable, titleFilter);
+//        }
+//
+//        return newsPage.map(news -> new NewsPreviewDto(
+//                        news,
+//                        dateHandler.formatDate(news.getUpdateDate())
+//                )
+//        );
+//    }
+
     public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String sortBy, String titleFilter, String tags) {
         Page<News> newsPage;
 
         filterHandler.validateFilter(sortBy);
 
-        if(titleFilter.equals("")) {
-            if(tags.equals("")) {
-                if(sortBy.equals("view")) newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
-                else if(sortBy.equals("latest")) newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
-                else if(sortBy.equals("relevance")) newsPage = newsRepository.getNewsByRelevance(pageable);
-                else newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
-            }else {
-                List<String> tagList = Arrays.asList(tags.split(","));
-                newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
+        if(StringUtils.isNotBlank(tags)) {
+            List<String> tagList = Arrays.asList(tags.split(","));
+            newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
+        } else if(StringUtils.isBlank(titleFilter)) {
+            switch (sortBy) {
+                case "view":
+                    newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
+                    break;
+                case "latest":
+                    newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
+                    break;
+                case "relevance":
+                    newsPage = newsRepository.getNewsByRelevance(pageable);
+                    break;
+                default:
+                    newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
+                    break;
             }
-        }else {
+        } else {
             newsPage = newsRepository.findAllByLikeTitleFilter(pageable, titleFilter);
         }
-
         return newsPage.map(news -> new NewsPreviewDto(
                         news,
                         dateHandler.formatDate(news.getUpdateDate())
