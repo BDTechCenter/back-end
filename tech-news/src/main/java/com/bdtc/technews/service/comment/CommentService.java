@@ -76,14 +76,14 @@ public class CommentService {
         String currentUserEmail = authService.getNtwUser(tokenJWT);
 
         if(commentUpVoterRepository.existsByVoterEmailAndCommentId(currentUserEmail, comment.getId())) {
-            throw new AlreadyUpVotedException();
+            commentUpVoterRepository.deleteByVoterEmailAndCommentId(currentUserEmail, id);
+            comment.removeUpvote();
+        }else {
+            CommentUpVoter commentUpVoter = new CommentUpVoter(currentUserEmail, comment);
+            comment.getCommentUpVoters().add(commentUpVoter);
+            commentUpVoterRepository.save(commentUpVoter);
+            comment.addUpVote();
         }
-
-        CommentUpVoter commentUpVoter = new CommentUpVoter(currentUserEmail, comment);
-        comment.getCommentUpVoters().add(commentUpVoter);
-        commentUpVoterRepository.save(commentUpVoter);
-
-        comment.addUpVote();
     }
 
     @Transactional
@@ -98,13 +98,5 @@ public class CommentService {
         comment.updateComment(commentRequestDto.comment());
 
         return new CommentDetailingDto(comment, dateHandler.formatDate(comment.getPublicationDate()));
-    }
-
-    @Transactional
-    public void removeUpVoteFromComment(String tokenJWT, Long commentId) {
-        String currentUserEmail = authService.getNtwUser(tokenJWT);
-
-        if(!commentUpVoterRepository.existsByVoterEmailAndCommentId(currentUserEmail, commentId)) throw new EntityNotFoundException();
-        commentUpVoterRepository.deleteByVoterEmail(currentUserEmail);
     }
 }

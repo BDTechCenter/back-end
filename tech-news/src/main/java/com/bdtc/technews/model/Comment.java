@@ -61,6 +61,10 @@ public class Comment {
         this.upVotes += 1;
     }
 
+    public void removeUpvote() {
+        this.upVotes -= 1;
+    }
+
     public void updateComment(String comment) {
         this.comment = comment;
     }
