@@ -11,8 +11,8 @@ public class AuthClientService {
     @Autowired
     private AuthClient authClient;
 
-    public String getNtwUser(String tokenJWT) {
+    public UserDto getUser(String tokenJWT) {
         UserDto userDetails = authClient.getUserDetails(tokenJWT);
-        return userDetails.networkUser();
+        return userDetails;
     }
 }

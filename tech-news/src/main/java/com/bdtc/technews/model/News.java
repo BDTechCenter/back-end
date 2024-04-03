@@ -28,6 +28,8 @@ public class News {
 
     private String author;
 
+    private String authorEmail;
+
     private LocalDateTime creationDate;
 
     private LocalDateTime publicationDate;
@@ -77,6 +79,10 @@ public class News {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
     }
 
     public void setCreationDate(LocalDateTime creationDate) {

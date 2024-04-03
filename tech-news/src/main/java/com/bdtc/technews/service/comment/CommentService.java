@@ -3,8 +3,8 @@ package com.bdtc.technews.service.comment;
 import com.bdtc.technews.dto.CommentDetailingDto;
 import com.bdtc.technews.dto.CommentDetailingWUpVoteDto;
 import com.bdtc.technews.dto.CommentRequestDto;
+import com.bdtc.technews.dto.UserDto;
 import com.bdtc.technews.http.auth.service.AuthClientService;
-import com.bdtc.technews.infra.exception.validation.AlreadyUpVotedException;
 import com.bdtc.technews.infra.exception.validation.PermissionException;
 import com.bdtc.technews.model.Comment;
 import com.bdtc.technews.model.CommentUpVoter;
@@ -44,11 +44,12 @@ public class CommentService {
     @Transactional
     public CommentDetailingDto createComment(String tokenJWT, UUID newsId, CommentRequestDto commentRequestDto) {
         Comment comment = new Comment(commentRequestDto);
-        String currentUserEmail = authService.getNtwUser(tokenJWT);
+        UserDto authenticatedUser = authService.getUser(tokenJWT);
         LocalDateTime date = dateHandler.getCurrentDateTime();
         News news = newsService.getNews(newsId);
 
-        comment.setAuthor(currentUserEmail);
+        comment.setAuthorEmail(authenticatedUser.networkUser());
+        comment.setAuthor(authenticatedUser.username());
         comment.setPublicationDate(date);
         comment.setNews(news);
         commentRepository.save(comment);
@@ -59,7 +60,7 @@ public class CommentService {
     public Page<CommentDetailingWUpVoteDto> getCommentsByNewsId(String tokenJWT, UUID newsId, Pageable pageable) {
         News news = newsService.getNews(newsId);
         Page<Comment> commentsPage = commentRepository.getCommentByRelevance(news, pageable);
-        String currentUserEmail = authService.getNtwUser(tokenJWT);
+        String currentUserEmail = authService.getUser(tokenJWT).username();
 
         return commentsPage.map(comment -> new CommentDetailingWUpVoteDto(
                 comment,
@@ -73,7 +74,7 @@ public class CommentService {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
         Comment comment = commentRepository.getReferenceById(id);
-        String currentUserEmail = authService.getNtwUser(tokenJWT);
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
 
         if(commentUpVoterRepository.existsByVoterEmailAndCommentId(currentUserEmail, comment.getId())) {
             commentUpVoterRepository.deleteByVoterEmailAndCommentId(currentUserEmail, id);
@@ -91,7 +92,7 @@ public class CommentService {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
         Comment comment = commentRepository.getReferenceById(id);
-        String currentUserEmail = authService.getNtwUser(tokenJWT);
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
 
         if(!currentUserEmail.equals(comment.getAuthor())) throw new PermissionException();
 

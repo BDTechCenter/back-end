@@ -24,6 +24,8 @@ public class Comment {
 
     private String author;
 
+    private String authorEmail;
+
     private LocalDateTime publicationDate;
 
     @Column(columnDefinition = "TEXT")
@@ -47,6 +49,10 @@ public class Comment {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
     }
 
     public void setPublicationDate(LocalDateTime publicationDate) {
