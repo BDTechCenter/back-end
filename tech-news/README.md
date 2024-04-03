@@ -26,6 +26,7 @@ Type: pathParameters
 
     sortBy: String (optional) ['view', 'latest' or 'relevance']
     title: String (optional)
+    tags: List<String> (optional)
     size: int (optional)
     page: int (optional)
 
@@ -38,7 +39,7 @@ Return:
     "updateDate": "String"
     "title": "String"
     "author": "String" 
-    "imageUrl": "url",
+    "imageUrl": "url"
     "alreadyUpVoted": boolean
 }
 ```
@@ -57,34 +58,10 @@ Return:
     "body": "Text"
     "tags": List<String>
     "imageUrl": "url"
-    "isPublished": boolean,
+    "isPublished": boolean
     "alreadyUpVoted": boolean
 }
 ```
-
-
-### GET news by TAG:    
-Endpoint: `/news`
-
-Type: pathParameters
-    
-    tags: List<String> (mandatory)
-    size: int (optional)
-    page: int (optional)
-
-e.g.: `/news?tags=docker,back-end`
-
-Return:
-```json
-{
-    "id": "UUID"
-    "updateDate": "String"
-    "title": "String"
-    "author": "String" 
-    "imageUrl": "url"
-}
-```
-
 
 ### GET archived news: 
 Obs: Return based on the author hasn't been implemented yet**
