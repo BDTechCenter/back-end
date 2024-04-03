@@ -35,21 +35,16 @@ public class NewsController {
     public ResponseEntity getNewsPreview(
             @PageableDefault() Pageable pageable,
             @RequestParam(name = "sortBy", required = false, defaultValue = "latest") String sortBy,
-            @RequestParam(name = "title", required = false, defaultValue = "") String titleFilter
+            @RequestParam(name = "title", required = false, defaultValue = "") String titleFilter,
+            @RequestParam(name = "tags", required = false, defaultValue = "") String tags
     ) {
-        Page<NewsPreviewDto> page = newsService.getNewsPreview(pageable, sortBy, titleFilter);
+        Page<NewsPreviewDto> page = newsService.getNewsPreview(pageable, sortBy, titleFilter, tags);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity getNewsById(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
         NewsDetailingWUpVoteDto news = newsService.getNewsById(tokenJWT, id);
-        return ResponseEntity.ok(news);
-    }
-
-    @GetMapping()
-    public ResponseEntity getNewsFilteringByTags(@RequestParam(name = "tags") String tags, @PageableDefault() Pageable pageable) {
-        Page<NewsPreviewDto> news = newsService.getNewsPreviewFilteringByTags(pageable, tags);
         return ResponseEntity.ok(news);
     }
 
