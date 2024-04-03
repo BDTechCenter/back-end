@@ -82,32 +82,6 @@ public class NewsService {
         );
     }
 
-//    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String sortBy, String titleFilter, String tags) {
-//        Page<News> newsPage;
-//
-//        filterHandler.validateFilter(sortBy);
-//
-//        if(titleFilter.equals("")) {
-//            if(tags.equals("")) {
-//                if(sortBy.equals("view")) newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
-//                else if(sortBy.equals("latest")) newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
-//                else if(sortBy.equals("relevance")) newsPage = newsRepository.getNewsByRelevance(pageable);
-//                else newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
-//            }else {
-//                List<String> tagList = Arrays.asList(tags.split(","));
-//                newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
-//            }
-//        }else {
-//            newsPage = newsRepository.findAllByLikeTitleFilter(pageable, titleFilter);
-//        }
-//
-//        return newsPage.map(news -> new NewsPreviewDto(
-//                        news,
-//                        dateHandler.formatDate(news.getUpdateDate())
-//                )
-//        );
-//    }
-
     public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String sortBy, String titleFilter, String tags) {
         Page<News> newsPage;
 
@@ -156,16 +130,6 @@ public class NewsService {
                 alreadyUpVoted
         );
     }
-
-//    public Page<NewsPreviewDto> getNewsPreviewFilteringByTags(Pageable pageable, String tags) {
-//        List<String> tagList = Arrays.asList(tags.split(","));
-//        Page<News> newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
-//        return newsPage.map(news -> new NewsPreviewDto(
-//                        news,
-//                        dateHandler.formatDate(news.getUpdateDate())
-//                )
-//        );
-//    }
 
     @Transactional
     public NewsDetailingDto publishNews(UUID newsId) {
