@@ -49,14 +49,14 @@ public class NewsController {
     }
 
     @PatchMapping("/{id}/publish")
-    public ResponseEntity publishNews(@PathVariable UUID id) {
-        NewsDetailingDto news = newsService.publishNews(id);
+    public ResponseEntity publishNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+        NewsDetailingDto news = newsService.publishNews(tokenJWT, id);
         return ResponseEntity.ok(news);
     }
 
     @PatchMapping("/{id}/archive")
-    public ResponseEntity archiveNews(@PathVariable UUID id) {
-        NewsDetailingDto news = newsService.archiveNews(id);
+    public ResponseEntity archiveNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+        NewsDetailingDto news = newsService.archiveNews(tokenJWT, id);
         return ResponseEntity.ok(news);
     }
 
