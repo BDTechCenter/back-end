@@ -58,4 +58,9 @@ public class ErrorHandler {
     public ResponseEntity permissionDeniedHandler(PermissionException exception) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ValidationErrorData("authorization", exception.getMessage()));
     }
+
+    @ExceptionHandler(UnauthorizedByRolesException.class)
+    public ResponseEntity UnauthorizedByCurrentRolesHandler(UnauthorizedByRolesException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ValidationErrorData("roles", exception.getMessage()));
+    }
 }

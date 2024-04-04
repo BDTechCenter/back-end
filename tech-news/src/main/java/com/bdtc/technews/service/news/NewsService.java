@@ -9,10 +9,7 @@ import com.bdtc.technews.model.Tag;
 import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.repository.NewsUpVoterRepository;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
-import com.bdtc.technews.service.news.utils.DateHandler;
-import com.bdtc.technews.service.news.utils.FilterHandler;
-import com.bdtc.technews.service.news.utils.ImageHandler;
-import com.bdtc.technews.service.news.utils.TagHandler;
+import com.bdtc.technews.service.news.utils.*;
 import com.bdtc.technews.service.tag.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -58,10 +55,15 @@ public class NewsService {
     @Autowired
     private AuthClientService authService;
 
+    @Autowired
+    private RoleAuthHandler roleAuthHandler;
+
     @Transactional
     public NewsDetailingDto createNews(String tokenJWT, NewsRequestDto newsDto) {
-        News news = new News(newsDto);
         UserDto authenticatedUser = authService.getUser(tokenJWT);
+        roleAuthHandler.validateUserRole(authenticatedUser);
+
+        News news = new News(newsDto);
         LocalDateTime dateNow = dateHandler.getCurrentDateTime();
         Set<Tag> tagSet = tagService.getTagSet(newsDto.tags());
         String imageUrl = imageHandler.saveImageToUploadDir(newsDto.image());
@@ -132,8 +134,12 @@ public class NewsService {
     }
 
     @Transactional
-    public NewsDetailingDto publishNews(UUID newsId) {
+    public NewsDetailingDto publishNews(String tokenJWT, UUID newsId) {
         News news = newsRepository.getReferenceById(newsId);
+
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
+
         news.publishNews();
         news.setPublicationDate(dateHandler.getCurrentDateTime());
         return new NewsDetailingDto(
@@ -144,8 +150,12 @@ public class NewsService {
     }
 
     @Transactional
-    public NewsDetailingDto archiveNews(UUID newsId) {
+    public NewsDetailingDto archiveNews(String tokenJWT, UUID newsId) {
         News news = newsRepository.getReferenceById(newsId);
+
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
+
         news.archiveNews();
         return new NewsDetailingDto(
                 news,
