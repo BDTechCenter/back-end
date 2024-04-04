@@ -134,8 +134,12 @@ public class NewsService {
     }
 
     @Transactional
-    public NewsDetailingDto publishNews(UUID newsId) {
+    public NewsDetailingDto publishNews(String tokenJWT, UUID newsId) {
         News news = newsRepository.getReferenceById(newsId);
+
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
+
         news.publishNews();
         news.setPublicationDate(dateHandler.getCurrentDateTime());
         return new NewsDetailingDto(
@@ -146,8 +150,12 @@ public class NewsService {
     }
 
     @Transactional
-    public NewsDetailingDto archiveNews(UUID newsId) {
+    public NewsDetailingDto archiveNews(String tokenJWT, UUID newsId) {
         News news = newsRepository.getReferenceById(newsId);
+
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
+
         news.archiveNews();
         return new NewsDetailingDto(
                 news,
