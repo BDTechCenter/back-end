@@ -1,7 +1,7 @@
 package com.bdtc.technews.infra.exception.validation;
 
-public class UnauthorizedByRoles extends RuntimeException{
-    public UnauthorizedByRoles() {
+public class UnauthorizedByRolesException extends RuntimeException{
+    public UnauthorizedByRolesException() {
         super("Unauthorized by current roles to perform this transaction");
     }
 }

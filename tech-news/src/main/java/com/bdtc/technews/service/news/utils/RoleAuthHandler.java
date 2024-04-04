@@ -1,7 +1,7 @@
 package com.bdtc.technews.service.news.utils;
 
 import com.bdtc.technews.dto.UserDto;
-import com.bdtc.technews.infra.exception.validation.UnauthorizedByRoles;
+import com.bdtc.technews.infra.exception.validation.UnauthorizedByRolesException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,6 +23,6 @@ public class RoleAuthHandler {
                 }
             }
         }
-        if(!hasAValidRole) throw new UnauthorizedByRoles();
+        if(!hasAValidRole) throw new UnauthorizedByRolesException();
     }
 }
