@@ -61,7 +61,7 @@ public class NewsController {
     }
 
     @GetMapping("/author")
-    public ResponseEntity getNewsBasedOnCurrentUserAuthor(
+    public ResponseEntity getNewsBasedOnAuthor(
             @RequestHeader("Authorization") String tokenJWT,
             @PageableDefault() Pageable pageable,
             @RequestParam(name = "sortBy", required = false, defaultValue = "empty") FilterOption sortBy) {
