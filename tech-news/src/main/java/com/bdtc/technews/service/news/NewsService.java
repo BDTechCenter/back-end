@@ -87,7 +87,8 @@ public class NewsService {
     public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String sortBy, String titleFilter, String tags) {
         Page<News> newsPage;
 
-        filterHandler.validateFilter(sortBy);
+        List<String> filterOptions = List.of("view", "latest", "relevance");
+        filterHandler.validateFilter(filterOptions, sortBy);
 
         if(StringUtils.isNotBlank(tags)) {
             List<String> tagList = Arrays.asList(tags.split(","));
@@ -164,8 +165,36 @@ public class NewsService {
         );
     }
 
-    public Page<NewsPreviewDto> getArchivedNewsPreview(Pageable pageable) {
-        Page<News> newsPage = newsRepository.findAllByIsPublishedFalse(pageable);
+//    public Page<NewsPreviewDto> getArchivedNewsPreview(Pageable pageable) {
+//        Page<News> newsPage = newsRepository.findAllByIsPublishedFalse(pageable);
+//        return newsPage.map(news -> new NewsPreviewDto(
+//                        news,
+//                        dateHandler.formatDate(news.getUpdateDate())
+//                )
+//        );
+//    }
+
+    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, String sortBy) {
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        Page<News> newsPage;
+
+        List<String> filterOptions = List.of("published", "archived");
+        filterHandler.validateFilter(filterOptions, sortBy);
+
+        if(StringUtils.isNotBlank(sortBy)) {
+            boolean isPublished = false;
+            switch(sortBy) {
+                case "published":
+                    isPublished = true;
+                    break;
+                case "archived":
+                    break;
+            }
+            newsPage = newsRepository.getNewsByAuthorAndPublication(currentUserEmail, pageable, isPublished);
+        } else {
+            newsPage = newsRepository.getNewsByAuthor(currentUserEmail, pageable);
+        }
+
         return newsPage.map(news -> new NewsPreviewDto(
                         news,
                         dateHandler.formatDate(news.getUpdateDate())

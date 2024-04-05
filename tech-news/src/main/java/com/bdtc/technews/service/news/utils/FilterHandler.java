@@ -7,16 +7,32 @@ import java.util.List;
 
 @Component
 public class FilterHandler {
-    private List<String> filterOptions = List.of("view", "latest", "relevance");
 
-    public void validateFilter(String sortBy) {
+    public void validateFilter(List<String> filterOptions, String filter) {
         boolean validOption=false;
         for(String option : filterOptions) {
-            if(sortBy.equals(option)) {
+            if(filter.equals(option)) {
                 validOption=true;
                 break;
             }
         }
-        if(!validOption) throw new ConflictInPathParameters("Invalid option for filter! Choose between 'view', 'latest' and 'relevance'!");
+        if(!validOption) throw new ConflictInPathParameters(
+                String.format(
+                        "Invalid option for filter! Choose between %s",
+                        listToString(filterOptions)
+                )
+        );
+    }
+
+    // UTILS FOR VALIDATE FILTER
+    public String listToString(List<String> list) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i));
+            if (i != list.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
     }
 }

@@ -60,9 +60,18 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
-    @GetMapping("/archived")
-    public ResponseEntity getArchivedNews(@PageableDefault() Pageable pageable) {
-        Page<NewsPreviewDto> news = newsService.getArchivedNewsPreview(pageable);
+//    @GetMapping("/archived")
+//    public ResponseEntity getArchivedNews(@PageableDefault() Pageable pageable) {
+//        Page<NewsPreviewDto> news = newsService.getArchivedNewsPreview(pageable);
+//        return ResponseEntity.ok(news);
+//    }
+
+    @GetMapping("/author")
+    public ResponseEntity getNewsBasedOnCurrentUserAuthor(
+            @RequestHeader("Authorization") String tokenJWT,
+            @PageableDefault() Pageable pageable,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy) {
+        Page<NewsPreviewDto> news = newsService.getNewsByAuthor(tokenJWT, pageable, sortBy);
         return ResponseEntity.ok(news);
     }
 
