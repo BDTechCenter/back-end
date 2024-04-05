@@ -164,8 +164,18 @@ public class NewsService {
         );
     }
 
-    public Page<NewsPreviewDto> getArchivedNewsPreview(Pageable pageable) {
-        Page<News> newsPage = newsRepository.findAllByIsPublishedFalse(pageable);
+//    public Page<NewsPreviewDto> getArchivedNewsPreview(Pageable pageable) {
+//        Page<News> newsPage = newsRepository.findAllByIsPublishedFalse(pageable);
+//        return newsPage.map(news -> new NewsPreviewDto(
+//                        news,
+//                        dateHandler.formatDate(news.getUpdateDate())
+//                )
+//        );
+//    }
+
+    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable) {
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        Page<News> newsPage = newsRepository.getNewsByAuthor(currentUserEmail, pageable);
         return newsPage.map(news -> new NewsPreviewDto(
                         news,
                         dateHandler.formatDate(news.getUpdateDate())

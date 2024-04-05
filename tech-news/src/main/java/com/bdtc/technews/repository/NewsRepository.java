@@ -54,4 +54,10 @@ public interface NewsRepository extends JpaRepository<News, UUID> {
            AND LOWER(n.title) LIKE LOWER(CONCAT('%', :titleFilter, '%')) 
            """)
     Page<News> findAllByLikeTitleFilter(Pageable pageable, String titleFilter);
+
+    @Query("""
+            SELECT n FROM News n
+            WHERE n.authorEmail = :currentUserEmail
+            """)
+    Page<News> getNewsByAuthor(String currentUserEmail, Pageable pageable);
 }
