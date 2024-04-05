@@ -84,10 +84,10 @@ public class NewsService {
         );
     }
 
-    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String sortBy, String titleFilter, String tags) {
+    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, FilterOption sortBy, String titleFilter, String tags) {
         Page<News> newsPage;
 
-        List<String> filterOptions = List.of("view", "latest", "relevance");
+        List<FilterOption> filterOptions = List.of(FilterOption.view, FilterOption.latest, FilterOption.relevance);
         filterHandler.validateFilter(filterOptions, sortBy);
 
         if(StringUtils.isNotBlank(tags)) {
@@ -95,13 +95,13 @@ public class NewsService {
             newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
         } else if(StringUtils.isBlank(titleFilter)) {
             switch (sortBy) {
-                case "view":
+                case view:
                     newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
                     break;
-                case "latest":
+                case latest:
                     newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
                     break;
-                case "relevance":
+                case relevance:
                     newsPage = newsRepository.getNewsByRelevance(pageable);
                     break;
                 default:
@@ -174,20 +174,20 @@ public class NewsService {
 //        );
 //    }
 
-    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, String sortBy) {
+    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, FilterOption sortBy) {
         String currentUserEmail = authService.getUser(tokenJWT).networkUser();
         Page<News> newsPage;
 
-        List<String> filterOptions = List.of("published", "archived");
+        List<FilterOption> filterOptions = List.of(FilterOption.published, FilterOption.archived, FilterOption.empty);
         filterHandler.validateFilter(filterOptions, sortBy);
 
-        if(StringUtils.isNotBlank(sortBy)) {
+        if(!sortBy.equals(FilterOption.empty)) {
             boolean isPublished = false;
             switch(sortBy) {
-                case "published":
+                case published:
                     isPublished = true;
                     break;
-                case "archived":
+                case archived:
                     break;
             }
             newsPage = newsRepository.getNewsByAuthorAndPublication(currentUserEmail, pageable, isPublished);
