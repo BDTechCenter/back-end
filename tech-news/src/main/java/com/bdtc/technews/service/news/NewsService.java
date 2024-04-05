@@ -165,14 +165,6 @@ public class NewsService {
         );
     }
 
-//    public Page<NewsPreviewDto> getArchivedNewsPreview(Pageable pageable) {
-//        Page<News> newsPage = newsRepository.findAllByIsPublishedFalse(pageable);
-//        return newsPage.map(news -> new NewsPreviewDto(
-//                        news,
-//                        dateHandler.formatDate(news.getUpdateDate())
-//                )
-//        );
-//    }
 
     public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, FilterOption filter) {
         String currentUserEmail = authService.getUser(tokenJWT).networkUser();
