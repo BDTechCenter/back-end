@@ -67,8 +67,11 @@ public class NewsController {
 //    }
 
     @GetMapping("/author")
-    public ResponseEntity getNewsBasedOnCurrentUserAuthor(@RequestHeader("Authorization") String tokenJWT, @PageableDefault() Pageable pageable) {
-        Page<NewsPreviewDto> news = newsService.getNewsByAuthor(tokenJWT, pageable);
+    public ResponseEntity getNewsBasedOnCurrentUserAuthor(
+            @RequestHeader("Authorization") String tokenJWT,
+            @PageableDefault() Pageable pageable,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy) {
+        Page<NewsPreviewDto> news = newsService.getNewsByAuthor(tokenJWT, pageable, sortBy);
         return ResponseEntity.ok(news);
     }
 

@@ -173,9 +173,24 @@ public class NewsService {
 //        );
 //    }
 
-    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable) {
+    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, String sortBy) {
         String currentUserEmail = authService.getUser(tokenJWT).networkUser();
-        Page<News> newsPage = newsRepository.getNewsByAuthor(currentUserEmail, pageable);
+        Page<News> newsPage;
+
+        if(StringUtils.isNotBlank(sortBy)) {
+            boolean isPublished = false;
+            switch(sortBy) {
+                case "published":
+                    isPublished = true;
+                    break;
+                case "archived":
+                    break;
+            }
+            newsPage = newsRepository.getNewsByAuthorAndPublication(currentUserEmail, pageable, isPublished);
+        } else {
+            newsPage = newsRepository.getNewsByAuthor(currentUserEmail, pageable);
+        }
+
         return newsPage.map(news -> new NewsPreviewDto(
                         news,
                         dateHandler.formatDate(news.getUpdateDate())
