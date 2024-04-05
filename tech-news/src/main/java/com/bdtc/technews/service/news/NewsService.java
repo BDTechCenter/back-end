@@ -87,7 +87,7 @@ public class NewsService {
     public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String sortBy, String titleFilter, String tags) {
         Page<News> newsPage;
 
-        filterHandler.validateFilter(sortBy);
+        filterHandler.validateNewsPreviewFilter(sortBy);
 
         if(StringUtils.isNotBlank(tags)) {
             List<String> tagList = Arrays.asList(tags.split(","));
@@ -176,6 +176,8 @@ public class NewsService {
     public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, String sortBy) {
         String currentUserEmail = authService.getUser(tokenJWT).networkUser();
         Page<News> newsPage;
+
+        filterHandler.validateNewsByAuthorFilter(sortBy);
 
         if(StringUtils.isNotBlank(sortBy)) {
             boolean isPublished = false;
