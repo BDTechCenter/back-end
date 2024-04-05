@@ -84,17 +84,17 @@ public class NewsService {
         );
     }
 
-    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, FilterOption sortBy, String titleFilter, String tags) {
+    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, FilterOption filter, String titleFilter, String tags) {
         Page<News> newsPage;
 
         List<FilterOption> filterOptions = List.of(FilterOption.view, FilterOption.latest, FilterOption.relevance);
-        filterHandler.validateFilter(filterOptions, sortBy);
+        filterHandler.validateFilter(filterOptions, filter);
 
         if(StringUtils.isNotBlank(tags)) {
             List<String> tagList = Arrays.asList(tags.split(","));
             newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
         } else if(StringUtils.isBlank(titleFilter)) {
-            switch (sortBy) {
+            switch (filter) {
                 case view:
                     newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
                     break;
@@ -174,16 +174,16 @@ public class NewsService {
 //        );
 //    }
 
-    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, FilterOption sortBy) {
+    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, FilterOption filter) {
         String currentUserEmail = authService.getUser(tokenJWT).networkUser();
         Page<News> newsPage;
 
         List<FilterOption> filterOptions = List.of(FilterOption.published, FilterOption.archived, FilterOption.empty);
-        filterHandler.validateFilter(filterOptions, sortBy);
+        filterHandler.validateFilter(filterOptions, filter);
 
-        if(!sortBy.equals(FilterOption.empty)) {
+        if(!filter.equals(FilterOption.empty)) {
             boolean isPublished = false;
-            switch(sortBy) {
+            switch(filter) {
                 case published:
                     isPublished = true;
                     break;
