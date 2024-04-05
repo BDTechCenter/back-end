@@ -22,11 +22,11 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://127.0.0.1:3000"
+            allowedOrigins: "*"
             allowedHeaders: "*"
             allowedMethods:
               - GET
               - POST
-              - DELETE
               - PUT
+              - PATCH
               - OPTIONS
