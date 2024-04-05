@@ -84,24 +84,24 @@ public class NewsService {
         );
     }
 
-    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String sortBy, String titleFilter, String tags) {
+    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, FilterOption filter, String titleFilter, String tags) {
         Page<News> newsPage;
 
-        List<String> filterOptions = List.of("view", "latest", "relevance");
-        filterHandler.validateFilter(filterOptions, sortBy);
+        List<FilterOption> filterOptions = List.of(FilterOption.view, FilterOption.latest, FilterOption.relevance);
+        filterHandler.validateFilter(filterOptions, filter);
 
         if(StringUtils.isNotBlank(tags)) {
             List<String> tagList = Arrays.asList(tags.split(","));
             newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
         } else if(StringUtils.isBlank(titleFilter)) {
-            switch (sortBy) {
-                case "view":
+            switch (filter) {
+                case view:
                     newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
                     break;
-                case "latest":
+                case latest:
                     newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
                     break;
-                case "relevance":
+                case relevance:
                     newsPage = newsRepository.getNewsByRelevance(pageable);
                     break;
                 default:
@@ -165,29 +165,21 @@ public class NewsService {
         );
     }
 
-//    public Page<NewsPreviewDto> getArchivedNewsPreview(Pageable pageable) {
-//        Page<News> newsPage = newsRepository.findAllByIsPublishedFalse(pageable);
-//        return newsPage.map(news -> new NewsPreviewDto(
-//                        news,
-//                        dateHandler.formatDate(news.getUpdateDate())
-//                )
-//        );
-//    }
 
-    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, String sortBy) {
+    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, FilterOption filter) {
         String currentUserEmail = authService.getUser(tokenJWT).networkUser();
         Page<News> newsPage;
 
-        List<String> filterOptions = List.of("published", "archived");
-        filterHandler.validateFilter(filterOptions, sortBy);
+        List<FilterOption> filterOptions = List.of(FilterOption.published, FilterOption.archived, FilterOption.empty);
+        filterHandler.validateFilter(filterOptions, filter);
 
-        if(StringUtils.isNotBlank(sortBy)) {
+        if(!filter.equals(FilterOption.empty)) {
             boolean isPublished = false;
-            switch(sortBy) {
-                case "published":
+            switch(filter) {
+                case published:
                     isPublished = true;
                     break;
-                case "archived":
+                case archived:
                     break;
             }
             newsPage = newsRepository.getNewsByAuthorAndPublication(currentUserEmail, pageable, isPublished);

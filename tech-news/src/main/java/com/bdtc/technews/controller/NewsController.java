@@ -34,7 +34,7 @@ public class NewsController {
     @GetMapping("/preview")
     public ResponseEntity getNewsPreview(
             @PageableDefault() Pageable pageable,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "latest") String sortBy,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "latest") FilterOption sortBy,
             @RequestParam(name = "title", required = false, defaultValue = "") String titleFilter,
             @RequestParam(name = "tags", required = false, defaultValue = "") String tags
     ) {
@@ -60,17 +60,11 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
-//    @GetMapping("/archived")
-//    public ResponseEntity getArchivedNews(@PageableDefault() Pageable pageable) {
-//        Page<NewsPreviewDto> news = newsService.getArchivedNewsPreview(pageable);
-//        return ResponseEntity.ok(news);
-//    }
-
     @GetMapping("/author")
-    public ResponseEntity getNewsBasedOnCurrentUserAuthor(
+    public ResponseEntity getNewsBasedOnAuthor(
             @RequestHeader("Authorization") String tokenJWT,
             @PageableDefault() Pageable pageable,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy) {
+            @RequestParam(name = "sortBy", required = false, defaultValue = "empty") FilterOption sortBy) {
         Page<NewsPreviewDto> news = newsService.getNewsByAuthor(tokenJWT, pageable, sortBy);
         return ResponseEntity.ok(news);
     }
