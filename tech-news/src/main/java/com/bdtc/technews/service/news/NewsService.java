@@ -80,6 +80,7 @@ public class NewsService {
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }
@@ -146,6 +147,7 @@ public class NewsService {
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }
@@ -161,6 +163,7 @@ public class NewsService {
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }
@@ -221,6 +224,7 @@ public class NewsService {
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }
