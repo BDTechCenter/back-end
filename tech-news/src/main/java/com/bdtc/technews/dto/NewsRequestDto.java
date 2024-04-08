@@ -11,7 +11,6 @@ public record NewsRequestDto(
         String title,
         @NotBlank
         String body,
-        @NotEmpty
         Set<String> tags,
         MultipartFile image,
         String isPublished
