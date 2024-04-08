@@ -1,5 +1,6 @@
 package com.bdtc.technews.service.news;
 
+import com.bdtc.technews.contants.FilterOption;
 import com.bdtc.technews.dto.*;
 import com.bdtc.technews.http.auth.service.AuthClientService;
 import com.bdtc.technews.infra.exception.validation.PermissionException;
@@ -80,28 +81,30 @@ public class NewsService {
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }
 
-    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, FilterOption filter, String titleFilter, String tags) {
+    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String filter, String titleFilter, String tags) {
         Page<News> newsPage;
 
-        List<FilterOption> filterOptions = List.of(FilterOption.view, FilterOption.latest, FilterOption.relevance);
-        filterHandler.validateFilter(filterOptions, filter);
+        List<FilterOption> filterOptions = List.of(FilterOption.VIEW, FilterOption.LATEST, FilterOption.RELEVANCE);
+        FilterOption filterOption = FilterOption.stringToFilterOption(filter);
+        filterHandler.validateFilter(filterOptions, filterOption);
 
         if(StringUtils.isNotBlank(tags)) {
             List<String> tagList = Arrays.asList(tags.split(","));
             newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
         } else if(StringUtils.isBlank(titleFilter)) {
-            switch (filter) {
-                case view:
+            switch (filterOption) {
+                case VIEW:
                     newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
                     break;
-                case latest:
+                case LATEST:
                     newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
                     break;
-                case relevance:
+                case RELEVANCE:
                     newsPage = newsRepository.getNewsByRelevance(pageable);
                     break;
                 default:
@@ -146,6 +149,7 @@ public class NewsService {
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }
@@ -161,25 +165,27 @@ public class NewsService {
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }
 
 
-    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, FilterOption filter) {
+    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, String filter) {
         String currentUserEmail = authService.getUser(tokenJWT).networkUser();
         Page<News> newsPage;
 
-        List<FilterOption> filterOptions = List.of(FilterOption.published, FilterOption.archived, FilterOption.empty);
-        filterHandler.validateFilter(filterOptions, filter);
+        List<FilterOption> filterOptions = List.of(FilterOption.PUBLISHED, FilterOption.ARCHIVED, FilterOption.EMPTY);
+        FilterOption filterOption = FilterOption.stringToFilterOption(filter);
+        filterHandler.validateFilter(filterOptions, filterOption);
 
-        if(!filter.equals(FilterOption.empty)) {
+        if(!filter.equals(FilterOption.EMPTY)) {
             boolean isPublished = false;
-            switch(filter) {
-                case published:
+            switch(filterOption) {
+                case PUBLISHED:
                     isPublished = true;
                     break;
-                case archived:
+                case ARCHIVED:
                     break;
             }
             newsPage = newsRepository.getNewsByAuthorAndPublication(currentUserEmail, pageable, isPublished);
@@ -221,6 +227,7 @@ public class NewsService {
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }

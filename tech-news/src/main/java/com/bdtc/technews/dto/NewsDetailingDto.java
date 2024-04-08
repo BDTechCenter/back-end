@@ -22,12 +22,12 @@ public record NewsDetailingDto(
         String imageUrl,
         boolean isPublished
 ) {
-    public NewsDetailingDto(News news, Set<String> tags, String date) {
+    public NewsDetailingDto(News news, Set<String> tags, String creationDate, String updateDate) {
         this(
                 news.getId(),
                 news.getAuthor(),
-                date,
-                date,
+                creationDate,
+                updateDate,
                 news.getTitle(),
                 news.getBody(),
                 tags,
