@@ -1,18 +1,20 @@
 package com.bdtc.technews.service.news;
 
-import com.bdtc.technews.dto.NewsDetailingDto;
-import com.bdtc.technews.dto.NewsPreviewDto;
-import com.bdtc.technews.dto.NewsRequestDto;
-import com.bdtc.technews.dto.NewsUpdateDto;
+import com.bdtc.technews.contants.FilterOption;
+import com.bdtc.technews.dto.*;
+import com.bdtc.technews.http.auth.service.AuthClientService;
+import com.bdtc.technews.infra.exception.validation.PermissionException;
 import com.bdtc.technews.model.News;
+import com.bdtc.technews.model.NewsUpVoter;
 import com.bdtc.technews.model.Tag;
 import com.bdtc.technews.repository.NewsRepository;
+import com.bdtc.technews.repository.NewsUpVoterRepository;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
-import com.bdtc.technews.service.news.utils.DateHandler;
-import com.bdtc.technews.service.news.utils.ImageHandler;
-import com.bdtc.technews.service.news.utils.TagHandler;
+import com.bdtc.technews.service.news.utils.*;
 import com.bdtc.technews.service.tag.TagService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,9 @@ public class NewsService {
     private NewsRepository newsRepository;
 
     @Autowired
+    private NewsUpVoterRepository newsUpVoterRepository;
+
+    @Autowired
     private TagService tagService;
 
     @Autowired
@@ -45,13 +50,27 @@ public class NewsService {
     @Autowired
     private NewsBackupService newsBackupService;
 
+    @Autowired
+    private FilterHandler filterHandler;
+
+    @Autowired
+    private AuthClientService authService;
+
+    @Autowired
+    private RoleAuthHandler roleAuthHandler;
+
     @Transactional
-    public NewsDetailingDto createNews(NewsRequestDto newsDto) {
+    public NewsDetailingDto createNews(String tokenJWT, NewsRequestDto newsDto) {
+        UserDto authenticatedUser = authService.getUser(tokenJWT);
+        roleAuthHandler.validateUserRole(authenticatedUser);
+
         News news = new News(newsDto);
         LocalDateTime dateNow = dateHandler.getCurrentDateTime();
         Set<Tag> tagSet = tagService.getTagSet(newsDto.tags());
         String imageUrl = imageHandler.saveImageToUploadDir(newsDto.image());
 
+        news.setAuthorEmail(authenticatedUser.networkUser());
+        news.setAuthor(authenticatedUser.username());
         news.setCreationDate(dateNow);
         news.setUpdateDate(dateNow);
         news.setTags(tagSet);
@@ -62,38 +81,39 @@ public class NewsService {
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }
 
-    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, boolean sortByView) {
+    public Page<NewsPreviewDto> getNewsPreview(Pageable pageable, String filter, String titleFilter, String tags) {
         Page<News> newsPage;
-        if(sortByView) {
-            newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
+
+        List<FilterOption> filterOptions = List.of(FilterOption.VIEW, FilterOption.LATEST, FilterOption.RELEVANCE);
+        FilterOption filterOption = FilterOption.stringToFilterOption(filter);
+        filterHandler.validateFilter(filterOptions, filterOption);
+
+        if(StringUtils.isNotBlank(tags)) {
+            List<String> tagList = Arrays.asList(tags.split(","));
+            newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
+        } else if(StringUtils.isBlank(titleFilter)) {
+            switch (filterOption) {
+                case VIEW:
+                    newsPage = newsRepository.findByIsPublishedTrueOrderByViewsDesc(pageable);
+                    break;
+                case LATEST:
+                    newsPage = newsRepository.findByIsPublishedTrueAndLatestUpdate(pageable);
+                    break;
+                case RELEVANCE:
+                    newsPage = newsRepository.getNewsByRelevance(pageable);
+                    break;
+                default:
+                    newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
+                    break;
+            }
         } else {
-            newsPage = newsRepository.findAllByIsPublishedTrue(pageable);
+            newsPage = newsRepository.findAllByLikeTitleFilter(pageable, titleFilter);
         }
-        return newsPage.map(news -> new NewsPreviewDto(
-                news,
-                dateHandler.formatDate(news.getUpdateDate())
-                )
-        );
-    }
-
-    @Transactional
-    public NewsDetailingDto getNewsById(UUID newsId) {
-        News news = newsRepository.getReferenceById(newsId);
-        news.addAView();
-        return new NewsDetailingDto(
-                news,
-                tagHandler.convertSetTagToSetString(news.getTags()),
-                dateHandler.formatDate(news.getUpdateDate())
-        );
-    }
-
-    public Page<NewsPreviewDto> getNewsPreviewFilteringByTags(Pageable pageable, String tags) {
-        List<String> tagList = Arrays.asList(tags.split(","));
-        Page<News> newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
         return newsPage.map(news -> new NewsPreviewDto(
                         news,
                         dateHandler.formatDate(news.getUpdateDate())
@@ -102,30 +122,79 @@ public class NewsService {
     }
 
     @Transactional
-    public NewsDetailingDto publishNews(UUID newsId) {
+    public NewsDetailingWUpVoteDto getNewsById(String tokenJWT, UUID newsId) {
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
         News news = newsRepository.getReferenceById(newsId);
+
+        if(!news.isPublished() && !news.getAuthorEmail().equals(currentUserEmail)) throw new PermissionException();
+
+        news.addAView();
+        boolean alreadyUpVoted = newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId());
+
+        return new NewsDetailingWUpVoteDto(
+                news,
+                tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getUpdateDate()),
+                alreadyUpVoted
+        );
+    }
+
+    @Transactional
+    public NewsDetailingDto publishNews(String tokenJWT, UUID newsId) {
+        News news = newsRepository.getReferenceById(newsId);
+
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
+
         news.publishNews();
         news.setPublicationDate(dateHandler.getCurrentDateTime());
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }
 
     @Transactional
-    public NewsDetailingDto archiveNews(UUID newsId) {
+    public NewsDetailingDto archiveNews(String tokenJWT, UUID newsId) {
         News news = newsRepository.getReferenceById(newsId);
+
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
+
         news.archiveNews();
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
     }
 
-    public Page<NewsPreviewDto> getArchivedNewsPreview(Pageable pageable) {
-        Page<News> newsPage = newsRepository.findAllByIsPublishedFalse(pageable);
+
+    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, String filter) {
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        Page<News> newsPage;
+
+        List<FilterOption> filterOptions = List.of(FilterOption.PUBLISHED, FilterOption.ARCHIVED, FilterOption.EMPTY);
+        FilterOption filterOption = FilterOption.stringToFilterOption(filter);
+        filterHandler.validateFilter(filterOptions, filterOption);
+
+        if(!filterOption.equals(FilterOption.EMPTY)) {
+            boolean isPublished = false;
+            switch(filterOption) {
+                case PUBLISHED:
+                    isPublished = true;
+                    break;
+                case ARCHIVED:
+                    break;
+            }
+            newsPage = newsRepository.getNewsByAuthorAndPublication(currentUserEmail, pageable, isPublished);
+        } else {
+            newsPage = newsRepository.getNewsByAuthor(currentUserEmail, pageable);
+        }
+
         return newsPage.map(news -> new NewsPreviewDto(
                         news,
                         dateHandler.formatDate(news.getUpdateDate())
@@ -135,12 +204,14 @@ public class NewsService {
 
 
     @Transactional
-    public NewsDetailingDto updateNews(UUID newsId, NewsUpdateDto updateDto) {
+    public NewsDetailingDto updateNews(String tokenJWT, UUID newsId, NewsUpdateDto updateDto) {
         News news = newsRepository.getReferenceById(newsId);
         newsBackupService.createNewsBackup(news, null);
 
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
+
         if(updateDto.title() !=null) news.updateTitle(updateDto.title());
-        if(updateDto.summary() !=null) news.updateSummary(updateDto.summary());
         if(updateDto.body() !=null) news.updateBody(updateDto.body());
 
         if(updateDto.tags() !=null) {
@@ -158,7 +229,32 @@ public class NewsService {
         return new NewsDetailingDto(
                 news,
                 tagHandler.convertSetTagToSetString(news.getTags()),
+                dateHandler.formatDate(news.getCreationDate()),
                 dateHandler.formatDate(news.getUpdateDate())
         );
+    }
+
+    public News getNews(UUID id) {
+        if(!newsRepository.existsById(id)) throw new EntityNotFoundException();
+        News news = newsRepository.getReferenceById(id);
+        return news;
+    }
+
+    @Transactional
+    public void addUpVoteToNews(String tokenJWT, UUID newsId) {
+        if(!newsRepository.existsById(newsId)) throw new EntityNotFoundException();
+
+        News news = newsRepository.getReferenceById(newsId);
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+
+        if(newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId())) {
+            newsUpVoterRepository.deleteByVoterEmailAndNewsId(currentUserEmail, newsId);
+            news.removeUpVote();
+        }else {
+            NewsUpVoter newsUpVoter = new NewsUpVoter(currentUserEmail, news);
+            news.getNewsUpVoters().add(newsUpVoter);
+            newsUpVoterRepository.save(newsUpVoter);
+            news.addUpVote();
+        }
     }
 }

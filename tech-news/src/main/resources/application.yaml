@@ -10,6 +10,12 @@ spring:
   application:
     name: tech-news
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 200MB
+
 server:
   error:
     include-stacktrace: never
@@ -18,3 +24,10 @@ server:
 
 upload:
   dir: ${user.dir}/newsUpload
+
+populate:
+  url: ${BASE_URL}
+
+frontend:
+  host: http://127.0.0.1:3000
+

@@ -20,10 +20,10 @@ public class NewsBackup {
 
     private UUID newsId;
 
+    @Column(length = 100)
     private String title;
 
-    private String summary;
-
+    @Column(columnDefinition = "TEXT")
     private String body;
 
     private String imageUrl;
@@ -31,7 +31,6 @@ public class NewsBackup {
     public NewsBackup(News news) {
         this.newsId = news.getId();
         this.title = news.getTitle();
-        this.summary = news.getSummary();
         this.body = news.getBody();
         this.imageUrl = news.getImageUrl();
     }

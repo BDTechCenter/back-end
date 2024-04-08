@@ -6,7 +6,6 @@ import java.util.Set;
 
 public record NewsUpdateDto(
         String title,
-        String summary,
         String body,
         Set<String> tags,
         MultipartFile image

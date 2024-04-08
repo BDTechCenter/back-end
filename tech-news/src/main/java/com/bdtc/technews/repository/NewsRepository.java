@@ -31,4 +31,40 @@ public interface NewsRepository extends JpaRepository<News, UUID> {
     Page<News> findAllByIsPublishedTrue(Pageable pageable);
 
     Page<News> findAllByIsPublishedFalse(Pageable pageable);
+
+    @Query(
+            """
+            SELECT n FROM News n
+            WHERE n.isPublished = true
+            ORDER BY n.updateDate DESC
+            """
+    )
+    Page<News> findByIsPublishedTrueAndLatestUpdate(Pageable pageable);
+
+    @Query("""
+            SELECT n FROM News n
+            WHERE n.isPublished = true
+            ORDER BY n.upVotes DESC
+            """)
+    Page<News> getNewsByRelevance(Pageable pageable);
+
+    @Query("""
+           SELECT n FROM News n
+           WHERE n.isPublished = true
+           AND LOWER(n.title) LIKE LOWER(CONCAT('%', :titleFilter, '%')) 
+           """)
+    Page<News> findAllByLikeTitleFilter(Pageable pageable, String titleFilter);
+
+    @Query("""
+            SELECT n FROM News n
+            WHERE n.authorEmail = :currentUserEmail
+            """)
+    Page<News> getNewsByAuthor(String currentUserEmail, Pageable pageable);
+
+    @Query("""
+            SELECT n FROM News n
+            WHERE n.authorEmail = :currentUserEmail
+            AND n.isPublished = :isPublished
+            """)
+    Page<News> getNewsByAuthorAndPublication(String currentUserEmail, Pageable pageable, boolean isPublished);
 }

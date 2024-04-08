@@ -42,12 +42,14 @@ public class TagService {
 
     public Set<Tag> getTagSet(Set<String> tagsStringList) {
         Set<Tag> tagSet = new HashSet<>();
-        for (String tagName : tagsStringList) {
-            Tag tagEntity = tagRepository.findByName(tagName);
-            if(tagEntity == null) {
-                tagEntity = tagRepository.save(new Tag(tagName));
+        if(tagsStringList != null && !tagsStringList.isEmpty()) {
+            for (String tagName : tagsStringList) {
+                Tag tagEntity = tagRepository.findByName(tagName);
+                if(tagEntity == null) {
+                    tagEntity = tagRepository.save(new Tag(tagName));
+                }
+                tagSet.add(tagEntity);
             }
-            tagSet.add(tagEntity);
         }
         return tagSet;
     }

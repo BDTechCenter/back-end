@@ -10,6 +10,8 @@ public record NewsPreviewDto(
         String updateDate,
         String title,
         String author,
+        Long views,
+        int upVotes,
         String imageUrl
 ) {
     public NewsPreviewDto(News news, String date) {
@@ -18,6 +20,8 @@ public record NewsPreviewDto(
                 date,
                 news.getTitle(),
                 news.getAuthor(),
+                news.getViews(),
+                news.getUpVotes(),
                 news.getImageUrl()
         );
     }

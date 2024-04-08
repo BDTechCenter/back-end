@@ -1,7 +1,7 @@
 package com.bdtc.technews.controller;
 
+import com.bdtc.technews.contants.FilterOption;
 import com.bdtc.technews.dto.*;
-import com.bdtc.technews.model.News;
 import com.bdtc.technews.service.news.NewsService;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
 import jakarta.validation.Valid;
@@ -26,51 +26,53 @@ public class NewsController {
     private NewsBackupService newsBackupService;
 
     @PostMapping
-    public ResponseEntity createNews(@ModelAttribute @Valid NewsRequestDto newsRequestDto, UriComponentsBuilder uriBuilder) {
-        NewsDetailingDto news = newsService.createNews(newsRequestDto);
+    public ResponseEntity createNews(@RequestHeader("Authorization") String tokenJWT, @ModelAttribute @Valid NewsRequestDto newsRequestDto, UriComponentsBuilder uriBuilder) {
+        NewsDetailingDto news = newsService.createNews(tokenJWT, newsRequestDto);
         var uri = uriBuilder.path("tech-news/news/{id}").build(news.id());
         return ResponseEntity.created(uri).body(news);
     }
 
     @GetMapping("/preview")
-    public ResponseEntity getNewsPreview(@PageableDefault() Pageable pageable, @RequestParam(name = "sortByView", required = false, defaultValue = "false") boolean sortByView) {
-        Page<NewsPreviewDto> page = newsService.getNewsPreview(pageable, sortByView);
+    public ResponseEntity getNewsPreview(
+            @PageableDefault() Pageable pageable,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "latest") String sortBy,
+            @RequestParam(name = "title", required = false, defaultValue = "") String titleFilter,
+            @RequestParam(name = "tags", required = false, defaultValue = "") String tags
+    ) {
+        Page<NewsPreviewDto> page = newsService.getNewsPreview(pageable, sortBy, titleFilter, tags);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getNewsById(@PathVariable UUID id) {
-        NewsDetailingDto news = newsService.getNewsById(id);
-        return ResponseEntity.ok(news);
-    }
-
-    @GetMapping()
-    public ResponseEntity getNewsFilteringByTags(@RequestParam(name = "tags") String tags, @PageableDefault() Pageable pageable) {
-        Page<NewsPreviewDto> news = newsService.getNewsPreviewFilteringByTags(pageable, tags);
+    public ResponseEntity getNewsById(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+        NewsDetailingWUpVoteDto news = newsService.getNewsById(tokenJWT, id);
         return ResponseEntity.ok(news);
     }
 
     @PatchMapping("/{id}/publish")
-    public ResponseEntity publishNews(@PathVariable UUID id) {
-        NewsDetailingDto news = newsService.publishNews(id);
+    public ResponseEntity publishNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+        NewsDetailingDto news = newsService.publishNews(tokenJWT, id);
         return ResponseEntity.ok(news);
     }
 
     @PatchMapping("/{id}/archive")
-    public ResponseEntity archiveNews(@PathVariable UUID id) {
-        NewsDetailingDto news = newsService.archiveNews(id);
+    public ResponseEntity archiveNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+        NewsDetailingDto news = newsService.archiveNews(tokenJWT, id);
         return ResponseEntity.ok(news);
     }
 
-    @GetMapping("/archived")
-    public ResponseEntity getArchivedNews(@PageableDefault() Pageable pageable) {
-        Page<NewsPreviewDto> news = newsService.getArchivedNewsPreview(pageable);
+    @GetMapping("/author")
+    public ResponseEntity getNewsBasedOnAuthor(
+            @RequestHeader("Authorization") String tokenJWT,
+            @PageableDefault() Pageable pageable,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "empty") String sortBy) {
+        Page<NewsPreviewDto> news = newsService.getNewsByAuthor(tokenJWT, pageable, sortBy);
         return ResponseEntity.ok(news);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity updateNews(@ModelAttribute NewsUpdateDto updateDto, @PathVariable UUID id) {
-        NewsDetailingDto news = newsService.updateNews(id, updateDto);
+    public ResponseEntity updateNews(@RequestHeader("Authorization") String tokenJWT, @ModelAttribute NewsUpdateDto updateDto, @PathVariable UUID id) {
+        NewsDetailingDto news = newsService.updateNews(tokenJWT, id, updateDto);
         return ResponseEntity.ok(news);
     }
 
@@ -84,5 +86,11 @@ public class NewsController {
     public ResponseEntity restoreNewsFromABackup(@PathVariable UUID id, @PathVariable Long backupId) {
         NewsDetailingDto news = newsBackupService.restoreNewsFromABackup(id, backupId);
         return ResponseEntity.ok(news);
+    }
+
+    @PatchMapping("/{id}/upvote")
+    public ResponseEntity addUpVoteToNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+        newsService.addUpVoteToNews(tokenJWT, id);
+        return ResponseEntity.ok().build();
     }
 }

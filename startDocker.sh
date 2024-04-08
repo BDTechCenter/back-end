@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mvn_command="mvn clean package -DskipTests"
-services=("service-discovery" "api-gateway" "tech-news")
+services=("service-discovery" "api-gateway" "auth-service" "tech-news")
 
 for service in "${services[@]}"
 do
@@ -10,5 +10,5 @@ do
   cd ..
 done
 
-docker-compose down
-docker-compose up --build
+#docker compose down
+#docker compose up --build

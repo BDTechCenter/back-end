@@ -15,22 +15,24 @@ public record NewsDetailingDto(
         String creationDate,
         String updateDate,
         String title,
-        String summary,
         String body,
         Set<String> tags,
+        Long views,
+        int upVotes,
         String imageUrl,
         boolean isPublished
 ) {
-    public NewsDetailingDto(News news, Set<String> tags, String date) {
+    public NewsDetailingDto(News news, Set<String> tags, String creationDate, String updateDate) {
         this(
                 news.getId(),
                 news.getAuthor(),
-                date,
-                date,
+                creationDate,
+                updateDate,
                 news.getTitle(),
-                news.getSummary(),
                 news.getBody(),
                 tags,
+                news.getViews(),
+                news.getUpVotes(),
                 news.getImageUrl(),
                 news.isPublished()
         );
