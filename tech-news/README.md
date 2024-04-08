@@ -63,10 +63,15 @@ Return:
 }
 ```
 
-### GET archived news: 
-Obs: Return based on the author hasn't been implemented yet**
+### GET news by author:
     
-Endpoint: `/news/archived`
+Endpoint: `/news/author`
+
+Type: pathParameters
+
+    sortBy: String (optional) ['published' or 'archived']
+    size: int (optional)
+    page: int (optional)
 
 Return: 
 ```json
