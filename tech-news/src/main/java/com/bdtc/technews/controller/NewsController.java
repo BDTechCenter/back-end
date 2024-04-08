@@ -35,7 +35,7 @@ public class NewsController {
     @GetMapping("/preview")
     public ResponseEntity getNewsPreview(
             @PageableDefault() Pageable pageable,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "latest") FilterOption sortBy,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "latest") String sortBy,
             @RequestParam(name = "title", required = false, defaultValue = "") String titleFilter,
             @RequestParam(name = "tags", required = false, defaultValue = "") String tags
     ) {
@@ -65,7 +65,7 @@ public class NewsController {
     public ResponseEntity getNewsBasedOnAuthor(
             @RequestHeader("Authorization") String tokenJWT,
             @PageableDefault() Pageable pageable,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "empty") FilterOption sortBy) {
+            @RequestParam(name = "sortBy", required = false, defaultValue = "empty") String sortBy) {
         Page<NewsPreviewDto> news = newsService.getNewsByAuthor(tokenJWT, pageable, sortBy);
         return ResponseEntity.ok(news);
     }
