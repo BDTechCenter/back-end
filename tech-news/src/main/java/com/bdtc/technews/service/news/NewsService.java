@@ -123,10 +123,12 @@ public class NewsService {
 
     @Transactional
     public NewsDetailingWUpVoteDto getNewsById(String tokenJWT, UUID newsId) {
-        News news = newsRepository.getReferenceById(newsId);
-        news.addAView();
-
         String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        News news = newsRepository.getReferenceById(newsId);
+
+        if(!news.isPublished() && !news.getAuthorEmail().equals(currentUserEmail)) throw new PermissionException();
+
+        news.addAView();
         boolean alreadyUpVoted = newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId());
 
         return new NewsDetailingWUpVoteDto(
