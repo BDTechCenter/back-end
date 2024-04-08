@@ -180,7 +180,7 @@ public class NewsService {
         FilterOption filterOption = FilterOption.stringToFilterOption(filter);
         filterHandler.validateFilter(filterOptions, filterOption);
 
-        if(!filter.equals(FilterOption.EMPTY)) {
+        if(!filterOption.equals(FilterOption.EMPTY)) {
             boolean isPublished = false;
             switch(filterOption) {
                 case PUBLISHED:
