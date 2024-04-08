@@ -1,7 +1,6 @@
 package com.bdtc.technews.service.news;
 
 import com.bdtc.technews.contants.FilterOption;
-import com.bdtc.technews.contants.RoleOption;
 import com.bdtc.technews.dto.*;
 import com.bdtc.technews.http.auth.service.AuthClientService;
 import com.bdtc.technews.infra.exception.validation.PermissionException;

@@ -1,5 +1,7 @@
 package com.bdtc.technews.contants;
 
+import com.bdtc.technews.infra.exception.validation.ConflictInPathParameters;
+
 public enum FilterOption {
     VIEW,
     LATEST,
@@ -9,6 +11,11 @@ public enum FilterOption {
     EMPTY;
 
     public static FilterOption stringToFilterOption(String valor) {
-        return FilterOption.valueOf(valor.toUpperCase());
+        try {
+            return FilterOption.valueOf(valor.toUpperCase());
+        }catch (IllegalArgumentException exception) {
+            throw new ConflictInPathParameters("Can't receive more then one path parameter");
+        }
+
     }
 }
