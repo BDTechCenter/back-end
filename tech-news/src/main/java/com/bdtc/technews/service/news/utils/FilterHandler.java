@@ -1,6 +1,6 @@
 package com.bdtc.technews.service.news.utils;
 
-import com.bdtc.technews.dto.FilterOption;
+import com.bdtc.technews.contants.FilterOption;
 import com.bdtc.technews.infra.exception.validation.ConflictInPathParameters;
 import org.springframework.stereotype.Component;
 

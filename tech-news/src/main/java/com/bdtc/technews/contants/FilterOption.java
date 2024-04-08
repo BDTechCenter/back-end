@@ -1,4 +1,4 @@
-package com.bdtc.technews.dto;
+package com.bdtc.technews.contants;
 
 public enum FilterOption {
     view,
