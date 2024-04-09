@@ -60,7 +60,7 @@ public class CommentService {
     public Page<CommentDetailingWUpVoteDto> getCommentsByNewsId(String tokenJWT, UUID newsId, Pageable pageable) {
         News news = newsService.getNews(newsId);
         Page<Comment> commentsPage = commentRepository.getCommentByRelevance(news, pageable);
-        String currentUserEmail = authService.getUser(tokenJWT).username();
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
 
         return commentsPage.map(comment -> new CommentDetailingWUpVoteDto(
                 comment,
