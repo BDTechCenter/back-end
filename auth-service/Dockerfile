@@ -1,8 +1,17 @@
+FROM maven:3.9.6-amazoncorretto-17-debian-bookworm as BUILD
+
+WORKDIR /app
+
+COPY pom.xml .
+
+COPY src ./src
+
+RUN mvn package -DskipTests
+
 FROM openjdk:17-alpine
 
-COPY target/auth-service-0.0.1-SNAPSHOT.jar app.jar
+WORKDIR /app
 
-ENV http_proxy=http://172.0.0.1:3128
-ENV https_proxy=http://172.0.0.1:3128
+COPY --from=BUILD /app/target/auth-service-0.0.1-SNAPSHOT.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
