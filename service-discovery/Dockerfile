@@ -1,7 +1,17 @@
+FROM maven:3.9.6-amazoncorretto-17-debian-bookworm as BUILD
+
+WORKDIR /app
+
+COPY pom.xml .
+
+COPY src ./src
+
+RUN mvn package -DskipTests
+
 FROM openjdk:17-alpine
 
-COPY target/service-discovery-0.0.1-SNAPSHOT.jar app.jar
+WORKDIR /app
 
-EXPOSE 8765
+COPY --from=BUILD /app/target/service-discovery-0.0.1-SNAPSHOT.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
