@@ -12,7 +12,8 @@ public record NewsPreviewDto(
         String author,
         Long views,
         int upVotes,
-        String imageUrl
+        String imageUrl,
+        boolean isPublished
 ) {
     public NewsPreviewDto(News news, String date) {
         this(
@@ -22,7 +23,8 @@ public record NewsPreviewDto(
                 news.getAuthor(),
                 news.getViews(),
                 news.getUpVotes(),
-                news.getImageUrl()
+                news.getImageUrl(),
+                news.isPublished()
         );
     }
 }
