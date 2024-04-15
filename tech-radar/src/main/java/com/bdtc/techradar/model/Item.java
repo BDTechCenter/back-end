@@ -25,9 +25,9 @@ public class Item {
     @GeneratedValue
     private UUID id;
 
-    private String author;  // revisions (need review)
+    private String author;
 
-    private String authorEmail;
+    private String authorEmail;  // revisions (need review)
 
     private LocalDateTime creationDate;
 
@@ -42,7 +42,7 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private Flag flag;
 
-    private boolean featured;  // need review
+    private boolean isActive;  // featured
 
     @Enumerated(EnumType.STRING)
     private Ring ring;
