@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: local
+
+  application:
+    name: tech-radar
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  error:
+    include-stacktrace: never
+
+  port: 5433
+
+#frontend:
+#  host: http://127.0.0.1:3000
