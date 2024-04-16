@@ -26,24 +26,33 @@ public class CommentController {
 
     @PostMapping("/{newsId}")
     @Transactional
-    public ResponseEntity createComment(
+    public ResponseEntity<CommentDetailingDto> createComment(
             @RequestHeader("Authorization") String tokenJWT,
             @PathVariable UUID newsId,
             @RequestBody @Valid CommentRequestDto commentRequestDto,
-            UriComponentsBuilder uriBuilder) {
+            UriComponentsBuilder uriBuilder
+    ) {
         CommentDetailingDto comment = commentService.createComment(tokenJWT, newsId, commentRequestDto);
         var uri = uriBuilder.path("tech-news/comments/{id}").build(comment.id());
         return ResponseEntity.created(uri).body(comment);
     }
 
     @GetMapping("/{newsId}")
-    public ResponseEntity getNewsComments(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID newsId, @PageableDefault() Pageable pageable) {
+    public ResponseEntity<Page<CommentDetailingWUpVoteDto>> getNewsComments(
+            @RequestHeader("Authorization") String tokenJWT,
+            @PathVariable UUID newsId,
+            @PageableDefault() Pageable pageable
+    ) {
         Page<CommentDetailingWUpVoteDto> commentsPage = commentService.getCommentsByNewsId(tokenJWT, newsId, pageable);
         return ResponseEntity.ok(commentsPage);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity updateComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id, @RequestBody @Valid CommentRequestDto commentRequestDto) {
+    public ResponseEntity<CommentDetailingDto> updateComment(
+            @RequestHeader("Authorization") String tokenJWT,
+            @PathVariable Long id,
+            @RequestBody @Valid CommentRequestDto commentRequestDto
+    ) {
         CommentDetailingDto comment = commentService.updateComment(tokenJWT, id, commentRequestDto);
         return ResponseEntity.ok(comment);
     }
@@ -55,7 +64,7 @@ public class CommentController {
     }
 
     @GetMapping("/author")
-    public ResponseEntity getCommentsByAuthor(@RequestHeader("Authorization") String tokenJWT, @PageableDefault() Pageable pageable) {
+    public ResponseEntity<Page<CommentDetailingDto>> getCommentsByAuthor(@RequestHeader("Authorization") String tokenJWT, @PageableDefault() Pageable pageable) {
         Page<CommentDetailingDto> commentsPage = commentService.getCommentsByAuthor(tokenJWT, pageable);
         return ResponseEntity.ok(commentsPage);
     }
