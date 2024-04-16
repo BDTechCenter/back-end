@@ -20,9 +20,11 @@ public class Quadrant {
     @GeneratedValue
     private UUID id;
 
+    @Column(unique = true)
     @Enumerated(EnumType.STRING)
     private Quadrant name;  // e.g. languages-and-frameworks
 
+    @Column(unique = true)
     private String title;  // e.g. Languages & Frameworks
 
     // QuadrantMap
@@ -30,10 +32,9 @@ public class Quadrant {
 
     private String txtColor;
 
+    @Column(unique = true)
     private Integer position;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 }
-
-// deixar unique

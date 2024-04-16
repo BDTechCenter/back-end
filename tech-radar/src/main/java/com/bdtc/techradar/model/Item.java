@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -27,7 +28,9 @@ public class Item {
 
     private String author;
 
-    private String authorEmail;  // revisions (need review)
+    private String authorEmail;
+
+    private List<String> revisions; // revisions (list of author emails)
 
     private LocalDateTime creationDate;
 
