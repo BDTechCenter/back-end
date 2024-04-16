@@ -47,4 +47,16 @@ public class CommentController {
         commentService.addUpVoteToComment(tokenJWT, id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/author")
+    public ResponseEntity getCommentsByAuthor(@RequestHeader("Authorization") String tokenJWT, @PageableDefault() Pageable pageable) {
+        Page<CommentDetailingDto> commentsPage = commentService.getCommentsByAuthor(tokenJWT, pageable);
+        return ResponseEntity.ok(commentsPage);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id) {
+        commentService.deleteComment(tokenJWT, id);
+        return ResponseEntity.ok().build();
+    }
 }

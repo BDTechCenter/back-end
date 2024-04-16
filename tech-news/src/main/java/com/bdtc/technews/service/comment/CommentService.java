@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.xml.transform.sax.SAXResult;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -94,10 +95,33 @@ public class CommentService {
         Comment comment = commentRepository.getReferenceById(id);
         String currentUserEmail = authService.getUser(tokenJWT).networkUser();
 
-        if(!currentUserEmail.equals(comment.getAuthor())) throw new PermissionException();
+        if(!currentUserEmail.equals(comment.getAuthorEmail())) throw new PermissionException();
 
         comment.updateComment(commentRequestDto.comment());
 
         return new CommentDetailingDto(comment, dateHandler.formatDate(comment.getPublicationDate()));
+    }
+
+    public Page<CommentDetailingDto> getCommentsByAuthor(String tokenJWT, Pageable pageable) {
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+
+        Page<Comment> commentsPage = commentRepository.getCommentByAuthor(currentUserEmail, pageable);
+
+        return commentsPage.map(comment -> new CommentDetailingDto(
+                comment,
+                dateHandler.formatDate(comment.getPublicationDate()
+                )));
+    }
+
+    @Transactional
+    public void deleteComment(String tokenJWT, Long id) {
+        if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
+
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        Comment comment = commentRepository.getReferenceById(id);
+
+        if(!currentUserEmail.equals(comment.getAuthorEmail())) throw new PermissionException();
+
+        commentRepository.delete(comment);
     }
 }
