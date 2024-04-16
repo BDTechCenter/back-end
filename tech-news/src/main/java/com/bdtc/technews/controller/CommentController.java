@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.UUID;
 
@@ -25,9 +26,14 @@ public class CommentController {
 
     @PostMapping("/{newsId}")
     @Transactional
-    public ResponseEntity createComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID newsId, @RequestBody @Valid CommentRequestDto commentRequestDto) {
+    public ResponseEntity createComment(
+            @RequestHeader("Authorization") String tokenJWT,
+            @PathVariable UUID newsId,
+            @RequestBody @Valid CommentRequestDto commentRequestDto,
+            UriComponentsBuilder uriBuilder) {
         CommentDetailingDto comment = commentService.createComment(tokenJWT, newsId, commentRequestDto);
-        return ResponseEntity.ok(comment);
+        var uri = uriBuilder.path("tech-news/comments/{id}").build(comment.id());
+        return ResponseEntity.created(uri).body(comment);
     }
 
     @GetMapping("/{newsId}")
@@ -45,7 +51,7 @@ public class CommentController {
     @PatchMapping("/{id}/upvote")
     public ResponseEntity addUpVoteToComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id) {
         commentService.addUpVoteToComment(tokenJWT, id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/author")
@@ -57,6 +63,6 @@ public class CommentController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id) {
         commentService.deleteComment(tokenJWT, id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
