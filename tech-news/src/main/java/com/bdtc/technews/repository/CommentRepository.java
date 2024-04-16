@@ -22,4 +22,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             """
     )
     Page<Comment> getCommentByRelevance(@Param("news") News news, Pageable pageable);
+
+    @Query("""
+           SELECT c
+           FROM Comment c
+           WHERE c.authorEmail =:currentUserEmail
+           ORDER BY c.publicationDate DESC
+           """)
+    Page<Comment> getCommentByAuthor(String currentUserEmail, Pageable pageable);
 }

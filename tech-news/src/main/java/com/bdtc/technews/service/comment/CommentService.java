@@ -100,4 +100,15 @@ public class CommentService {
 
         return new CommentDetailingDto(comment, dateHandler.formatDate(comment.getPublicationDate()));
     }
+
+    public Page<CommentDetailingDto> getCommentsByAuthor(String tokenJWT, Pageable pageable) {
+        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+
+        Page<Comment> commentsPage = commentRepository.getCommentByAuthor(currentUserEmail, pageable);
+
+        return commentsPage.map(comment -> new CommentDetailingDto(
+                comment,
+                dateHandler.formatDate(comment.getPublicationDate()
+                )));
+    }
 }
