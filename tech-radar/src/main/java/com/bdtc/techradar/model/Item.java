@@ -2,7 +2,6 @@ package com.bdtc.techradar.model;
 
 
 import com.bdtc.techradar.constant.Flag;
-import com.bdtc.techradar.constant.Quadrant;
 import com.bdtc.techradar.constant.Ring;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -50,7 +49,8 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private Ring ring;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "quadrant_id")
     private Quadrant quadrant;
 
     @Column(columnDefinition = "TEXT")

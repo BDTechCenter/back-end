@@ -1,5 +1,6 @@
 package com.bdtc.techradar.model;
 
+import com.bdtc.techradar.constant.QuadrantEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -22,7 +23,7 @@ public class Quadrant {
 
     @Column(unique = true)
     @Enumerated(EnumType.STRING)
-    private Quadrant name;  // e.g. languages-and-frameworks
+    private QuadrantEnum name;  // e.g. languages-and-frameworks
 
     @Column(unique = true)
     private String title;  // e.g. Languages & Frameworks

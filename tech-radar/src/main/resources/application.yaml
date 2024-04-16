@@ -13,7 +13,7 @@ server:
   error:
     include-stacktrace: never
 
-  port: 5433
+  port: 4241
 
 #frontend:
 #  host: http://127.0.0.1:3000
