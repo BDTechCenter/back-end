@@ -1,6 +1,7 @@
 package com.bdtc.techradar.model;
 
 import com.bdtc.techradar.constant.QuadrantEnum;
+import com.bdtc.techradar.dto.QuadrantDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -38,4 +39,13 @@ public class Quadrant {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    public Quadrant(QuadrantDto quadrantDto) {
+        this.name = quadrantDto.name();
+        this.title = quadrantDto.title();
+        this.color = quadrantDto.color();
+        this.txtColor = quadrantDto.txtColor();
+        this.position = quadrantDto.position();
+        this.description = quadrantDto.description();
+    }
 }

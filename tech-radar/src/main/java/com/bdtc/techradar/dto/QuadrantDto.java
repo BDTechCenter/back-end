@@ -3,7 +3,7 @@ package com.bdtc.techradar.dto;
 import com.bdtc.techradar.constant.QuadrantEnum;
 import com.bdtc.techradar.model.Quadrant;
 
-public record QuadrantViewDto(
+public record QuadrantDto(
         QuadrantEnum name,
         String title,
         String color,
@@ -11,7 +11,7 @@ public record QuadrantViewDto(
         Integer position,
         String description
 ) {
-    public QuadrantViewDto(Quadrant quadrant) {
+    public QuadrantDto(Quadrant quadrant) {
         this(
             quadrant.getName(),
             quadrant.getTitle(),

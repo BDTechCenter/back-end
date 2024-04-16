@@ -1,6 +1,7 @@
 package com.bdtc.techradar.service;
 
-import com.bdtc.techradar.dto.QuadrantViewDto;
+import com.bdtc.techradar.dto.QuadrantDetailDto;
+import com.bdtc.techradar.dto.QuadrantDto;
 import com.bdtc.techradar.model.Quadrant;
 import com.bdtc.techradar.repository.QuadrantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,18 @@ public class QuadrantService {
     @Autowired
     private QuadrantRepository quadrantRepository;
 
-    public List<QuadrantViewDto> getViewQuadrants() {
-        List<QuadrantViewDto> quadrantViewDtos = new ArrayList<>();
+    public List<QuadrantDto> getViewQuadrants() {
+        List<QuadrantDto> quadrantViewDtos = new ArrayList<>();
         List<Quadrant> quadrantsList = quadrantRepository.findAll();
         for (Quadrant quadrant : quadrantsList) {
-            quadrantViewDtos.add(new QuadrantViewDto(quadrant));
+            quadrantViewDtos.add(new QuadrantDto(quadrant));
         }
         return quadrantViewDtos;
+    }
+
+    public QuadrantDetailDto createQuadrant(QuadrantDto quadrantDto) {
+        Quadrant quadrant = new Quadrant(quadrantDto);
+        quadrantRepository.save(quadrant);
+        return new QuadrantDetailDto(quadrant);
     }
 }
