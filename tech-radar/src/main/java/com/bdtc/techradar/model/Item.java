@@ -2,7 +2,6 @@ package com.bdtc.techradar.model;
 
 
 import com.bdtc.techradar.constant.Flag;
-import com.bdtc.techradar.constant.Quadrant;
 import com.bdtc.techradar.constant.Ring;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,9 +25,11 @@ public class Item {
     @GeneratedValue
     private UUID id;
 
-    private String author;  // revisions (need review)
+    private String author;
 
     private String authorEmail;
+
+    private List<String> revisions; // revisions (list of author emails)
 
     private LocalDateTime creationDate;
 
@@ -42,12 +44,13 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private Flag flag;
 
-    private boolean featured;  // need review
+    private boolean isActive;  // featured
 
     @Enumerated(EnumType.STRING)
     private Ring ring;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "quadrant_id")
     private Quadrant quadrant;
 
     @Column(columnDefinition = "TEXT")
