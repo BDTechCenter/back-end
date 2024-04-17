@@ -19,14 +19,14 @@ public class QuadrantController {
     @Autowired
     private QuadrantService quadrantService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity createQuadrant(@RequestBody @Valid QuadrantDto quadrantDto, UriComponentsBuilder uriBuilder) {
         QuadrantDetailDto quadrantDetailDto = quadrantService.createQuadrant(quadrantDto);
         var uri = uriBuilder.path("tech-radar/quadrants/{id}").build(quadrantDetailDto.id());
         return ResponseEntity.created(uri).body(quadrantDetailDto);
     }
 
-    @GetMapping("/view")
+    @GetMapping()
     public ResponseEntity<List<QuadrantDto>> getQuadrants() {
         List<QuadrantDto> quadrantsDtos = quadrantService.getViewQuadrants();
         return ResponseEntity.ok(quadrantsDtos);
