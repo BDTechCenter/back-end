@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
 public interface QuadrantRepository extends JpaRepository<Quadrant, UUID> {
+    Quadrant findByTitle(String title);
 }

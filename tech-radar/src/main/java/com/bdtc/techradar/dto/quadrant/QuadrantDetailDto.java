@@ -1,4 +1,4 @@
-package com.bdtc.techradar.dto;
+package com.bdtc.techradar.dto.quadrant;
 
 import com.bdtc.techradar.constant.QuadrantEnum;
 import com.bdtc.techradar.model.Quadrant;
@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public record QuadrantDetailDto(
         UUID id,
-        QuadrantEnum name,
+        String name,
         String title,
         String color,
         String txtColor,

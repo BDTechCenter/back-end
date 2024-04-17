@@ -1,10 +1,10 @@
-package com.bdtc.techradar.dto;
+package com.bdtc.techradar.dto.quadrant;
 
 import com.bdtc.techradar.constant.QuadrantEnum;
 import com.bdtc.techradar.model.Quadrant;
 
 public record QuadrantDto(
-        QuadrantEnum name,
+        String name,
         String title,
         String color,
         String txtColor,

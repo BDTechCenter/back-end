@@ -1,7 +1,8 @@
 package com.bdtc.techradar.model;
 
 import com.bdtc.techradar.constant.QuadrantEnum;
-import com.bdtc.techradar.dto.QuadrantDto;
+import com.bdtc.techradar.dto.quadrant.QuadrantDto;
+import com.bdtc.techradar.dto.quadrant.QuadrantRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,8 +24,9 @@ public class Quadrant {
     private UUID id;
 
     @Column(unique = true)
-    @Enumerated(EnumType.STRING)
-    private QuadrantEnum name;  // e.g. languages-and-frameworks
+//    @Enumerated(EnumType.STRING)
+//    private QuadrantEnum name;  // e.g. languages-and-frameworks
+    private String name;
 
     @Column(unique = true)
     private String title;  // e.g. Languages & Frameworks
@@ -40,12 +42,12 @@ public class Quadrant {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    public Quadrant(QuadrantDto quadrantDto) {
-        this.name = quadrantDto.name();
-        this.title = quadrantDto.title();
-        this.color = quadrantDto.color();
-        this.txtColor = quadrantDto.txtColor();
-        this.position = quadrantDto.position();
-        this.description = quadrantDto.description();
+    public Quadrant(QuadrantRequestDto quadrantRequestDto) {
+        this.name = quadrantRequestDto.quadrant().getName();
+        this.title = quadrantRequestDto.quadrant().getTitle();
+        this.color = quadrantRequestDto.color();
+        this.txtColor = quadrantRequestDto.txtColor();
+        this.position = quadrantRequestDto.position();
+        this.description = quadrantRequestDto.description();
     }
 }

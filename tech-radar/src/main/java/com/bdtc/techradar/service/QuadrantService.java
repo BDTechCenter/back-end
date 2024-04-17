@@ -1,7 +1,9 @@
 package com.bdtc.techradar.service;
 
-import com.bdtc.techradar.dto.QuadrantDetailDto;
-import com.bdtc.techradar.dto.QuadrantDto;
+import com.bdtc.techradar.constant.QuadrantEnum;
+import com.bdtc.techradar.dto.quadrant.QuadrantDetailDto;
+import com.bdtc.techradar.dto.quadrant.QuadrantDto;
+import com.bdtc.techradar.dto.quadrant.QuadrantRequestDto;
 import com.bdtc.techradar.model.Quadrant;
 import com.bdtc.techradar.repository.QuadrantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +21,20 @@ public class QuadrantService {
     public List<QuadrantDto> getViewQuadrants() {
         List<QuadrantDto> quadrantViewDtos = new ArrayList<>();
         List<Quadrant> quadrantsList = quadrantRepository.findAll();
+
         for (Quadrant quadrant : quadrantsList) {
             quadrantViewDtos.add(new QuadrantDto(quadrant));
         }
         return quadrantViewDtos;
     }
 
-    public QuadrantDetailDto createQuadrant(QuadrantDto quadrantDto) {
-        Quadrant quadrant = new Quadrant(quadrantDto);
+    public QuadrantDetailDto createQuadrant(QuadrantRequestDto quadrantRequestDto) {
+        Quadrant quadrant = new Quadrant(quadrantRequestDto);
         quadrantRepository.save(quadrant);
         return new QuadrantDetailDto(quadrant);
+    }
+
+    public Quadrant getQuadrant(QuadrantEnum quadrantEnum) {
+        return quadrantRepository.findByTitle(quadrantEnum.getTitle());
     }
 }
