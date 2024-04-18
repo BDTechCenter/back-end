@@ -39,8 +39,8 @@ public class QuadrantController {
         return ResponseEntity.ok(quadrantsDtos);
     }
 
-    @PatchMapping("/{quadrant}")
-    public ResponseEntity<QuadrantDetailDto> updateQuandrant(@PathVariable QuadrantEnum quadrant, @RequestBody QuadrantUpdateDto quadrantUpdateDto) {
-        return ResponseEntity.ok(quadrantService.updateQuadrant(quadrant, quadrantUpdateDto));
+    @PatchMapping("/{quadrantId}")
+    public ResponseEntity<QuadrantDetailDto> updateQuandrant(@PathVariable String quadrantId, @RequestBody QuadrantUpdateDto quadrantUpdateDto) {
+        return ResponseEntity.ok(quadrantService.updateQuadrant(quadrantId, quadrantUpdateDto));
     }
 }

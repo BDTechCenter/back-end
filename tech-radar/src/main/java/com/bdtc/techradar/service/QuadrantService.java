@@ -46,8 +46,15 @@ public class QuadrantService {
     }
 
     @Transactional
-    public QuadrantDetailDto updateQuadrant(QuadrantEnum quadrantEnum, QuadrantUpdateDto quadrantUpdateDto) {
-        Quadrant quadrant = getQuadrant(quadrantEnum);
+    public QuadrantDetailDto updateQuadrant(String quadrantId, QuadrantUpdateDto quadrantUpdateDto) {
+        Quadrant quadrant = quadrantRepository.getReferenceById(quadrantId);
+
+        if (quadrantUpdateDto.name() != null) quadrant.setName(quadrantUpdateDto.name());
+        if (quadrantUpdateDto.title() != null) quadrant.setTitle(quadrantUpdateDto.title());
+        if (quadrantUpdateDto.color() != null) quadrant.setColor(quadrantUpdateDto.color());
+        if (quadrantUpdateDto.txtColor() != null) quadrant.setTxtColor(quadrantUpdateDto.txtColor());
+        if (quadrantUpdateDto.position() != null) quadrant.setPosition(quadrantUpdateDto.position());
+        if (quadrantUpdateDto.description() != null) quadrant.setDescription(quadrantUpdateDto.description());
 
         return new QuadrantDetailDto(quadrant);
     }
