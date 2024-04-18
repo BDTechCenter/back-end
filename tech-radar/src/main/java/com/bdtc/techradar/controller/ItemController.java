@@ -3,6 +3,7 @@ package com.bdtc.techradar.controller;
 import com.bdtc.techradar.dto.item.ItemDetailDto;
 import com.bdtc.techradar.dto.item.ItemPreviewDto;
 import com.bdtc.techradar.dto.item.ItemRequestDto;
+import com.bdtc.techradar.dto.item.ItemUpdateDto;
 import com.bdtc.techradar.service.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,4 +37,10 @@ public class ItemController {
     public ResponseEntity<ItemDetailDto> getItemDetail(@PathVariable UUID itemId) {
         return ResponseEntity.ok(itemService.getItemDetail(itemId));
     }
+
+    @PatchMapping("/{itemId}")
+    public ResponseEntity<ItemDetailDto> updateItem(@PathVariable UUID itemId, @RequestBody ItemUpdateDto itemUpdateDto) {
+        return ResponseEntity.ok(itemService.updateItem(itemId, itemUpdateDto));
+    }
+
 }
