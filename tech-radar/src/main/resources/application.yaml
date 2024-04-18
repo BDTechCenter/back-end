@@ -8,7 +8,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-
+    jdbc:
+      error_handling:
+        throw_sql_exceptions: true
 server:
   error:
     include-stacktrace: never
