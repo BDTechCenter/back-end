@@ -10,9 +10,10 @@ public record ItemPreviewDto(
         UUID id,
         String title,
         Ring ring,
-        String quadrantId
+        String quadrantId,
+        boolean isActive
 ) {
     public ItemPreviewDto(Item item) {
-        this(item.getId(), item.getTitle(), item.getRing(), item.getQuadrant().getId());
+        this(item.getId(), item.getTitle(), item.getRing(), item.getQuadrant().getId(), item.isActive());
     }
 }

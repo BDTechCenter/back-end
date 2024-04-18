@@ -43,4 +43,13 @@ public class ItemController {
         return ResponseEntity.ok(itemService.updateItem(itemId, itemUpdateDto));
     }
 
+    @PatchMapping("/{itemId}/publish")
+    public ResponseEntity<ItemDetailDto> publishItem(@PathVariable UUID itemId) throws Exception {
+        return ResponseEntity.ok(itemService.publishItem(itemId));
+    }
+
+    @PatchMapping("/{itemId}/archive")
+    public ResponseEntity<ItemDetailDto> archiveItem(@PathVariable UUID itemId) throws Exception {
+        return ResponseEntity.ok(itemService.archiveItem(itemId));
+    }
 }

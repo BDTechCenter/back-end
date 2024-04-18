@@ -38,11 +38,11 @@ public class QuadrantService {
             quadrantRepository.save(quadrant);
             return new QuadrantDetailDto(quadrant);
         }
-        throw new Exception("Exception message");
+        throw new Exception("Quadrant with this ID already exists");
     }
 
     public Quadrant getQuadrant(QuadrantEnum quadrantEnum) {
-        return quadrantRepository.findByTitle(quadrantEnum.getTitle());
+        return quadrantRepository.getReferenceById(quadrantEnum.getTitle());
     }
 
     @Transactional

@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ItemService {
         Item item = new Item(itemRequestDto);
         Quadrant quadrant = quadrantService.getQuadrant(itemRequestDto.quadrant());
 
-        item.setCreationDate(LocalDateTime.now());
+        item.setCreationDate(LocalDate.now());
         item.setQuadrant(quadrant);
 
         itemRepository.save(item);
@@ -65,7 +66,31 @@ public class ItemService {
         if (itemUpdateDto.ring() != null) item.setRing(itemUpdateDto.ring());
         if (itemUpdateDto.body() != null) item.setBody(itemUpdateDto.body());
 
+        item.setUpdateDate(LocalDate.now());
+
         // add user to revision list
         return new ItemDetailDto(item);
+    }
+
+    @Transactional
+    public ItemDetailDto publishItem(UUID itemId) throws Exception {
+        Item item = itemRepository.getReferenceById(itemId);
+        if (!item.isActive()) {
+            item.setPublicationDate(LocalDate.now());
+            item.setActive(true);
+            return new ItemDetailDto(item);
+        }
+        throw new Exception("Item already published");
+    }
+
+    @Transactional
+    public ItemDetailDto archiveItem(UUID itemId) throws Exception {
+        Item item = itemRepository.getReferenceById(itemId);
+        if (item.isActive()) {
+            item.setPublicationDate(null);
+            item.setActive(false);
+            return new ItemDetailDto(item);
+        }
+        throw new Exception("Item already archived");
     }
 }

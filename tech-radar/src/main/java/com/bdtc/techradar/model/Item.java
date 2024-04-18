@@ -7,6 +7,7 @@ import com.bdtc.techradar.dto.item.ItemRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -35,9 +36,9 @@ public class Item {
 
     private String title;
 
-    private LocalDateTime creationDate;
-    private LocalDateTime publicationDate; // release --> YYYY-MM-DD (confirm format)
-    private LocalDateTime updateDate;
+    private LocalDate creationDate;
+    private LocalDate publicationDate; // release --> YYYY-MM-DD (confirm format)
+    private LocalDate updateDate;
 
     private String name;
 
