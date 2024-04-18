@@ -6,6 +6,7 @@ import com.bdtc.techradar.dto.quadrant.QuadrantDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantRequestDto;
 import com.bdtc.techradar.model.Quadrant;
 import com.bdtc.techradar.repository.QuadrantRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ public class QuadrantService {
         return quadrantViewDtos;
     }
 
+    @Transactional
     public QuadrantDetailDto createQuadrant(QuadrantRequestDto quadrantRequestDto) {
         Quadrant quadrant = new Quadrant(quadrantRequestDto);
         quadrantRepository.save(quadrant);
