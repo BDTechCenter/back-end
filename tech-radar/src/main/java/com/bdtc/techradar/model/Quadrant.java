@@ -20,8 +20,6 @@ import java.util.UUID;
 public class Quadrant {
 
     @Id
-//    @GeneratedValue
-//    private UUID id;
     private String id;
 
     @Column(unique = true)

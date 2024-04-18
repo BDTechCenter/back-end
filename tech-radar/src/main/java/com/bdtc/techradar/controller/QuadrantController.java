@@ -27,7 +27,7 @@ public class QuadrantController {
     public ResponseEntity<QuadrantDetailDto> createQuadrant(
             @RequestBody @Valid QuadrantRequestDto quadrantRequestDto,
             UriComponentsBuilder uriBuilder
-    ) {
+    ) throws Exception {
         QuadrantDetailDto quadrantDetailDto = quadrantService.createQuadrant(quadrantRequestDto);
         var uri = uriBuilder.path("tech-radar/quadrants/{id}").build(quadrantDetailDto.id());
         return ResponseEntity.created(uri).body(quadrantDetailDto);

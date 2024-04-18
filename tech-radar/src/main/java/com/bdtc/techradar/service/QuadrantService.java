@@ -32,10 +32,13 @@ public class QuadrantService {
     }
 
     @Transactional
-    public QuadrantDetailDto createQuadrant(QuadrantRequestDto quadrantRequestDto) {
-        Quadrant quadrant = new Quadrant(quadrantRequestDto);
-        quadrantRepository.save(quadrant);
-        return new QuadrantDetailDto(quadrant);
+    public QuadrantDetailDto createQuadrant(QuadrantRequestDto quadrantRequestDto) throws Exception {
+        if (!quadrantRepository.existsById(quadrantRequestDto.quadrant().getTitle())) {
+            Quadrant quadrant = new Quadrant(quadrantRequestDto);
+            quadrantRepository.save(quadrant);
+            return new QuadrantDetailDto(quadrant);
+        }
+        throw new Exception("Exception message");
     }
 
     public Quadrant getQuadrant(QuadrantEnum quadrantEnum) {
