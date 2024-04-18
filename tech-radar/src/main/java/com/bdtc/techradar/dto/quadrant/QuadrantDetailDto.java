@@ -6,7 +6,7 @@ import com.bdtc.techradar.model.Quadrant;
 import java.util.UUID;
 
 public record QuadrantDetailDto(
-        UUID id,
+        String id,
         String name,
         String title,
         String color,

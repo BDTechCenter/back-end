@@ -1,6 +1,7 @@
 package com.bdtc.techradar.dto.item;
 
 import com.bdtc.techradar.constant.Flag;
+import com.bdtc.techradar.constant.QuadrantEnum;
 import com.bdtc.techradar.constant.Ring;
 import com.bdtc.techradar.model.Item;
 
@@ -18,7 +19,7 @@ public record ItemDetailDto(
         LocalDateTime creationDate,
         LocalDateTime publicationDate,
         Ring ring,
-        UUID quadrantId,
+        String quadrantId,
         String body
 ) {
     public ItemDetailDto(Item item) {

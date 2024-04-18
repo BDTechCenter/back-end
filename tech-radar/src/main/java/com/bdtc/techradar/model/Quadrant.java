@@ -20,13 +20,12 @@ import java.util.UUID;
 public class Quadrant {
 
     @Id
-    @GeneratedValue
-    private UUID id;
+//    @GeneratedValue
+//    private UUID id;
+    private String id;
 
     @Column(unique = true)
-//    @Enumerated(EnumType.STRING)
-//    private QuadrantEnum name;  // e.g. languages-and-frameworks
-    private String name;
+    private String name;  // e.g. languages-and-frameworks
 
     @Column(unique = true)
     private String title;  // e.g. Languages & Frameworks
@@ -43,8 +42,9 @@ public class Quadrant {
     private String description;
 
     public Quadrant(QuadrantRequestDto quadrantRequestDto) {
-        this.name = quadrantRequestDto.quadrant().getName();
-        this.title = quadrantRequestDto.quadrant().getTitle();
+        this.id = quadrantRequestDto.quadrant().getTitle();
+        this.name = quadrantRequestDto.name();
+        this.title = quadrantRequestDto.title();
         this.color = quadrantRequestDto.color();
         this.txtColor = quadrantRequestDto.txtColor();
         this.position = quadrantRequestDto.position();

@@ -1,24 +1,23 @@
 package com.bdtc.techradar.constant;
 
+//"Languages & Frameworks", "languages-and-frameworks"
+//"Platforms & Operations", "platforms-and-operations"
+//"Tools", "tools"
+//"Methods & Patterns", "methods-and-patterns"
+
 public enum QuadrantEnum {
-    LANGUAGES_AND_FRAMEWORKS("Languages & Frameworks", "languages-and-frameworks"),
-    PLATFORMS_AND_OPERATIONS("Platforms & Operations", "platforms-and-operations"),
-    TOOLS("Tools", "tools"),
-    METHODS_AND_PATTERNS("Methods & Patterns", "methods-and-patterns");
+    FIRST_QUADRANT("first-quadrant"),
+    SECOND_QUADRANT("second-quadrant"),
+    THIRD_QUADRANT("third-quadrant"),
+    FOURTH_QUADRANT("fourth-quadrant");
 
-    private String title;
-    private String name;
+    private final String quandrantId;
 
-    QuadrantEnum(String title, String name) {
-        this.title = title;
-        this.name = name;
+    QuadrantEnum(String quandrantId) {
+        this.quandrantId = quandrantId;
     }
 
     public String getTitle() {
-        return title;
-    }
-
-    public String getName() {
-        return name;
+        return quandrantId;
     }
 }
