@@ -1,6 +1,7 @@
 package com.bdtc.techradar.model;
 
 
+import com.bdtc.techradar.constant.Expectation;
 import com.bdtc.techradar.constant.Flag;
 import com.bdtc.techradar.constant.Ring;
 import com.bdtc.techradar.dto.item.ItemRequestDto;
@@ -8,7 +9,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,6 +45,9 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private Ring ring;
 
+    @Enumerated(EnumType.STRING)
+    private Expectation expectation;
+
     @ManyToOne
     @JoinColumn(name = "quadrant_id")
     private Quadrant quadrant;
@@ -59,6 +62,7 @@ public class Item {
         this.revisions = itemRequestDto.revisions();
         this.title = itemRequestDto.title();
         this.ring = itemRequestDto.ring();
+        this.expectation = itemRequestDto.expectation();
         this.body = itemRequestDto.body();
     }
 }

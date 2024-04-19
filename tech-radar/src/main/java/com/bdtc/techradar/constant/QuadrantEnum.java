@@ -1,9 +1,5 @@
 package com.bdtc.techradar.constant;
 
-//"Languages & Frameworks", "languages-and-frameworks"
-//"Platforms & Operations", "platforms-and-operations"
-//"Tools", "tools"
-//"Methods & Patterns", "methods-and-patterns"
 
 public enum QuadrantEnum {
     FIRST_QUADRANT("first-quadrant"),

@@ -1,12 +1,10 @@
 package com.bdtc.techradar.dto.item;
 
 import com.bdtc.techradar.constant.Flag;
-import com.bdtc.techradar.constant.QuadrantEnum;
 import com.bdtc.techradar.constant.Ring;
 import com.bdtc.techradar.model.Item;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +19,7 @@ public record ItemDetailDto(
         LocalDate publicationDate,
         LocalDate updateDate,
         Ring ring,
+        String expectation,
         String quadrantId,
         String body
 ) {
@@ -36,6 +35,7 @@ public record ItemDetailDto(
                 item.getPublicationDate(),
                 item.getUpdateDate(),
                 item.getRing(),
+                item.getExpectation().getDescription(),
                 item.getQuadrant().getId(),
                 item.getBody());
     }

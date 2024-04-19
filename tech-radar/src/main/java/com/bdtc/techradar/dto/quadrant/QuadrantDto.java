@@ -1,6 +1,5 @@
 package com.bdtc.techradar.dto.quadrant;
 
-import com.bdtc.techradar.constant.QuadrantEnum;
 import com.bdtc.techradar.model.Quadrant;
 
 public record QuadrantDto(
@@ -13,12 +12,12 @@ public record QuadrantDto(
 ) {
     public QuadrantDto(Quadrant quadrant) {
         this(
-            quadrant.getName(),
-            quadrant.getTitle(),
-            quadrant.getColor(),
-            quadrant.getTxtColor(),
-            quadrant.getPosition(),
-            quadrant.getDescription()
+                quadrant.getName(),
+                quadrant.getTitle(),
+                quadrant.getColor(),
+                quadrant.getTxtColor(),
+                quadrant.getPosition(),
+                quadrant.getDescription()
         );
     }
 }

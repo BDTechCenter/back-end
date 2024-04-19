@@ -27,6 +27,7 @@ public class ItemController {
         var uri = uriBuilder.path("tech-radar/items/{id}").build(itemDetailDto.id());
         return ResponseEntity.created(uri).body(itemDetailDto);
     }
+
     @GetMapping()
     public ResponseEntity<List<ItemPreviewDto>> getQuadrants() {
         List<ItemPreviewDto> itemPreviewDtos = itemService.getItemsPreview();

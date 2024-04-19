@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +26,7 @@ public class ItemService {
 
     public List<ItemPreviewDto> getItemsPreview() {
         List<ItemPreviewDto> itemPreviewDtos = new ArrayList<>();
-        List<Item> items = itemRepository.findAll();
+        List<Item> items = itemRepository.findAllByIsActiveTrue();
 
         for (Item item : items) {
             itemPreviewDtos.add(new ItemPreviewDto(item));
