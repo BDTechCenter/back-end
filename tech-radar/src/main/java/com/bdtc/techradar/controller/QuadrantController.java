@@ -1,7 +1,9 @@
 package com.bdtc.techradar.controller;
 
-import com.bdtc.techradar.dto.QuadrantDetailDto;
-import com.bdtc.techradar.dto.QuadrantDto;
+import com.bdtc.techradar.dto.quadrant.QuadrantDetailDto;
+import com.bdtc.techradar.dto.quadrant.QuadrantDto;
+import com.bdtc.techradar.dto.quadrant.QuadrantRequestDto;
+import com.bdtc.techradar.dto.quadrant.QuadrantUpdateDto;
 import com.bdtc.techradar.service.QuadrantService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,11 @@ public class QuadrantController {
     private QuadrantService quadrantService;
 
     @PostMapping("/create")
-    public ResponseEntity createQuadrant(@RequestBody @Valid QuadrantDto quadrantDto, UriComponentsBuilder uriBuilder) {
-        QuadrantDetailDto quadrantDetailDto = quadrantService.createQuadrant(quadrantDto);
+    public ResponseEntity<QuadrantDetailDto> createQuadrant(
+            @RequestBody @Valid QuadrantRequestDto quadrantRequestDto,
+            UriComponentsBuilder uriBuilder
+    ) throws Exception {
+        QuadrantDetailDto quadrantDetailDto = quadrantService.createQuadrant(quadrantRequestDto);
         var uri = uriBuilder.path("tech-radar/quadrants/{id}").build(quadrantDetailDto.id());
         return ResponseEntity.created(uri).body(quadrantDetailDto);
     }
@@ -30,5 +35,10 @@ public class QuadrantController {
     public ResponseEntity<List<QuadrantDto>> getQuadrants() {
         List<QuadrantDto> quadrantsDtos = quadrantService.getViewQuadrants();
         return ResponseEntity.ok(quadrantsDtos);
+    }
+
+    @PatchMapping("/{quadrantId}")
+    public ResponseEntity<QuadrantDetailDto> updateQuandrant(@PathVariable String quadrantId, @RequestBody QuadrantUpdateDto quadrantUpdateDto) {
+        return ResponseEntity.ok(quadrantService.updateQuadrant(quadrantId, quadrantUpdateDto));
     }
 }

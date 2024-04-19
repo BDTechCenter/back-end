@@ -1,30 +1,26 @@
 package com.bdtc.techradar.model;
 
-import com.bdtc.techradar.constant.QuadrantEnum;
-import com.bdtc.techradar.dto.QuadrantDto;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.UUID;
+import com.bdtc.techradar.dto.quadrant.QuadrantRequestDto;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.*;
 
 @Entity
 @Table(name = "quadrant")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @EqualsAndHashCode(of = "id")
 public class Quadrant {
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    private String id;
 
     @Column(unique = true)
-    @Enumerated(EnumType.STRING)
-    private QuadrantEnum name;  // e.g. languages-and-frameworks
+    private String name;  // e.g. languages-and-frameworks
 
     @Column(unique = true)
     private String title;  // e.g. Languages & Frameworks
@@ -40,12 +36,13 @@ public class Quadrant {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    public Quadrant(QuadrantDto quadrantDto) {
-        this.name = quadrantDto.name();
-        this.title = quadrantDto.title();
-        this.color = quadrantDto.color();
-        this.txtColor = quadrantDto.txtColor();
-        this.position = quadrantDto.position();
-        this.description = quadrantDto.description();
+    public Quadrant(QuadrantRequestDto quadrantRequestDto) {
+        this.id = quadrantRequestDto.quadrant().getTitle();
+        this.name = quadrantRequestDto.name();
+        this.title = quadrantRequestDto.title();
+        this.color = quadrantRequestDto.color();
+        this.txtColor = quadrantRequestDto.txtColor();
+        this.position = quadrantRequestDto.position();
+        this.description = quadrantRequestDto.description();
     }
 }
