@@ -4,7 +4,7 @@ import com.bdtc.techradar.dto.item.ItemDetailDto;
 import com.bdtc.techradar.dto.item.ItemPreviewDto;
 import com.bdtc.techradar.dto.item.ItemRequestDto;
 import com.bdtc.techradar.dto.item.ItemUpdateDto;
-import com.bdtc.techradar.service.ItemService;
+import com.bdtc.techradar.service.item.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

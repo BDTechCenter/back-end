@@ -1,4 +1,4 @@
-package com.bdtc.techradar.service;
+package com.bdtc.techradar.service.item;
 
 import com.bdtc.techradar.dto.item.ItemDetailDto;
 import com.bdtc.techradar.dto.item.ItemPreviewDto;
@@ -9,6 +9,7 @@ import com.bdtc.techradar.infra.exception.validation.ItemAlreadyPublishedExcepti
 import com.bdtc.techradar.model.Item;
 import com.bdtc.techradar.model.Quadrant;
 import com.bdtc.techradar.repository.ItemRepository;
+import com.bdtc.techradar.service.quadrant.QuadrantService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,7 @@ import com.bdtc.techradar.dto.quadrant.QuadrantDetailDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantRequestDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantUpdateDto;
-import com.bdtc.techradar.service.QuadrantService;
+import com.bdtc.techradar.service.quadrant.QuadrantService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

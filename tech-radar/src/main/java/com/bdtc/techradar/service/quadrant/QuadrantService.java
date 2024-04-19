@@ -1,4 +1,4 @@
-package com.bdtc.techradar.service;
+package com.bdtc.techradar.service.quadrant;
 
 import com.bdtc.techradar.constant.QuadrantEnum;
 import com.bdtc.techradar.dto.quadrant.QuadrantDetailDto;
