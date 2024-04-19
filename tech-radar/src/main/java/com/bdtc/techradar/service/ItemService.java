@@ -4,6 +4,8 @@ import com.bdtc.techradar.dto.item.ItemDetailDto;
 import com.bdtc.techradar.dto.item.ItemPreviewDto;
 import com.bdtc.techradar.dto.item.ItemRequestDto;
 import com.bdtc.techradar.dto.item.ItemUpdateDto;
+import com.bdtc.techradar.infra.exception.validation.ItemAlreadyArchivedException;
+import com.bdtc.techradar.infra.exception.validation.ItemAlreadyPublishedException;
 import com.bdtc.techradar.model.Item;
 import com.bdtc.techradar.model.Quadrant;
 import com.bdtc.techradar.repository.ItemRepository;
@@ -79,7 +81,7 @@ public class ItemService {
             item.setActive(true);
             return new ItemDetailDto(item);
         }
-        throw new Exception("Item already published");
+        throw new ItemAlreadyPublishedException();
     }
 
     @Transactional
@@ -90,6 +92,6 @@ public class ItemService {
             item.setActive(false);
             return new ItemDetailDto(item);
         }
-        throw new Exception("Item already archived");
+        throw new ItemAlreadyArchivedException();
     }
 }
