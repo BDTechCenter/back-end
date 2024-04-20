@@ -23,7 +23,6 @@ public record QuadrantRequestDto(
         @NotNull
         Integer position,
 
-        @NotBlank
         String description
 ) {
 }

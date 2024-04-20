@@ -1,12 +1,15 @@
-package com.bdtc.techradar.service;
+package com.bdtc.techradar.service.item;
 
 import com.bdtc.techradar.dto.item.ItemDetailDto;
 import com.bdtc.techradar.dto.item.ItemPreviewDto;
 import com.bdtc.techradar.dto.item.ItemRequestDto;
 import com.bdtc.techradar.dto.item.ItemUpdateDto;
+import com.bdtc.techradar.infra.exception.validation.ItemAlreadyArchivedException;
+import com.bdtc.techradar.infra.exception.validation.ItemAlreadyPublishedException;
 import com.bdtc.techradar.model.Item;
 import com.bdtc.techradar.model.Quadrant;
 import com.bdtc.techradar.repository.ItemRepository;
+import com.bdtc.techradar.service.quadrant.QuadrantService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,16 @@ public class ItemService {
     public List<ItemPreviewDto> getItemsPreview() {
         List<ItemPreviewDto> itemPreviewDtos = new ArrayList<>();
         List<Item> items = itemRepository.findAllByIsActiveTrue();
+
+        for (Item item : items) {
+            itemPreviewDtos.add(new ItemPreviewDto(item));
+        }
+        return itemPreviewDtos;
+    }
+
+    public List<ItemPreviewDto> getAllItemsPreview() {
+        List<ItemPreviewDto> itemPreviewDtos = new ArrayList<>();
+        List<Item> items = itemRepository.findAll();
 
         for (Item item : items) {
             itemPreviewDtos.add(new ItemPreviewDto(item));
@@ -79,7 +92,7 @@ public class ItemService {
             item.setActive(true);
             return new ItemDetailDto(item);
         }
-        throw new Exception("Item already published");
+        throw new ItemAlreadyPublishedException();
     }
 
     @Transactional
@@ -90,6 +103,6 @@ public class ItemService {
             item.setActive(false);
             return new ItemDetailDto(item);
         }
-        throw new Exception("Item already archived");
+        throw new ItemAlreadyArchivedException();
     }
 }

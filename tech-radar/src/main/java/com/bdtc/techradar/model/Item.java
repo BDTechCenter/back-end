@@ -34,12 +34,14 @@ public class Item {
     private String authorEmail;
     private List<String> revisions; // revisions (list of author emails)
 
+    @Column(unique = true)
     private String title;
 
     private LocalDate creationDate;
     private LocalDate publicationDate; // release --> YYYY-MM-DD (confirm format)
     private LocalDate updateDate;
 
+    @Column(unique = true)
     private String name;
 
     @Enumerated(EnumType.STRING)

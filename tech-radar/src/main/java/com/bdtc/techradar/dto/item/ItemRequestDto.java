@@ -34,7 +34,6 @@ public record ItemRequestDto(
         @NotNull
         QuadrantEnum quadrant,
 
-        @NotBlank
         String body
 ) {
 }
