@@ -49,9 +49,7 @@ public class ErrorHandler {
         if (rootCause instanceof SQLException sqlException && uniqueConstraintHandler.isUniqueConstraintException(sqlException)) {
             return uniqueConstraintHandler.getUniqueConstraintResponse(sqlException);
         } else {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Unknown constraint violation occurred: " + ex.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ValidationErrorData("", "Unknown constraint violation occurred: " + ex.getMessage()));
         }
     }
 }

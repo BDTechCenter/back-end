@@ -37,6 +37,16 @@ public class ItemService {
         return itemPreviewDtos;
     }
 
+    public List<ItemPreviewDto> getAllItemsPreview() {
+        List<ItemPreviewDto> itemPreviewDtos = new ArrayList<>();
+        List<Item> items = itemRepository.findAll();
+
+        for (Item item : items) {
+            itemPreviewDtos.add(new ItemPreviewDto(item));
+        }
+        return itemPreviewDtos;
+    }
+
     public ItemDetailDto getItemDetail(UUID itemId) {
         Item item = itemRepository.getReferenceById(itemId);
         return new ItemDetailDto(item);

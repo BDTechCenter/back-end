@@ -29,8 +29,14 @@ public class ItemController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<ItemPreviewDto>> getQuadrants() {
+    public ResponseEntity<List<ItemPreviewDto>> getItems() {
         List<ItemPreviewDto> itemPreviewDtos = itemService.getItemsPreview();
+        return ResponseEntity.ok(itemPreviewDtos);
+    }
+
+    @GetMapping("all")
+    public ResponseEntity<List<ItemPreviewDto>> getAllItems() {
+        List<ItemPreviewDto> itemPreviewDtos = itemService.getAllItemsPreview();
         return ResponseEntity.ok(itemPreviewDtos);
     }
 
