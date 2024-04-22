@@ -22,20 +22,6 @@ services:
     networks:
       - bdtc-net
 
-  auth-service:
-    depends_on:
-      - service-discovery
-      - api-gateway
-    container_name: auth-service
-    build:
-      context: ./auth-service
-    environment:
-      - EUREKA_URL=http://service-discovery:8765/eureka
-    env_file:
-      - ./auth-service/.env
-    networks:
-      - bdtc-net
-
   tech-news:
     depends_on:
       - api-gateway
