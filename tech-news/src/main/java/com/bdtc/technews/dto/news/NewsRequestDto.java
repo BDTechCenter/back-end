@@ -1,4 +1,4 @@
-package com.bdtc.technews.dto;
+package com.bdtc.technews.dto.news;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,7 +1,7 @@
 package com.bdtc.technews.service.news.utils;
 
 import com.bdtc.technews.contants.RoleOption;
-import com.bdtc.technews.dto.UserDto;
+import com.bdtc.technews.dto.user.UserDto;
 import com.bdtc.technews.infra.exception.validation.UnauthorizedByRolesException;
 import org.springframework.stereotype.Component;
 

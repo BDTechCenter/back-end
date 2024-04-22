@@ -1,10 +1,8 @@
 package com.bdtc.technews.repository;
 
-import com.bdtc.technews.dto.NewsRequestDto;
+import com.bdtc.technews.dto.news.NewsRequestDto;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.model.Tag;
-import com.bdtc.technews.service.news.utils.DateHandler;
-import com.bdtc.technews.service.tag.TagService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -14,15 +12,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
