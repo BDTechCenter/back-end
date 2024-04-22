@@ -1,14 +1,13 @@
-package com.bdtc.techradar.http.auth.util;
+package com.bdtc.techradar.service.auth;
 
 import com.bdtc.techradar.constant.Roles;
+import com.bdtc.techradar.dto.user.UserDto;
 import com.bdtc.techradar.infra.exception.validation.UnauthorizedByRolesException;
 import org.springframework.stereotype.Component;
-import com.bdtc.techradar.dto.user.UserDto;
 import java.util.List;
 
 @Component
 public class RoleAuthHandler {
-
     private final List<Roles> validRoles = List.of(Roles.ADMIN, Roles.BDUSER);
 
     public void validateUserRole(UserDto userDto) {
@@ -16,7 +15,6 @@ public class RoleAuthHandler {
 
         if(userRoles != null && !userRoles.isEmpty()) {
             for(Roles userRole : userRoles) {
-                // case role not in valid roles
                 if(!validRoles.contains(userRole)) throw new UnauthorizedByRolesException();
             }
         } else {

@@ -8,6 +8,8 @@ import com.bdtc.techradar.service.quadrant.QuadrantService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -32,7 +34,7 @@ public class QuadrantController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<QuadrantDto>> getQuadrants(@RequestHeader("Authorization") String tokenJWT) {
+    public ResponseEntity<List<QuadrantDto>> getQuadrants(@AuthenticationPrincipal Jwt tokenJWT) {
         List<QuadrantDto> quadrantsDtos = quadrantService.getViewQuadrants(tokenJWT);
         return ResponseEntity.ok(quadrantsDtos);
     }

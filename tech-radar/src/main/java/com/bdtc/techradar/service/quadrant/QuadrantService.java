@@ -5,12 +5,13 @@ import com.bdtc.techradar.dto.quadrant.QuadrantDetailDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantRequestDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantUpdateDto;
-import com.bdtc.techradar.http.auth.service.AuthClientService;
 import com.bdtc.techradar.infra.exception.validation.PermissionException;
 import com.bdtc.techradar.model.Quadrant;
 import com.bdtc.techradar.repository.QuadrantRepository;
+import com.bdtc.techradar.service.auth.UserHandler;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,11 +24,11 @@ public class QuadrantService {
     private QuadrantRepository quadrantRepository;
 
     @Autowired
-    private AuthClientService authService;
+    private UserHandler userHandler;
 
-    public List<QuadrantDto> getViewQuadrants(String tokenJWT) {
-        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
-        if(currentUserEmail == null || currentUserEmail.isEmpty()) throw new PermissionException();
+    public List<QuadrantDto> getViewQuadrants(Jwt tokenJWT) {
+        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        if (currentUserEmail == null || currentUserEmail.isEmpty()) throw new PermissionException();
 
         List<QuadrantDto> quadrantViewDtos = new ArrayList<>();
         List<Quadrant> quadrantsList = quadrantRepository.findAll();
