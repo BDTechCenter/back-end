@@ -32,8 +32,8 @@ public class QuadrantController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<QuadrantDto>> getQuadrants() {
-        List<QuadrantDto> quadrantsDtos = quadrantService.getViewQuadrants();
+    public ResponseEntity<List<QuadrantDto>> getQuadrants(@RequestHeader("Authorization") String tokenJWT) {
+        List<QuadrantDto> quadrantsDtos = quadrantService.getViewQuadrants(tokenJWT);
         return ResponseEntity.ok(quadrantsDtos);
     }
 
