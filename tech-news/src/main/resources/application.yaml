@@ -16,6 +16,23 @@ spring:
       max-file-size: 100MB
       max-request-size: 200MB
 
+  security:
+    oauth2:
+      client:
+        provider:
+          azure-ad:
+            authorization-uri: ${AUTHORIZATION_URI}
+            token-uri: ${TOKEN_URI}
+            jwk-set-uri: ${JWK_SET_URI}
+        registration:
+          azure-client:
+            provider: azure-ad
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid
+
 server:
   error:
     include-stacktrace: never
