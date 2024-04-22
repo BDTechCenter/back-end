@@ -28,6 +28,7 @@ public class SecurityConfigs {
                 .cors(cors -> cors.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> req
+                        .requestMatchers("/images/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(conf -> conf
                         .jwt(jwt -> jwt.decoder(jwtDecoder()))
