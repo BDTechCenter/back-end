@@ -1,6 +1,7 @@
 spring:
   profiles:
     active: local
+#    active: docker
 
   application:
     name: tech-radar
@@ -16,6 +17,7 @@ server:
     include-stacktrace: never
 
   port: 4241
+#  port: 0
 
 #frontend:
 #  host: http://127.0.0.1:3000
