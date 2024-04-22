@@ -1,8 +1,7 @@
 package com.bdtc.technews.controller;
 
-import com.bdtc.technews.dto.TagDto;
+import com.bdtc.technews.dto.tag.TagDto;
 import com.bdtc.technews.service.tag.TagService;
-import com.bdtc.technews.service.tag.validation.creation.TagCreationValidators;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

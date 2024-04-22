@@ -1,6 +1,6 @@
 package com.bdtc.technews.model;
 
-import com.bdtc.technews.dto.TagDto;
+import com.bdtc.technews.dto.tag.TagDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

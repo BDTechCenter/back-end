@@ -1,9 +1,9 @@
 package com.bdtc.technews.service.comment;
 
-import com.bdtc.technews.dto.CommentDetailingDto;
-import com.bdtc.technews.dto.CommentDetailingWUpVoteDto;
-import com.bdtc.technews.dto.CommentRequestDto;
-import com.bdtc.technews.dto.UserDto;
+import com.bdtc.technews.dto.comment.CommentDetailingDto;
+import com.bdtc.technews.dto.comment.CommentDetailingWUpVoteDto;
+import com.bdtc.technews.dto.comment.CommentRequestDto;
+import com.bdtc.technews.dto.user.UserDto;
 import com.bdtc.technews.http.auth.service.AuthClientService;
 import com.bdtc.technews.infra.exception.validation.PermissionException;
 import com.bdtc.technews.model.Comment;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.xml.transform.sax.SAXResult;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

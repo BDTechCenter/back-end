@@ -1,27 +1,24 @@
-package com.bdtc.technews.dto;
+package com.bdtc.technews.dto.comment;
 
 import com.bdtc.technews.model.Comment;
 
 import java.util.UUID;
 
-public record CommentDetailingWUpVoteDto(
+public record CommentDetailingDto(
         Long id,
-         UUID newsId,
+        UUID newsId,
         String author,
         String publicationDate,
         String comment,
-        int upVotes,
-        boolean alreadyUpVoted
+        int upVotes
 ) {
-
-    public CommentDetailingWUpVoteDto(Comment comment, String publicationDate, boolean alreadyUpVoted) {
+    public CommentDetailingDto(Comment comment, String publicationDate) {
         this(
                 comment.getId(),
                 comment.getNews().getId(),
                 comment.getAuthor(),
                 publicationDate, comment.getComment(),
-                comment.getUpVotes(),
-                alreadyUpVoted
+                comment.getUpVotes()
         );
     }
 }

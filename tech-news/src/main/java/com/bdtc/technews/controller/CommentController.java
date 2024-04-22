@@ -1,15 +1,14 @@
 package com.bdtc.technews.controller;
 
-import com.bdtc.technews.dto.CommentDetailingDto;
-import com.bdtc.technews.dto.CommentDetailingWUpVoteDto;
-import com.bdtc.technews.dto.CommentRequestDto;
+import com.bdtc.technews.dto.comment.CommentDetailingDto;
+import com.bdtc.technews.dto.comment.CommentDetailingWUpVoteDto;
+import com.bdtc.technews.dto.comment.CommentRequestDto;
 import com.bdtc.technews.service.comment.CommentService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

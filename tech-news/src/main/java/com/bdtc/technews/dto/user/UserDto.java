@@ -1,4 +1,4 @@
-package com.bdtc.technews.dto;
+package com.bdtc.technews.dto.user;
 
 import java.util.List;
 

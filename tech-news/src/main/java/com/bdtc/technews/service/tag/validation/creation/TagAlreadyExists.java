@@ -1,6 +1,6 @@
 package com.bdtc.technews.service.tag.validation.creation;
 
-import com.bdtc.technews.dto.TagDto;
+import com.bdtc.technews.dto.tag.TagDto;
 import com.bdtc.technews.repository.TagRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
