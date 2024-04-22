@@ -58,6 +58,7 @@ public interface NewsRepository extends JpaRepository<News, UUID> {
     @Query("""
             SELECT n FROM News n
             WHERE n.authorEmail = :currentUserEmail
+            ORDER BY n.updateDate DESC
             """)
     Page<News> getNewsByAuthor(String currentUserEmail, Pageable pageable);
 

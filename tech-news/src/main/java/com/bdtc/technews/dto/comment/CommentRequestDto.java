@@ -1,4 +1,4 @@
-package com.bdtc.technews.dto;
+package com.bdtc.technews.dto.comment;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.constraints.NotBlank;

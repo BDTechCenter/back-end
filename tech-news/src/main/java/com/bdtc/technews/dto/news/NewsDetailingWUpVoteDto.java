@@ -1,15 +1,11 @@
-package com.bdtc.technews.dto;
+package com.bdtc.technews.dto.news;
 
 import com.bdtc.technews.model.News;
-import com.bdtc.technews.model.Tag;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-public record NewsDetailingDto(
+public record NewsDetailingWUpVoteDto(
         UUID id,
         String author,
         String creationDate,
@@ -20,21 +16,23 @@ public record NewsDetailingDto(
         Long views,
         int upVotes,
         String imageUrl,
-        boolean isPublished
+        boolean isPublished,
+        boolean alreadyUpVoted
 ) {
-    public NewsDetailingDto(News news, Set<String> tags, String creationDate, String updateDate) {
+    public NewsDetailingWUpVoteDto(News news, Set<String> tags, String date, boolean alreadyUpVoted) {
         this(
                 news.getId(),
                 news.getAuthor(),
-                creationDate,
-                updateDate,
+                date,
+                date,
                 news.getTitle(),
                 news.getBody(),
                 tags,
                 news.getViews(),
                 news.getUpVotes(),
                 news.getImageUrl(),
-                news.isPublished()
+                news.isPublished(),
+                alreadyUpVoted
         );
     }
 }

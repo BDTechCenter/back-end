@@ -1,7 +1,7 @@
 package com.bdtc.technews.service.news.backup;
 
-import com.bdtc.technews.dto.NewsBackupDto;
-import com.bdtc.technews.dto.NewsDetailingDto;
+import com.bdtc.technews.dto.news.NewsBackupDto;
+import com.bdtc.technews.dto.news.NewsDetailingDto;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.model.NewsBackup;
 import com.bdtc.technews.repository.NewsBackupRepository;

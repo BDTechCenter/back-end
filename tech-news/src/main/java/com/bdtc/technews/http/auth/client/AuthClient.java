@@ -1,6 +1,6 @@
 package com.bdtc.technews.http.auth.client;
 
-import com.bdtc.technews.dto.UserDto;
+import com.bdtc.technews.dto.user.UserDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
