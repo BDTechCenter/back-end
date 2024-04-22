@@ -1,4 +1,4 @@
-package com.bdtc.technews.http.auth.util;
+package com.bdtc.technews.service.auth;
 
 import com.bdtc.technews.contants.Roles;
 import com.bdtc.technews.dto.user.UserDto;

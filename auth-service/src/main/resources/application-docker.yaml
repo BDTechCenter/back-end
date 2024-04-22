@@ -1,4 +1,0 @@
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${EUREKA_URL}
