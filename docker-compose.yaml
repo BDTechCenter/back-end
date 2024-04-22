@@ -29,6 +29,8 @@ services:
     container_name: tech-news
     build:
       context: ./tech-news
+    env_file:
+      - ./tech-news/.env
     environment:
       - DATABASE_URL=jdbc:postgresql://tech-news-db:5432/tech_news
       - EUREKA_URL=http://service-discovery:8765/eureka
