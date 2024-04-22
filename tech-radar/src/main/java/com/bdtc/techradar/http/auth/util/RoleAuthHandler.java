@@ -9,16 +9,18 @@ import java.util.List;
 @Component
 public class RoleAuthHandler {
 
-    private final List<String> validRoles = List.of(Roles.ADMIN.getRoleValue(), Roles.BDUSER.getRoleValue());
+    private final List<Roles> validRoles = List.of(Roles.ADMIN, Roles.BDUSER);
 
     public void validateUserRole(UserDto userDto) {
-        List<String> userRoles = userDto.roles();
+        List<Roles> userRoles = userDto.roles();
 
         if(userRoles != null && !userRoles.isEmpty()) {
-            for(String userRole : userRoles) {
+            for(Roles userRole : userRoles) {
                 // case role not in valid roles
                 if(!validRoles.contains(userRole)) throw new UnauthorizedByRolesException();
             }
+        } else {
+            throw new UnauthorizedByRolesException();
         }
     }
 }

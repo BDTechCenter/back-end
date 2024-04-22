@@ -16,8 +16,8 @@ server:
   error:
     include-stacktrace: never
 
-  port: 4241
-#  port: 0
+#  port: 4241
+  port: 0
 
 #frontend:
 #  host: http://127.0.0.1:3000
