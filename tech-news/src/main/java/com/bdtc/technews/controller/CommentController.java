@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -26,7 +28,7 @@ public class CommentController {
     @PostMapping("/{newsId}")
     @Transactional
     public ResponseEntity<CommentDetailingDto> createComment(
-            @RequestHeader("Authorization") String tokenJWT,
+            @AuthenticationPrincipal Jwt tokenJWT,
             @PathVariable UUID newsId,
             @RequestBody @Valid CommentRequestDto commentRequestDto,
             UriComponentsBuilder uriBuilder
@@ -38,7 +40,7 @@ public class CommentController {
 
     @GetMapping("/{newsId}")
     public ResponseEntity<Page<CommentDetailingWUpVoteDto>> getNewsComments(
-            @RequestHeader("Authorization") String tokenJWT,
+            @AuthenticationPrincipal Jwt tokenJWT,
             @PathVariable UUID newsId,
             @PageableDefault() Pageable pageable
     ) {
@@ -48,7 +50,7 @@ public class CommentController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<CommentDetailingDto> updateComment(
-            @RequestHeader("Authorization") String tokenJWT,
+            @AuthenticationPrincipal Jwt tokenJWT,
             @PathVariable Long id,
             @RequestBody @Valid CommentRequestDto commentRequestDto
     ) {
@@ -57,19 +59,28 @@ public class CommentController {
     }
 
     @PatchMapping("/{id}/upvote")
-    public ResponseEntity addUpVoteToComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id) {
+    public ResponseEntity addUpVoteToComment(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable Long id
+    ) {
         commentService.addUpVoteToComment(tokenJWT, id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/author")
-    public ResponseEntity<Page<CommentDetailingDto>> getCommentsByAuthor(@RequestHeader("Authorization") String tokenJWT, @PageableDefault() Pageable pageable) {
+    public ResponseEntity<Page<CommentDetailingDto>> getCommentsByAuthor(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PageableDefault() Pageable pageable
+    ) {
         Page<CommentDetailingDto> commentsPage = commentService.getCommentsByAuthor(tokenJWT, pageable);
         return ResponseEntity.ok(commentsPage);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteComment(@RequestHeader("Authorization") String tokenJWT, @PathVariable Long id) {
+    public ResponseEntity deleteComment(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable Long id
+    ) {
         commentService.deleteComment(tokenJWT, id);
         return ResponseEntity.noContent().build();
     }
