@@ -1,6 +1,6 @@
 package com.bdtc.technews.model;
 
-import com.bdtc.technews.dto.CommentRequestDto;
+import com.bdtc.technews.dto.comment.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
