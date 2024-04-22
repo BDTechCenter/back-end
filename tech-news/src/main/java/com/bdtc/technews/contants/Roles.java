@@ -1,10 +1,20 @@
 package com.bdtc.technews.contants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Roles {
     ADMIN,
     BDUSER;
 
-    public static Roles stringToRoleOption(String valor) {
-        return Roles.valueOf(valor);
+    public static List<Roles> arrayListToRoleList(ArrayList<String> rolesStringList) {
+        List<Roles> rolesList = new ArrayList<Roles>();
+
+        if(rolesStringList != null && !rolesStringList.isEmpty()){
+            for(String role : rolesStringList) {
+                rolesList.add(Roles.valueOf(role));
+            }
+        }
+        return rolesList;
     }
 }

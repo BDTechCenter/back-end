@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -26,7 +28,7 @@ public class NewsController {
 
     @PostMapping
     public ResponseEntity<NewsDetailingDto> createNews(
-            @RequestHeader("Authorization") String tokenJWT,
+            @AuthenticationPrincipal Jwt tokenJWT,
             @ModelAttribute @Valid NewsRequestDto newsRequestDto,
             UriComponentsBuilder uriBuilder
     ) {
@@ -47,26 +49,35 @@ public class NewsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NewsDetailingWUpVoteDto> getNewsById(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+    public ResponseEntity<NewsDetailingWUpVoteDto> getNewsById(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable UUID id
+    ) {
         NewsDetailingWUpVoteDto news = newsService.getNewsById(tokenJWT, id);
         return ResponseEntity.ok(news);
     }
 
     @PatchMapping("/{id}/publish")
-    public ResponseEntity<NewsDetailingDto> publishNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+    public ResponseEntity<NewsDetailingDto> publishNews(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable UUID id
+    ) {
         NewsDetailingDto news = newsService.publishNews(tokenJWT, id);
         return ResponseEntity.ok(news);
     }
 
     @PatchMapping("/{id}/archive")
-    public ResponseEntity<NewsDetailingDto> archiveNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+    public ResponseEntity<NewsDetailingDto> archiveNews(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable UUID id
+    ) {
         NewsDetailingDto news = newsService.archiveNews(tokenJWT, id);
         return ResponseEntity.ok(news);
     }
 
     @GetMapping("/author")
     public ResponseEntity<Page<NewsPreviewDto>> getNewsBasedOnAuthor(
-            @RequestHeader("Authorization") String tokenJWT,
+            @AuthenticationPrincipal Jwt tokenJWT,
             @PageableDefault() Pageable pageable,
             @RequestParam(name = "sortBy", required = false, defaultValue = "empty") String sortBy
     ) {
@@ -76,7 +87,7 @@ public class NewsController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<NewsDetailingDto> updateNews(
-            @RequestHeader("Authorization") String tokenJWT,
+            @AuthenticationPrincipal Jwt tokenJWT,
             @ModelAttribute NewsUpdateDto updateDto,
             @PathVariable UUID id
     ) {
@@ -85,19 +96,28 @@ public class NewsController {
     }
 
     @GetMapping("/{id}/backup")
-    public ResponseEntity<NewsBackupDto> getNewsBackup(@PathVariable UUID id, @RequestParam(name = "level") int backupLevel) {
+    public ResponseEntity<NewsBackupDto> getNewsBackup(
+            @PathVariable UUID id,
+            @RequestParam(name = "level") int backupLevel
+    ) {
         NewsBackupDto news = newsBackupService.getNewsBackup(id, backupLevel);
         return ResponseEntity.ok(news);
     }
 
     @PutMapping("/{id}/backup/{backupId}/restore")
-    public ResponseEntity<NewsDetailingDto> restoreNewsFromABackup(@PathVariable UUID id, @PathVariable Long backupId) {
+    public ResponseEntity<NewsDetailingDto> restoreNewsFromABackup(
+            @PathVariable UUID id,
+            @PathVariable Long backupId
+    ) {
         NewsDetailingDto news = newsBackupService.restoreNewsFromABackup(id, backupId);
         return ResponseEntity.ok(news);
     }
 
     @PatchMapping("/{id}/upvote")
-    public ResponseEntity addUpVoteToNews(@RequestHeader("Authorization") String tokenJWT, @PathVariable UUID id) {
+    public ResponseEntity addUpVoteToNews(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable UUID id
+    ) {
         newsService.addUpVoteToNews(tokenJWT, id);
         return ResponseEntity.noContent().build();
     }
