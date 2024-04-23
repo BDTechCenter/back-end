@@ -10,6 +10,7 @@ import com.bdtc.technews.model.CommentUpVoter;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.CommentRepository;
 import com.bdtc.technews.repository.CommentUpVoterRepository;
+import com.bdtc.technews.service.auth.AuthorizationHandler;
 import com.bdtc.technews.service.news.NewsService;
 import com.bdtc.technews.service.news.utils.DateHandler;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,6 +38,9 @@ public class CommentService {
 
     @Autowired
     private DateHandler dateHandler;
+
+    @Autowired
+    private AuthorizationHandler authorizationHandler;
 
     @Transactional
     public CommentDetailingDto createComment(Jwt tokenJWT, UUID newsId, CommentRequestDto commentRequestDto) {
@@ -89,9 +93,9 @@ public class CommentService {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
         Comment comment = commentRepository.getReferenceById(id);
-        String currentUserEmail = new UserDto(tokenJWT).networkUser();
 
-        if(!currentUserEmail.equals(comment.getAuthorEmail())) throw new PermissionException();
+        UserDto userDto = new UserDto(tokenJWT);
+        authorizationHandler.userHasAuthorization(userDto, comment.getAuthorEmail());
 
         comment.updateComment(commentRequestDto.comment());
 
@@ -116,7 +120,8 @@ public class CommentService {
         String currentUserEmail = new UserDto(tokenJWT).networkUser();
         Comment comment = commentRepository.getReferenceById(id);
 
-        if(!currentUserEmail.equals(comment.getAuthorEmail())) throw new PermissionException();
+        UserDto userDto = new UserDto(tokenJWT);
+        authorizationHandler.userHasAuthorization(userDto, comment.getAuthorEmail());
 
         commentRepository.delete(comment);
     }
