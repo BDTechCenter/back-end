@@ -3,14 +3,13 @@ package com.bdtc.technews.service.news;
 import com.bdtc.technews.contants.FilterOption;
 import com.bdtc.technews.dto.news.*;
 import com.bdtc.technews.dto.user.UserDto;
-import com.bdtc.technews.service.auth.RoleAuthHandler;
 import com.bdtc.technews.infra.exception.validation.PermissionException;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.model.NewsUpVoter;
 import com.bdtc.technews.model.Tag;
 import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.repository.NewsUpVoterRepository;
-import com.bdtc.technews.service.auth.UserHandler;
+import com.bdtc.technews.service.auth.RoleAuthHandler;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
 import com.bdtc.technews.service.news.utils.DateHandler;
 import com.bdtc.technews.service.news.utils.FilterHandler;
@@ -60,14 +59,11 @@ public class NewsService {
     private FilterHandler filterHandler;
 
     @Autowired
-    private UserHandler userHandler;
-
-    @Autowired
     private RoleAuthHandler roleAuthHandler;
 
     @Transactional
     public NewsDetailingDto createNews(Jwt tokenJWT, NewsRequestDto newsDto) {
-        UserDto authenticatedUser = userHandler.getUserByTokenJWT(tokenJWT);
+        UserDto authenticatedUser = new UserDto(tokenJWT);
         roleAuthHandler.validateUserRole(authenticatedUser);
 
         News news = new News(newsDto);
@@ -129,7 +125,7 @@ public class NewsService {
 
     @Transactional
     public NewsDetailingWUpVoteDto getNewsById(Jwt tokenJWT, UUID newsId) {
-        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
         News news = newsRepository.getReferenceById(newsId);
 
         if(!news.isPublished() && !news.getAuthorEmail().equals(currentUserEmail)) throw new PermissionException();
@@ -149,7 +145,7 @@ public class NewsService {
     public NewsDetailingDto publishNews(Jwt tokenJWT, UUID newsId) {
         News news = newsRepository.getReferenceById(newsId);
 
-        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
         if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
 
         news.publishNews();
@@ -166,7 +162,7 @@ public class NewsService {
     public NewsDetailingDto archiveNews(Jwt tokenJWT, UUID newsId) {
         News news = newsRepository.getReferenceById(newsId);
 
-        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
         if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
 
         news.archiveNews();
@@ -180,7 +176,7 @@ public class NewsService {
 
 
     public Page<NewsPreviewDto> getNewsByAuthor(Jwt tokenJWT, Pageable pageable, String filter) {
-        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
         Page<News> newsPage;
 
         List<FilterOption> filterOptions = List.of(FilterOption.PUBLISHED, FilterOption.ARCHIVED, FilterOption.EMPTY);
@@ -214,7 +210,7 @@ public class NewsService {
         News news = newsRepository.getReferenceById(newsId);
         newsBackupService.createNewsBackup(news, null);
 
-        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
         if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
 
         if(updateDto.title() !=null) news.updateTitle(updateDto.title());
@@ -251,7 +247,7 @@ public class NewsService {
         if(!newsRepository.existsById(newsId)) throw new EntityNotFoundException();
 
         News news = newsRepository.getReferenceById(newsId);
-        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
 
         if(newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId())) {
             newsUpVoterRepository.deleteByVoterEmailAndNewsId(currentUserEmail, newsId);

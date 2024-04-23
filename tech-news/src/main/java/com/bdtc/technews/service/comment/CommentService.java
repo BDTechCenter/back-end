@@ -10,7 +10,6 @@ import com.bdtc.technews.model.CommentUpVoter;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.CommentRepository;
 import com.bdtc.technews.repository.CommentUpVoterRepository;
-import com.bdtc.technews.service.auth.UserHandler;
 import com.bdtc.technews.service.news.NewsService;
 import com.bdtc.technews.service.news.utils.DateHandler;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,13 +38,10 @@ public class CommentService {
     @Autowired
     private DateHandler dateHandler;
 
-    @Autowired
-    private UserHandler userHandler;
-
     @Transactional
     public CommentDetailingDto createComment(Jwt tokenJWT, UUID newsId, CommentRequestDto commentRequestDto) {
         Comment comment = new Comment(commentRequestDto);
-        UserDto authenticatedUser = userHandler.getUserByTokenJWT(tokenJWT);
+        UserDto authenticatedUser = new UserDto(tokenJWT);
         LocalDateTime date = dateHandler.getCurrentDateTime();
         News news = newsService.getNews(newsId);
 
@@ -61,7 +57,7 @@ public class CommentService {
     public Page<CommentDetailingWUpVoteDto> getCommentsByNewsId(Jwt tokenJWT, UUID newsId, Pageable pageable) {
         News news = newsService.getNews(newsId);
         Page<Comment> commentsPage = commentRepository.getCommentByRelevance(news, pageable);
-        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
 
         return commentsPage.map(comment -> new CommentDetailingWUpVoteDto(
                 comment,
@@ -75,7 +71,7 @@ public class CommentService {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
         Comment comment = commentRepository.getReferenceById(id);
-        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
 
         if(commentUpVoterRepository.existsByVoterEmailAndCommentId(currentUserEmail, comment.getId())) {
             commentUpVoterRepository.deleteByVoterEmailAndCommentId(currentUserEmail, id);
@@ -93,7 +89,7 @@ public class CommentService {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
         Comment comment = commentRepository.getReferenceById(id);
-        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
 
         if(!currentUserEmail.equals(comment.getAuthorEmail())) throw new PermissionException();
 
@@ -103,7 +99,7 @@ public class CommentService {
     }
 
     public Page<CommentDetailingDto> getCommentsByAuthor(Jwt tokenJWT, Pageable pageable) {
-        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
 
         Page<Comment> commentsPage = commentRepository.getCommentByAuthor(currentUserEmail, pageable);
 
@@ -117,7 +113,7 @@ public class CommentService {
     public void deleteComment(Jwt tokenJWT, Long id) {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
-        String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
         Comment comment = commentRepository.getReferenceById(id);
 
         if(!currentUserEmail.equals(comment.getAuthorEmail())) throw new PermissionException();
