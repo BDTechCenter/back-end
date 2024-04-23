@@ -33,12 +33,12 @@ public class ErrorHandler {
 
     @ExceptionHandler(ItemAlreadyPublishedException.class)
     public ResponseEntity itemAlreadyPublishedHandler(ItemAlreadyPublishedException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ValidationErrorData("item", e.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ValidationErrorData("item", e.getMessage()));
     }
 
     @ExceptionHandler(ItemAlreadyArchivedException.class)
     public ResponseEntity itemAlreadyArchivedHandler(ItemAlreadyArchivedException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ValidationErrorData("item", e.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ValidationErrorData("item", e.getMessage()));
     }
 
     @ExceptionHandler(PermissionException.class)

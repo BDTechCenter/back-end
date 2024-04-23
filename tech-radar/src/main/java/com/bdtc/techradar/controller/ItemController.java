@@ -8,6 +8,8 @@ import com.bdtc.techradar.service.item.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -22,8 +24,12 @@ public class ItemController {
     private ItemService itemService;
 
     @PostMapping("/create")
-    public ResponseEntity<ItemDetailDto> createItem(@RequestBody @Valid ItemRequestDto itemRequestDto, UriComponentsBuilder uriBuilder) {
-        ItemDetailDto itemDetailDto = itemService.createItem(itemRequestDto);
+    public ResponseEntity<ItemDetailDto> createItem(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @RequestBody @Valid ItemRequestDto itemRequestDto,
+            UriComponentsBuilder uriBuilder
+    ) {
+        ItemDetailDto itemDetailDto = itemService.createItem(tokenJWT, itemRequestDto);
         var uri = uriBuilder.path("tech-radar/items/{id}").build(itemDetailDto.id());
         return ResponseEntity.created(uri).body(itemDetailDto);
     }
@@ -41,22 +47,35 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}/detail")
-    public ResponseEntity<ItemDetailDto> getItemDetail(@PathVariable UUID itemId) {
+    public ResponseEntity<ItemDetailDto> getItemDetail(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable UUID itemId
+    ) {
         return ResponseEntity.ok(itemService.getItemDetail(itemId));
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<ItemDetailDto> updateItem(@PathVariable UUID itemId, @RequestBody ItemUpdateDto itemUpdateDto) {
-        return ResponseEntity.ok(itemService.updateItem(itemId, itemUpdateDto));
+    public ResponseEntity<ItemDetailDto> updateItem(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable UUID itemId,
+            @RequestBody ItemUpdateDto itemUpdateDto
+    ) {
+        return ResponseEntity.ok(itemService.updateItem(tokenJWT, itemId, itemUpdateDto));
     }
 
     @PatchMapping("/{itemId}/publish")
-    public ResponseEntity<ItemDetailDto> publishItem(@PathVariable UUID itemId) throws Exception {
-        return ResponseEntity.ok(itemService.publishItem(itemId));
+    public ResponseEntity<ItemDetailDto> publishItem(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable UUID itemId
+    ) {
+        return ResponseEntity.ok(itemService.publishItem(tokenJWT, itemId));
     }
 
     @PatchMapping("/{itemId}/archive")
-    public ResponseEntity<ItemDetailDto> archiveItem(@PathVariable UUID itemId) throws Exception {
-        return ResponseEntity.ok(itemService.archiveItem(itemId));
+    public ResponseEntity<ItemDetailDto> archiveItem(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable UUID itemId
+    ) {
+        return ResponseEntity.ok(itemService.archiveItem(tokenJWT, itemId));
     }
 }

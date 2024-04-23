@@ -8,8 +8,6 @@ import com.bdtc.techradar.constant.Ring;
 import java.util.Optional;
 
 public record ItemUpdateDto(
-        Flag flag,
-        String authorEmail,
         String title,
         Ring ring,
         Expectation expectation,

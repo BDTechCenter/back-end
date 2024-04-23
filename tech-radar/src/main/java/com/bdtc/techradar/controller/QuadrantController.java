@@ -23,21 +23,21 @@ public class QuadrantController {
     @Autowired
     private QuadrantService quadrantService;
 
+    @GetMapping()
+    public ResponseEntity<List<QuadrantDto>> getQuadrants() {
+        List<QuadrantDto> quadrantsDtos = quadrantService.getViewQuadrants();
+        return ResponseEntity.ok(quadrantsDtos);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<QuadrantDetailDto> createQuadrant(
             @AuthenticationPrincipal Jwt tokenJWT,
             @RequestBody @Valid QuadrantRequestDto quadrantRequestDto,
             UriComponentsBuilder uriBuilder
-    ) throws Exception {
+    ) {
         QuadrantDetailDto quadrantDetailDto = quadrantService.createQuadrant(tokenJWT, quadrantRequestDto);
         var uri = uriBuilder.path("tech-radar/quadrants/{id}").build(quadrantDetailDto.id());
         return ResponseEntity.created(uri).body(quadrantDetailDto);
-    }
-
-    @GetMapping()
-    public ResponseEntity<List<QuadrantDto>> getQuadrants(@AuthenticationPrincipal Jwt tokenJWT) {
-        List<QuadrantDto> quadrantsDtos = quadrantService.getViewQuadrants(tokenJWT);
-        return ResponseEntity.ok(quadrantsDtos);
     }
 
     @PatchMapping("/{quadrantId}")

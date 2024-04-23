@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,13 +33,13 @@ public class Item {
 
     private String author;
     private String authorEmail;
-    private List<String> revisions; // revisions (list of author emails)
+    private List<String> revisions = new ArrayList<>(); // revisions (list of author emails)
 
     @Column(unique = true)
     private String title;
 
     private LocalDate creationDate;
-    private LocalDate publicationDate; // release --> YYYY-MM-DD (confirm format)
+    private LocalDate publicationDate; // release
     private LocalDate updateDate;
 
     @Column(unique = true)
@@ -58,13 +59,14 @@ public class Item {
     private String body;
 
     public Item(ItemRequestDto itemRequestDto) {
-        this.flag = itemRequestDto.flag();
         this.isActive = itemRequestDto.isActive();
-        this.authorEmail = itemRequestDto.authorEmail();
-        this.revisions = itemRequestDto.revisions();
         this.title = itemRequestDto.title();
         this.ring = itemRequestDto.ring();
         this.expectation = itemRequestDto.expectation();
         this.body = itemRequestDto.body();
+    }
+
+    public void setRevisions(String networkUser) {
+        this.revisions.add(networkUser);
     }
 }
