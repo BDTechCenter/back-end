@@ -4,14 +4,17 @@ import com.bdtc.techradar.dto.item.ItemDetailDto;
 import com.bdtc.techradar.dto.item.ItemPreviewDto;
 import com.bdtc.techradar.dto.item.ItemRequestDto;
 import com.bdtc.techradar.dto.item.ItemUpdateDto;
+import com.bdtc.techradar.dto.user.UserDto;
 import com.bdtc.techradar.infra.exception.validation.ItemAlreadyArchivedException;
 import com.bdtc.techradar.infra.exception.validation.ItemAlreadyPublishedException;
 import com.bdtc.techradar.model.Item;
 import com.bdtc.techradar.model.Quadrant;
 import com.bdtc.techradar.repository.ItemRepository;
+import com.bdtc.techradar.service.auth.AuthHandler;
 import com.bdtc.techradar.service.quadrant.QuadrantService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,6 +29,10 @@ public class ItemService {
 
     @Autowired
     private QuadrantService quadrantService;
+
+    @Autowired
+    private AuthHandler authHandler;
+
 
     public List<ItemPreviewDto> getItemsPreview() {
         List<ItemPreviewDto> itemPreviewDtos = new ArrayList<>();
@@ -53,40 +60,49 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemDetailDto createItem(ItemRequestDto itemRequestDto) {
+    public ItemDetailDto createItem(Jwt tokenJWT, ItemRequestDto itemRequestDto) {
+        UserDto authenticatedUser = new UserDto(tokenJWT);
+        authHandler.validateUserRole(authenticatedUser);
+
         Item item = new Item(itemRequestDto);
         Quadrant quadrant = quadrantService.getQuadrant(itemRequestDto.quadrant());
 
         item.setCreationDate(LocalDate.now());
         item.setQuadrant(quadrant);
+        item.setAuthor(authenticatedUser.username());
+        item.setAuthorEmail(authenticatedUser.networkUser());
 
         itemRepository.save(item);
         return new ItemDetailDto(item);
     }
 
     @Transactional
-    public ItemDetailDto updateItem(UUID itemId, ItemUpdateDto itemUpdateDto) {
+    public ItemDetailDto updateItem(Jwt tokenJWT, UUID itemId, ItemUpdateDto itemUpdateDto) {
+        UserDto authenticatedUser = new UserDto(tokenJWT);
+        authHandler.validateUserRole(authenticatedUser);
+
         Item item = itemRepository.getReferenceById(itemId);
 
         if (itemUpdateDto.quadrant().isPresent()) {
             Quadrant quadrant = quadrantService.getQuadrant(itemUpdateDto.quadrant().get());
             item.setQuadrant(quadrant);
         }
-        if (itemUpdateDto.flag() != null) item.setFlag(itemUpdateDto.flag());
-        if (itemUpdateDto.authorEmail() != null) item.setAuthorEmail(itemUpdateDto.authorEmail());
         if (itemUpdateDto.title() != null) item.setTitle(itemUpdateDto.title());
         if (itemUpdateDto.ring() != null) item.setRing(itemUpdateDto.ring());
         if (itemUpdateDto.body() != null) item.setBody(itemUpdateDto.body());
 
         item.setUpdateDate(LocalDate.now());
+        item.setRevisions(authenticatedUser.networkUser());
 
-        // add user to revision list
         return new ItemDetailDto(item);
     }
 
     @Transactional
-    public ItemDetailDto publishItem(UUID itemId) throws Exception {
+    public ItemDetailDto publishItem(Jwt tokenJWT, UUID itemId) {
         Item item = itemRepository.getReferenceById(itemId);
+        // only author or admin can publish
+        authHandler.validateAuthorOrAdmin(tokenJWT, item);
+
         if (!item.isActive()) {
             item.setPublicationDate(LocalDate.now());
             item.setActive(true);
@@ -96,8 +112,11 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemDetailDto archiveItem(UUID itemId) throws Exception {
+    public ItemDetailDto archiveItem(Jwt tokenJWT, UUID itemId) {
         Item item = itemRepository.getReferenceById(itemId);
+        // only author or admin can publish
+        authHandler.validateAuthorOrAdmin(tokenJWT, item);
+
         if (item.isActive()) {
             item.setPublicationDate(null);
             item.setActive(false);
