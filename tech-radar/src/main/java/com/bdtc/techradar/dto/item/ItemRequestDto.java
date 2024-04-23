@@ -10,17 +10,9 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record ItemRequestDto(
-        @NotNull
-        Flag flag,
 
         @NotNull
         boolean isActive,
-
-        @NotBlank
-        String authorEmail,
-
-        @NotNull
-        List<String> revisions,
 
         @NotBlank
         String title,
