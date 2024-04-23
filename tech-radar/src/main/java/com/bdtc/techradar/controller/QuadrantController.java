@@ -25,10 +25,11 @@ public class QuadrantController {
 
     @PostMapping("/create")
     public ResponseEntity<QuadrantDetailDto> createQuadrant(
+            @AuthenticationPrincipal Jwt tokenJWT,
             @RequestBody @Valid QuadrantRequestDto quadrantRequestDto,
             UriComponentsBuilder uriBuilder
     ) throws Exception {
-        QuadrantDetailDto quadrantDetailDto = quadrantService.createQuadrant(quadrantRequestDto);
+        QuadrantDetailDto quadrantDetailDto = quadrantService.createQuadrant(tokenJWT, quadrantRequestDto);
         var uri = uriBuilder.path("tech-radar/quadrants/{id}").build(quadrantDetailDto.id());
         return ResponseEntity.created(uri).body(quadrantDetailDto);
     }
@@ -40,7 +41,11 @@ public class QuadrantController {
     }
 
     @PatchMapping("/{quadrantId}")
-    public ResponseEntity<QuadrantDetailDto> updateQuandrant(@PathVariable String quadrantId, @RequestBody QuadrantUpdateDto quadrantUpdateDto) {
-        return ResponseEntity.ok(quadrantService.updateQuadrant(quadrantId, quadrantUpdateDto));
+    public ResponseEntity<QuadrantDetailDto> updateQuandrant(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable String quadrantId,
+            @RequestBody QuadrantUpdateDto quadrantUpdateDto
+    ) {
+        return ResponseEntity.ok(quadrantService.updateQuadrant(tokenJWT, quadrantId, quadrantUpdateDto));
     }
 }

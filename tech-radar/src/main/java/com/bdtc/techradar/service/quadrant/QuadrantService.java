@@ -1,13 +1,17 @@
 package com.bdtc.techradar.service.quadrant;
 
 import com.bdtc.techradar.constant.QuadrantEnum;
+import com.bdtc.techradar.constant.Roles;
 import com.bdtc.techradar.dto.quadrant.QuadrantDetailDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantRequestDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantUpdateDto;
+import com.bdtc.techradar.dto.user.UserDto;
 import com.bdtc.techradar.infra.exception.validation.PermissionException;
+import com.bdtc.techradar.infra.exception.validation.QuadrantAlreadyExistsException;
 import com.bdtc.techradar.model.Quadrant;
 import com.bdtc.techradar.repository.QuadrantRepository;
+import com.bdtc.techradar.service.auth.RoleAuthHandler;
 import com.bdtc.techradar.service.auth.UserHandler;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,9 @@ public class QuadrantService {
     @Autowired
     private UserHandler userHandler;
 
+    @Autowired
+    private RoleAuthHandler roleAuthHandler;
+
     public List<QuadrantDto> getViewQuadrants(Jwt tokenJWT) {
         String currentUserEmail = userHandler.getUserByTokenJWT(tokenJWT).networkUser();
         if (currentUserEmail == null || currentUserEmail.isEmpty()) throw new PermissionException();
@@ -40,13 +47,17 @@ public class QuadrantService {
     }
 
     @Transactional
-    public QuadrantDetailDto createQuadrant(QuadrantRequestDto quadrantRequestDto) throws Exception {
-        if (!quadrantRepository.existsById(quadrantRequestDto.quadrant().getTitle())) {
-            Quadrant quadrant = new Quadrant(quadrantRequestDto);
-            quadrantRepository.save(quadrant);
-            return new QuadrantDetailDto(quadrant);
+    public QuadrantDetailDto createQuadrant(Jwt tokenJWT, QuadrantRequestDto quadrantRequestDto) {
+        UserDto userDto = userHandler.getUserByTokenJWT(tokenJWT);
+        if (roleAuthHandler.userIsAdmin(userDto)) {
+            if (!quadrantRepository.existsById(quadrantRequestDto.quadrant().getTitle())) {
+                Quadrant quadrant = new Quadrant(quadrantRequestDto);
+                quadrantRepository.save(quadrant);
+                return new QuadrantDetailDto(quadrant);
+            }
+            throw new QuadrantAlreadyExistsException();
         }
-        throw new Exception("Quadrant with this ID already exists");
+        throw new PermissionException();
     }
 
     public Quadrant getQuadrant(QuadrantEnum quadrantEnum) {
@@ -54,16 +65,21 @@ public class QuadrantService {
     }
 
     @Transactional
-    public QuadrantDetailDto updateQuadrant(String quadrantId, QuadrantUpdateDto quadrantUpdateDto) {
+    public QuadrantDetailDto updateQuadrant(Jwt tokenJWT, String quadrantId, QuadrantUpdateDto quadrantUpdateDto) {
         Quadrant quadrant = quadrantRepository.getReferenceById(quadrantId);
 
-        if (quadrantUpdateDto.name() != null) quadrant.setName(quadrantUpdateDto.name());
-        if (quadrantUpdateDto.title() != null) quadrant.setTitle(quadrantUpdateDto.title());
-        if (quadrantUpdateDto.color() != null) quadrant.setColor(quadrantUpdateDto.color());
-        if (quadrantUpdateDto.txtColor() != null) quadrant.setTxtColor(quadrantUpdateDto.txtColor());
-        if (quadrantUpdateDto.position() != null) quadrant.setPosition(quadrantUpdateDto.position());
-        if (quadrantUpdateDto.description() != null) quadrant.setDescription(quadrantUpdateDto.description());
+        UserDto userDto = userHandler.getUserByTokenJWT(tokenJWT);
+        if (roleAuthHandler.userIsAdmin(userDto)) {
 
-        return new QuadrantDetailDto(quadrant);
+            if (quadrantUpdateDto.name() != null) quadrant.setName(quadrantUpdateDto.name());
+            if (quadrantUpdateDto.title() != null) quadrant.setTitle(quadrantUpdateDto.title());
+            if (quadrantUpdateDto.color() != null) quadrant.setColor(quadrantUpdateDto.color());
+            if (quadrantUpdateDto.txtColor() != null) quadrant.setTxtColor(quadrantUpdateDto.txtColor());
+            if (quadrantUpdateDto.position() != null) quadrant.setPosition(quadrantUpdateDto.position());
+            if (quadrantUpdateDto.description() != null) quadrant.setDescription(quadrantUpdateDto.description());
+
+            return new QuadrantDetailDto(quadrant);
+        }
+        throw new PermissionException();
     }
 }

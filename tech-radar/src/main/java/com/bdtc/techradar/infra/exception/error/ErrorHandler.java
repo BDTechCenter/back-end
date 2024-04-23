@@ -1,8 +1,7 @@
 package com.bdtc.techradar.infra.exception.error;
 
 
-import com.bdtc.techradar.infra.exception.validation.ItemAlreadyArchivedException;
-import com.bdtc.techradar.infra.exception.validation.ItemAlreadyPublishedException;
+import com.bdtc.techradar.infra.exception.validation.*;
 import com.bdtc.techradar.infra.exception.error.util.UniqueConstraintHandler;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,26 @@ public class ErrorHandler {
     @ExceptionHandler(ItemAlreadyArchivedException.class)
     public ResponseEntity itemAlreadyArchivedHandler(ItemAlreadyArchivedException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ValidationErrorData("item", e.getMessage()));
+    }
+
+    @ExceptionHandler(PermissionException.class)
+    public ResponseEntity permissionDeniedHandler(PermissionException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ValidationErrorData("authorization", e.getMessage()));
+    }
+
+    @ExceptionHandler(AuthClientInvalidTokenException.class)
+    public ResponseEntity invalidTokenHandler(AuthClientInvalidTokenException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ValidationErrorData("token", e.getMessage()));
+    }
+
+    @ExceptionHandler(UnauthorizedByRolesException.class)
+    public ResponseEntity UnauthorizedByCurrentRolesHandler(UnauthorizedByRolesException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ValidationErrorData("roles", e.getMessage()));
+    }
+
+    @ExceptionHandler(QuadrantAlreadyExistsException.class)
+    public ResponseEntity QuadrantAlreadyExistsException(UnauthorizedByRolesException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ValidationErrorData("quandrant", e.getMessage()));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
