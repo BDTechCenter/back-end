@@ -1,16 +1,20 @@
 package com.bdtc.technews.service.news;
 
 import com.bdtc.technews.contants.FilterOption;
-import com.bdtc.technews.dto.*;
-import com.bdtc.technews.http.auth.service.AuthClientService;
+import com.bdtc.technews.dto.news.*;
+import com.bdtc.technews.dto.user.UserDto;
 import com.bdtc.technews.infra.exception.validation.PermissionException;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.model.NewsUpVoter;
 import com.bdtc.technews.model.Tag;
 import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.repository.NewsUpVoterRepository;
+import com.bdtc.technews.service.auth.AuthorizationHandler;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
-import com.bdtc.technews.service.news.utils.*;
+import com.bdtc.technews.service.news.utils.DateHandler;
+import com.bdtc.technews.service.news.utils.FilterHandler;
+import com.bdtc.technews.service.news.utils.ImageHandler;
+import com.bdtc.technews.service.news.utils.TagHandler;
 import com.bdtc.technews.service.tag.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -18,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -54,15 +59,12 @@ public class NewsService {
     private FilterHandler filterHandler;
 
     @Autowired
-    private AuthClientService authService;
-
-    @Autowired
-    private RoleAuthHandler roleAuthHandler;
+    private AuthorizationHandler authorizationHandler;
 
     @Transactional
-    public NewsDetailingDto createNews(String tokenJWT, NewsRequestDto newsDto) {
-        UserDto authenticatedUser = authService.getUser(tokenJWT);
-        roleAuthHandler.validateUserRole(authenticatedUser);
+    public NewsDetailingDto createNews(Jwt tokenJWT, NewsRequestDto newsDto) {
+        UserDto authenticatedUser = new UserDto(tokenJWT);
+        authorizationHandler.validateUserRole(authenticatedUser);
 
         News news = new News(newsDto);
         LocalDateTime dateNow = dateHandler.getCurrentDateTime();
@@ -122,14 +124,18 @@ public class NewsService {
     }
 
     @Transactional
-    public NewsDetailingWUpVoteDto getNewsById(String tokenJWT, UUID newsId) {
-        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+    public NewsDetailingWUpVoteDto getNewsById(Jwt tokenJWT, UUID newsId) {
+        UserDto userDto = new UserDto(tokenJWT);
         News news = newsRepository.getReferenceById(newsId);
 
-        if(!news.isPublished() && !news.getAuthorEmail().equals(currentUserEmail)) throw new PermissionException();
+        if(!news.isPublished() &&
+                !authorizationHandler.userHasAuthorization(userDto, news.getAuthorEmail())
+        ) throw new PermissionException();
 
         news.addAView();
-        boolean alreadyUpVoted = newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId());
+        boolean alreadyUpVoted = newsUpVoterRepository.existsByVoterEmailAndNewsId(
+                userDto.networkUser(), news.getId()
+        );
 
         return new NewsDetailingWUpVoteDto(
                 news,
@@ -140,11 +146,11 @@ public class NewsService {
     }
 
     @Transactional
-    public NewsDetailingDto publishNews(String tokenJWT, UUID newsId) {
+    public NewsDetailingDto publishNews(Jwt tokenJWT, UUID newsId) {
         News news = newsRepository.getReferenceById(newsId);
 
-        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
-        if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
+        UserDto userDto = new UserDto(tokenJWT);
+        authorizationHandler.userHasAuthorization(userDto, news.getAuthorEmail());
 
         news.publishNews();
         news.setPublicationDate(dateHandler.getCurrentDateTime());
@@ -157,11 +163,11 @@ public class NewsService {
     }
 
     @Transactional
-    public NewsDetailingDto archiveNews(String tokenJWT, UUID newsId) {
+    public NewsDetailingDto archiveNews(Jwt tokenJWT, UUID newsId) {
         News news = newsRepository.getReferenceById(newsId);
 
-        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
-        if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
+        UserDto userDto = new UserDto(tokenJWT);
+        authorizationHandler.userHasAuthorization(userDto, news.getAuthorEmail());
 
         news.archiveNews();
         return new NewsDetailingDto(
@@ -173,8 +179,8 @@ public class NewsService {
     }
 
 
-    public Page<NewsPreviewDto> getNewsByAuthor(String tokenJWT, Pageable pageable, String filter) {
-        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+    public Page<NewsPreviewDto> getNewsByAuthor(Jwt tokenJWT, Pageable pageable, String filter) {
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
         Page<News> newsPage;
 
         List<FilterOption> filterOptions = List.of(FilterOption.PUBLISHED, FilterOption.ARCHIVED, FilterOption.EMPTY);
@@ -204,12 +210,12 @@ public class NewsService {
 
 
     @Transactional
-    public NewsDetailingDto updateNews(String tokenJWT, UUID newsId, NewsUpdateDto updateDto) {
+    public NewsDetailingDto updateNews(Jwt tokenJWT, UUID newsId, NewsUpdateDto updateDto) {
         News news = newsRepository.getReferenceById(newsId);
         newsBackupService.createNewsBackup(news, null);
 
-        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
-        if(!currentUserEmail.equals(news.getAuthorEmail())) throw new PermissionException();
+        UserDto userDto = new UserDto(tokenJWT);
+        authorizationHandler.userHasAuthorization(userDto, news.getAuthorEmail());
 
         if(updateDto.title() !=null) news.updateTitle(updateDto.title());
         if(updateDto.body() !=null) news.updateBody(updateDto.body());
@@ -241,11 +247,11 @@ public class NewsService {
     }
 
     @Transactional
-    public void addUpVoteToNews(String tokenJWT, UUID newsId) {
+    public void addUpVoteToNews(Jwt tokenJWT, UUID newsId) {
         if(!newsRepository.existsById(newsId)) throw new EntityNotFoundException();
 
         News news = newsRepository.getReferenceById(newsId);
-        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
 
         if(newsUpVoterRepository.existsByVoterEmailAndNewsId(currentUserEmail, news.getId())) {
             newsUpVoterRepository.deleteByVoterEmailAndNewsId(currentUserEmail, newsId);

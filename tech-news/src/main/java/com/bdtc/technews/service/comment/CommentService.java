@@ -1,16 +1,16 @@
 package com.bdtc.technews.service.comment;
 
-import com.bdtc.technews.dto.CommentDetailingDto;
-import com.bdtc.technews.dto.CommentDetailingWUpVoteDto;
-import com.bdtc.technews.dto.CommentRequestDto;
-import com.bdtc.technews.dto.UserDto;
-import com.bdtc.technews.http.auth.service.AuthClientService;
+import com.bdtc.technews.dto.comment.CommentDetailingDto;
+import com.bdtc.technews.dto.comment.CommentDetailingWUpVoteDto;
+import com.bdtc.technews.dto.comment.CommentRequestDto;
+import com.bdtc.technews.dto.user.UserDto;
 import com.bdtc.technews.infra.exception.validation.PermissionException;
 import com.bdtc.technews.model.Comment;
 import com.bdtc.technews.model.CommentUpVoter;
 import com.bdtc.technews.model.News;
 import com.bdtc.technews.repository.CommentRepository;
 import com.bdtc.technews.repository.CommentUpVoterRepository;
+import com.bdtc.technews.service.auth.AuthorizationHandler;
 import com.bdtc.technews.service.news.NewsService;
 import com.bdtc.technews.service.news.utils.DateHandler;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -39,12 +40,12 @@ public class CommentService {
     private DateHandler dateHandler;
 
     @Autowired
-    private AuthClientService authService;
+    private AuthorizationHandler authorizationHandler;
 
     @Transactional
-    public CommentDetailingDto createComment(String tokenJWT, UUID newsId, CommentRequestDto commentRequestDto) {
+    public CommentDetailingDto createComment(Jwt tokenJWT, UUID newsId, CommentRequestDto commentRequestDto) {
         Comment comment = new Comment(commentRequestDto);
-        UserDto authenticatedUser = authService.getUser(tokenJWT);
+        UserDto authenticatedUser = new UserDto(tokenJWT);
         LocalDateTime date = dateHandler.getCurrentDateTime();
         News news = newsService.getNews(newsId);
 
@@ -57,10 +58,10 @@ public class CommentService {
         return new CommentDetailingDto(comment, dateHandler.formatDate(comment.getPublicationDate()));
     }
 
-    public Page<CommentDetailingWUpVoteDto> getCommentsByNewsId(String tokenJWT, UUID newsId, Pageable pageable) {
+    public Page<CommentDetailingWUpVoteDto> getCommentsByNewsId(Jwt tokenJWT, UUID newsId, Pageable pageable) {
         News news = newsService.getNews(newsId);
         Page<Comment> commentsPage = commentRepository.getCommentByRelevance(news, pageable);
-        String currentUserEmail = authService.getUser(tokenJWT).username();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
 
         return commentsPage.map(comment -> new CommentDetailingWUpVoteDto(
                 comment,
@@ -70,11 +71,11 @@ public class CommentService {
     }
 
     @Transactional
-    public void addUpVoteToComment(String tokenJWT, Long id) {
+    public void addUpVoteToComment(Jwt tokenJWT, Long id) {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
         Comment comment = commentRepository.getReferenceById(id);
-        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
 
         if(commentUpVoterRepository.existsByVoterEmailAndCommentId(currentUserEmail, comment.getId())) {
             commentUpVoterRepository.deleteByVoterEmailAndCommentId(currentUserEmail, id);
@@ -88,16 +89,40 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDetailingDto updateComment(String tokenJWT, Long id, CommentRequestDto commentRequestDto) {
+    public CommentDetailingDto updateComment(Jwt tokenJWT, Long id, CommentRequestDto commentRequestDto) {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
         Comment comment = commentRepository.getReferenceById(id);
-        String currentUserEmail = authService.getUser(tokenJWT).networkUser();
 
-        if(!currentUserEmail.equals(comment.getAuthor())) throw new PermissionException();
+        UserDto userDto = new UserDto(tokenJWT);
+        authorizationHandler.userHasAuthorization(userDto, comment.getAuthorEmail());
 
         comment.updateComment(commentRequestDto.comment());
 
         return new CommentDetailingDto(comment, dateHandler.formatDate(comment.getPublicationDate()));
+    }
+
+    public Page<CommentDetailingDto> getCommentsByAuthor(Jwt tokenJWT, Pageable pageable) {
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
+
+        Page<Comment> commentsPage = commentRepository.getCommentByAuthor(currentUserEmail, pageable);
+
+        return commentsPage.map(comment -> new CommentDetailingDto(
+                comment,
+                dateHandler.formatDate(comment.getPublicationDate()
+                )));
+    }
+
+    @Transactional
+    public void deleteComment(Jwt tokenJWT, Long id) {
+        if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
+
+        String currentUserEmail = new UserDto(tokenJWT).networkUser();
+        Comment comment = commentRepository.getReferenceById(id);
+
+        UserDto userDto = new UserDto(tokenJWT);
+        authorizationHandler.userHasAuthorization(userDto, comment.getAuthorEmail());
+
+        commentRepository.delete(comment);
     }
 }

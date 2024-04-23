@@ -22,20 +22,6 @@ services:
     networks:
       - bdtc-net
 
-  auth-service:
-    depends_on:
-      - service-discovery
-      - api-gateway
-    container_name: auth-service
-    build:
-      context: ./auth-service
-    environment:
-      - EUREKA_URL=http://service-discovery:8765/eureka
-    env_file:
-      - ./auth-service/.env
-    networks:
-      - bdtc-net
-
   tech-news:
     depends_on:
       - api-gateway
@@ -43,6 +29,8 @@ services:
     container_name: tech-news
     build:
       context: ./tech-news
+    env_file:
+      - ./tech-news/.env
     environment:
       - DATABASE_URL=jdbc:postgresql://tech-news-db:5432/tech_news
       - EUREKA_URL=http://service-discovery:8765/eureka
@@ -64,10 +52,39 @@ services:
     networks:
       - bdtc-net
 
+  tech-radar:
+    depends_on:
+      - api-gateway
+      - tech-radar-db
+    container_name: tech-radar
+    build:
+      context: ./tech-radar
+    env_file:
+      - ./tech-radar/.env
+    environment:
+      - DATABASE_URL=jdbc:postgresql://tech-radar-db:5432/tech_radar
+      - EUREKA_URL=http://service-discovery:8765/eureka
+    networks:
+      - bdtc-net
+
+  tech-radar-db:
+    image: postgres
+    container_name: tech-radar-db
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+      POSTGRES_DB: tech_radar
+    ports:
+      - 6967:5432
+    volumes:
+      - tech-radar-db-volume:/var/lib/postgresql/data/
+    networks:
+      - bdtc-net
 
 volumes:
   tech-news-db-volume:
 
+  tech-radar-db-volume:
 
 networks:
   bdtc-net:

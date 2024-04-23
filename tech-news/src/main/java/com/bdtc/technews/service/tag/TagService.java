@@ -1,6 +1,6 @@
 package com.bdtc.technews.service.tag;
 
-import com.bdtc.technews.dto.TagDto;
+import com.bdtc.technews.dto.tag.TagDto;
 import com.bdtc.technews.model.Tag;
 import com.bdtc.technews.repository.TagRepository;
 import com.bdtc.technews.service.tag.validation.creation.TagCreationValidators;

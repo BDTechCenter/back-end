@@ -1,7 +1,6 @@
 package com.bdtc.technews.model;
 
-import com.bdtc.technews.dto.NewsRequestDto;
-import com.bdtc.technews.service.news.utils.DateHandler;
+import com.bdtc.technews.dto.news.NewsRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
