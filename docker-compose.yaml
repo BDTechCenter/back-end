@@ -35,6 +35,8 @@ services:
       - DATABASE_URL=jdbc:postgresql://tech-news-db:5432/tech_news
       - EUREKA_URL=http://service-discovery:8765/eureka
       - GATEWAY_URL=http://10.234.90.77:8766/tech-news
+    volumes:
+      - news-upload-volume:/app/newsUpload
     networks:
       - bdtc-net
 
@@ -83,6 +85,8 @@ services:
 
 volumes:
   tech-news-db-volume:
+
+  news-upload-volume:
 
   tech-radar-db-volume:
 
