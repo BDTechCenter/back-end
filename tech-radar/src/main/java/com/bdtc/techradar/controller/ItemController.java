@@ -40,13 +40,13 @@ public class ItemController {
         return ResponseEntity.ok(itemPreviewDtos);
     }
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<List<ItemPreviewDto>> getAllItems() {
         List<ItemPreviewDto> itemPreviewDtos = itemService.getAllItemsPreview();
         return ResponseEntity.ok(itemPreviewDtos);
     }
 
-    @GetMapping("/{itemId}/detail")
+    @GetMapping("/{itemId}")
     public ResponseEntity<ItemDetailDto> getItemDetail(
             @AuthenticationPrincipal Jwt tokenJWT,
             @PathVariable UUID itemId
