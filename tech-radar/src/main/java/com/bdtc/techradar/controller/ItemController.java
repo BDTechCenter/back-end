@@ -40,7 +40,7 @@ public class ItemController {
         return ResponseEntity.ok(itemPreviewDtos);
     }
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<List<ItemPreviewDto>> getAllItems() {
         List<ItemPreviewDto> itemPreviewDtos = itemService.getAllItemsPreview();
         return ResponseEntity.ok(itemPreviewDtos);
