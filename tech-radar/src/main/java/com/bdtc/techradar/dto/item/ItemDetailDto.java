@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public record ItemDetailDto(
         UUID id,
-        Flag flag,
+        String flag,
         boolean isActive,
         String authorEmail,
         List<String> revisions,
@@ -18,7 +18,7 @@ public record ItemDetailDto(
         LocalDate creationDate,
         LocalDate publicationDate,
         LocalDate updateDate,
-        Ring ring,
+        String ring,
         String expectation,
         String quadrantId,
         String body
@@ -26,7 +26,7 @@ public record ItemDetailDto(
     public ItemDetailDto(Item item) {
         this(
                 item.getId(),
-                item.getFlag(),
+                item.getFlag().getTitle(),
                 item.isActive(),
                 item.getAuthorEmail(),
                 item.getRevisions(),
@@ -34,7 +34,7 @@ public record ItemDetailDto(
                 item.getCreationDate(),
                 item.getPublicationDate(),
                 item.getUpdateDate(),
-                item.getRing(),
+                item.getRing().getTitle(),
                 item.getExpectation().getDescription(),
                 item.getQuadrant().getId(),
                 item.getBody());
