@@ -46,7 +46,7 @@ public class ItemController {
         return ResponseEntity.ok(itemPreviewDtos);
     }
 
-    @GetMapping("/{itemId}/detail")
+    @GetMapping("/{itemId}")
     public ResponseEntity<ItemDetailDto> getItemDetail(
             @AuthenticationPrincipal Jwt tokenJWT,
             @PathVariable UUID itemId
