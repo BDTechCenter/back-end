@@ -8,14 +8,14 @@ import java.util.UUID;
 
 public record ItemPreviewDto(
         UUID id,
-        String flag,
+        Flag flag,
         String title,
-        String ring,
+        Ring ring,
         String expectation,
         String quadrantId,
         boolean isActive
 ) {
     public ItemPreviewDto(Item item) {
-        this(item.getId(), item.getFlag().getTitle(), item.getTitle(), item.getRing().getTitle(), item.getExpectation().getDescription(), item.getQuadrant().getId(), item.isActive());
+        this(item.getId(), item.getFlag(), item.getTitle(), item.getRing(), item.getExpectation().getDescription(), item.getQuadrant().getId(), item.isActive());
     }
 }
