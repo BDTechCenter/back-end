@@ -1,5 +1,6 @@
 package com.bdtc.techradar.controller;
 
+import com.bdtc.techradar.dto.item.ItemPreviewDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantDetailDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantRequestDto;
@@ -27,6 +28,14 @@ public class QuadrantController {
     public ResponseEntity<List<QuadrantDto>> getQuadrants() {
         List<QuadrantDto> quadrantsDtos = quadrantService.getViewQuadrants();
         return ResponseEntity.ok(quadrantsDtos);
+    }
+
+    @GetMapping("/{quadrantId}/items")
+    public ResponseEntity<List<ItemPreviewDto>> getQuadrantItems(
+            @PathVariable String quadrantId
+    ) {
+        List<ItemPreviewDto> itemsDtos = quadrantService.getQuadrantItems(quadrantId);
+        return ResponseEntity.ok(itemsDtos);
     }
 
     @PostMapping("/create")
