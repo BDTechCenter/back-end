@@ -1,5 +1,6 @@
 package com.bdtc.techradar.service.item;
 
+import com.bdtc.techradar.constant.Flag;
 import com.bdtc.techradar.dto.item.ItemDetailDto;
 import com.bdtc.techradar.dto.item.ItemPreviewDto;
 import com.bdtc.techradar.dto.item.ItemRequestDto;
@@ -14,6 +15,7 @@ import com.bdtc.techradar.service.auth.AuthHandler;
 import com.bdtc.techradar.service.quadrant.QuadrantService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +73,7 @@ public class ItemService {
         item.setQuadrant(quadrant);
         item.setAuthor(authenticatedUser.username());
         item.setAuthorEmail(authenticatedUser.networkUser());
+        item.setFlag(Flag.NEW);
 
         itemRepository.save(item);
         return new ItemDetailDto(item);
@@ -93,6 +96,7 @@ public class ItemService {
 
         item.setUpdateDate(LocalDate.now());
         item.setRevisions(authenticatedUser.networkUser());
+        item.setFlag(Flag.CHANGED);
 
         return new ItemDetailDto(item);
     }
@@ -106,6 +110,7 @@ public class ItemService {
         if (!item.isActive()) {
             item.setPublicationDate(LocalDate.now());
             item.setActive(true);
+            item.setFlag(Flag.NEW);
             return new ItemDetailDto(item);
         }
         throw new ItemAlreadyPublishedException();
@@ -123,5 +128,18 @@ public class ItemService {
             return new ItemDetailDto(item);
         }
         throw new ItemAlreadyArchivedException();
+    }
+
+    @Transactional
+    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+    public void updateItemFlag() {
+        List<Item> items = itemRepository.findAll();
+        LocalDate oneWeekAgo = LocalDate.now().minusWeeks(1);
+
+        for (Item item : items) {
+            if (item.getCreationDate().isBefore(oneWeekAgo) && item.getUpdateDate().isBefore(oneWeekAgo)) {
+                item.setFlag(Flag.DEFAULT);
+            }
+        }
     }
 }

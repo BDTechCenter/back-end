@@ -1,20 +1,20 @@
 package com.bdtc.techradar.service.quadrant;
 
 import com.bdtc.techradar.constant.QuadrantEnum;
+import com.bdtc.techradar.dto.item.ItemPreviewDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantDetailDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantRequestDto;
 import com.bdtc.techradar.dto.quadrant.QuadrantUpdateDto;
-import com.bdtc.techradar.dto.user.UserDto;
 import com.bdtc.techradar.infra.exception.validation.QuadrantAlreadyExistsException;
 import com.bdtc.techradar.model.Quadrant;
+import com.bdtc.techradar.model.Item;
 import com.bdtc.techradar.repository.QuadrantRepository;
 import com.bdtc.techradar.service.auth.AuthHandler;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +35,17 @@ public class QuadrantService {
             quadrantViewDtos.add(new QuadrantDto(quadrant));
         }
         return quadrantViewDtos;
+    }
+
+    public List<ItemPreviewDto> getQuadrantItems(String quadrantId) {
+        List<ItemPreviewDto> itemPreviewDtos = new ArrayList<>();
+        Quadrant quadrant = quadrantRepository.getReferenceById(quadrantId);
+        List<Item> items = quadrantRepository.findAllRelatedItemsByQuadrantId(quadrant);
+
+        for (Item item :  items) {
+            itemPreviewDtos.add(new ItemPreviewDto(item));
+        }
+        return itemPreviewDtos;
     }
 
     @Transactional
