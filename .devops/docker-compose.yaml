@@ -3,7 +3,7 @@ services:
   service-discovery:
     container_name: service-discovery
     build:
-      context: ./service-discovery
+      context: ../service-discovery
     ports:
       - "0.0.0.0:8765:8765"
     networks:
@@ -14,7 +14,7 @@ services:
       - service-discovery
     container_name: api-gateway
     build:
-      context: ./api-gateway
+      context: ../api-gateway
     environment:
       - EUREKA_URL=http://service-discovery:8765/eureka
     ports:
@@ -28,9 +28,9 @@ services:
       - tech-news-db
     container_name: tech-news
     build:
-      context: ./tech-news
+      context: ../tech-news
     env_file:
-      - ./tech-news/.env
+      - ../tech-news/.env
     environment:
       - DATABASE_URL=jdbc:postgresql://tech-news-db:5432/tech_news
       - EUREKA_URL=http://service-discovery:8765/eureka
@@ -60,9 +60,9 @@ services:
       - tech-radar-db
     container_name: tech-radar
     build:
-      context: ./tech-radar
+      context: ../tech-radar
     env_file:
-      - ./tech-radar/.env
+      - ../tech-radar/.env
     environment:
       - DATABASE_URL=jdbc:postgresql://tech-radar-db:5432/tech_radar
       - EUREKA_URL=http://service-discovery:8765/eureka
