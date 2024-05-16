@@ -7,7 +7,6 @@ public record QuadrantDetailDto(
         String name,
         String title,
         String color,
-        String txtColor,
         Integer position,
         String description
 ) {
@@ -17,7 +16,6 @@ public record QuadrantDetailDto(
                 quadrant.getName(),
                 quadrant.getTitle(),
                 quadrant.getColor(),
-                quadrant.getTxtColor(),
                 quadrant.getPosition(),
                 quadrant.getDescription()
         );
