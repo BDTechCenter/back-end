@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface ItemRepository extends JpaRepository<Item, UUID> {
     List<Item> findAllByIsActiveTrue();
+
+    List<Item> findAllByNeedAdminReviewTrue();
 }

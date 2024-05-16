@@ -30,6 +30,7 @@ public class Item {
     private Flag flag;
 
     private boolean isActive;  // featured
+    private boolean needAdminReview = true;
 
     private String author;
     private String authorEmail;

@@ -1,10 +1,8 @@
 package com.bdtc.techradar.service.item;
 
 import com.bdtc.techradar.constant.Flag;
-import com.bdtc.techradar.dto.item.ItemDetailDto;
-import com.bdtc.techradar.dto.item.ItemPreviewDto;
-import com.bdtc.techradar.dto.item.ItemRequestDto;
-import com.bdtc.techradar.dto.item.ItemUpdateDto;
+import com.bdtc.techradar.constant.Roles;
+import com.bdtc.techradar.dto.item.*;
 import com.bdtc.techradar.dto.user.UserDto;
 import com.bdtc.techradar.infra.exception.validation.ItemAlreadyArchivedException;
 import com.bdtc.techradar.infra.exception.validation.ItemAlreadyPublishedException;
@@ -46,6 +44,16 @@ public class ItemService {
         return itemPreviewDtos;
     }
 
+    public List<ItemAdminPreviewDto> getItemsAdminPreview() {
+        List<ItemAdminPreviewDto> itemAdminPreviewDtos = new ArrayList<>();
+        List<Item> items = itemRepository.findAllByNeedAdminReviewTrue();
+
+        for (Item item : items) {
+            itemAdminPreviewDtos.add(new ItemAdminPreviewDto(item));
+        }
+        return itemAdminPreviewDtos;
+    }
+
     public List<ItemPreviewDto> getAllItemsPreview() {
         List<ItemPreviewDto> itemPreviewDtos = new ArrayList<>();
         List<Item> items = itemRepository.findAll();
@@ -68,6 +76,8 @@ public class ItemService {
 
         Item item = new Item(itemRequestDto);
         Quadrant quadrant = quadrantService.getQuadrant(itemRequestDto.quadrant());
+
+        if (authenticatedUser.roles().contains(Roles.ADMIN)) item.setNeedAdminReview(false);
 
         item.setCreationDate(LocalDate.now());
         item.setQuadrant(quadrant);
@@ -95,6 +105,12 @@ public class ItemService {
 
         Item item = itemRepository.getReferenceById(itemId);
 
+        if (authenticatedUser.roles().contains(Roles.ADMIN)) {
+            item.setNeedAdminReview(false);
+        } else {
+            item.setNeedAdminReview(true);
+        }
+
         if (itemUpdateDto.quadrant().isPresent()) {
             Quadrant quadrant = quadrantService.getQuadrant(itemUpdateDto.quadrant().get());
             item.setQuadrant(quadrant);
@@ -113,8 +129,9 @@ public class ItemService {
     @Transactional
     public ItemDetailDto publishItem(Jwt tokenJWT, UUID itemId) {
         Item item = itemRepository.getReferenceById(itemId);
-        // only author or admin can publish
-        authHandler.validateAuthorOrAdmin(tokenJWT, item);
+        // only admin can publish
+        authHandler.validateUserIsAdmin(tokenJWT);
+        item.setNeedAdminReview(false);
 
         if (!item.isActive()) {
             item.setPublicationDate(LocalDate.now());
@@ -128,7 +145,7 @@ public class ItemService {
     @Transactional
     public ItemDetailDto archiveItem(Jwt tokenJWT, UUID itemId) {
         Item item = itemRepository.getReferenceById(itemId);
-        // only author or admin can publish
+        // only author or admin can archive
         authHandler.validateAuthorOrAdmin(tokenJWT, item);
 
         if (item.isActive()) {
