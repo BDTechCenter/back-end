@@ -80,6 +80,15 @@ public class ItemService {
     }
 
     @Transactional
+    public List<ItemDetailDto> createMultipleItems(Jwt tokenJWT, List<ItemRequestDto> itemRequestDtos) {
+        List<ItemDetailDto> itemRequestDtosList = new ArrayList<>();
+        for(ItemRequestDto itemRequestDto : itemRequestDtos) {
+            itemRequestDtosList.add(createItem(tokenJWT, itemRequestDto));
+        }
+        return itemRequestDtosList;
+    }
+
+    @Transactional
     public ItemDetailDto updateItem(Jwt tokenJWT, UUID itemId, ItemUpdateDto itemUpdateDto) {
         UserDto authenticatedUser = new UserDto(tokenJWT);
         authHandler.validateUserRole(authenticatedUser);

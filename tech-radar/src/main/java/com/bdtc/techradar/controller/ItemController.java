@@ -23,7 +23,7 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<ItemDetailDto> createItem(
             @AuthenticationPrincipal Jwt tokenJWT,
             @RequestBody @Valid ItemRequestDto itemRequestDto,
@@ -32,6 +32,16 @@ public class ItemController {
         ItemDetailDto itemDetailDto = itemService.createItem(tokenJWT, itemRequestDto);
         var uri = uriBuilder.path("tech-radar/items/{id}").build(itemDetailDto.id());
         return ResponseEntity.created(uri).body(itemDetailDto);
+    }
+
+    @PostMapping("/multiple")
+    public ResponseEntity<List<ItemDetailDto>> createMultipleItems(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @RequestBody @Valid List<ItemRequestDto> itemRequestDtos,
+            UriComponentsBuilder uriBuilder
+    ) {
+        List<ItemDetailDto> itemDetailDtos = itemService.createMultipleItems(tokenJWT, itemRequestDtos);
+        return ResponseEntity.ok().body(itemDetailDtos);
     }
 
     @GetMapping()
