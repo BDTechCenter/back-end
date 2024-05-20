@@ -30,7 +30,10 @@ public class NewsController {
     @Autowired
     private NewsBackupService newsBackupService;
 
-    @Operation(summary = "Create a new News") // #spring-doc
+    @Operation(
+            summary = "Create a new News",
+            description = "For this transaction you need the role 'BDUSER'"
+    ) // #spring-doc
     @PostMapping
     public ResponseEntity<NewsDetailingDto> createNews(
             @AuthenticationPrincipal Jwt tokenJWT,
@@ -75,7 +78,10 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
-    @Operation(summary = "Publish an archived news") // #spring-doc
+    @Operation(
+            summary = "Publish an archived news",
+            description = "Only the author or user with 'ADMIN' role can publish a news"
+    ) // #spring-doc
     @PatchMapping("/{id}/publish")
     public ResponseEntity<NewsDetailingDto> publishNews(
             @AuthenticationPrincipal Jwt tokenJWT,
@@ -85,7 +91,10 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
-    @Operation(summary = "Archive a published news") // #spring-doc
+    @Operation(
+            summary = "Archive a published news",
+            description = "Only the author or user with 'ADMIN' role can archive a news"
+    ) // #spring-doc
     @PatchMapping("/{id}/archive")
     public ResponseEntity<NewsDetailingDto> archiveNews(
             @AuthenticationPrincipal Jwt tokenJWT,
@@ -96,7 +105,8 @@ public class NewsController {
     }
 
     @Operation(
-            summary = "Get news based on author (logged user)",
+            summary = "Get news based on author",
+            description = "Return the news based on the logged user, by the JWT token",
             parameters = {
                 @Parameter(name = "sortBy",description = "choose between 'published' and 'archived'", required = false)
             }
@@ -111,7 +121,10 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
-    @Operation(summary = "Update a news") // #spring-doc
+    @Operation(
+            summary = "Update a news",
+            description = "Only the author or user with 'ADMIN' role can update a news"
+    ) // #spring-doc
     @PatchMapping("/{id}")
     public ResponseEntity<NewsDetailingDto> updateNews(
             @AuthenticationPrincipal Jwt tokenJWT,
@@ -122,7 +135,13 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
-    @Operation(summary = "Add or remove a upvote to measure news relevance") // #spring-doc
+    @Operation(
+            summary = "Add or remove a upvote to measure news relevance",
+            description = """
+                    If you already upVoted the news, your upVote will be delete, 
+                    otherwise it will be created
+                    """
+    ) // #spring-doc
     @PatchMapping("/{id}/upvote")
     public ResponseEntity addUpVoteToNews(
             @AuthenticationPrincipal Jwt tokenJWT,
