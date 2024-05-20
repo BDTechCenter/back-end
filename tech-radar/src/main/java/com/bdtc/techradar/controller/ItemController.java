@@ -1,9 +1,6 @@
 package com.bdtc.techradar.controller;
 
-import com.bdtc.techradar.dto.item.ItemDetailDto;
-import com.bdtc.techradar.dto.item.ItemPreviewDto;
-import com.bdtc.techradar.dto.item.ItemRequestDto;
-import com.bdtc.techradar.dto.item.ItemUpdateDto;
+import com.bdtc.techradar.dto.item.*;
 import com.bdtc.techradar.service.item.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +20,7 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<ItemDetailDto> createItem(
             @AuthenticationPrincipal Jwt tokenJWT,
             @RequestBody @Valid ItemRequestDto itemRequestDto,
@@ -34,10 +31,26 @@ public class ItemController {
         return ResponseEntity.created(uri).body(itemDetailDto);
     }
 
+    @PostMapping("/multiple")
+    public ResponseEntity<List<ItemDetailDto>> createMultipleItems(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @RequestBody @Valid List<ItemRequestDto> itemRequestDtos,
+            UriComponentsBuilder uriBuilder
+    ) {
+        List<ItemDetailDto> itemDetailDtos = itemService.createMultipleItems(tokenJWT, itemRequestDtos);
+        return ResponseEntity.ok().body(itemDetailDtos);
+    }
+
     @GetMapping()
     public ResponseEntity<List<ItemPreviewDto>> getItems() {
         List<ItemPreviewDto> itemPreviewDtos = itemService.getItemsPreview();
         return ResponseEntity.ok(itemPreviewDtos);
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<List<ItemAdminPreviewDto>> getItemsAdminPreview() {
+        List<ItemAdminPreviewDto> itemAdminPreviewDtos = itemService.getItemsAdminPreview();
+        return ResponseEntity.ok(itemAdminPreviewDtos);
     }
 
     @GetMapping("/all")
