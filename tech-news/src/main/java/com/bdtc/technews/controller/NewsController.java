@@ -3,6 +3,9 @@ package com.bdtc.technews.controller;
 import com.bdtc.technews.dto.news.*;
 import com.bdtc.technews.service.news.NewsService;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.UUID;
 
+@Tag(name = "News Controller", description = "Handle all news related requests") // #spring-doc
 @RestController
 @RequestMapping("/news")
 public class NewsController {
@@ -26,6 +30,10 @@ public class NewsController {
     @Autowired
     private NewsBackupService newsBackupService;
 
+    @Operation(
+            summary = "Create a new News",
+            description = "For this transaction you need the role 'BDUSER'"
+    ) // #spring-doc
     @PostMapping
     public ResponseEntity<NewsDetailingDto> createNews(
             @AuthenticationPrincipal Jwt tokenJWT,
@@ -37,6 +45,18 @@ public class NewsController {
         return ResponseEntity.created(uri).body(news);
     }
 
+    @Operation(
+            summary = "Get published news preview",
+            parameters = {
+                @Parameter(
+                        name = "sortBy",
+                        description = "choose between: 'view' (most viewed), 'latest' and 'relevance' (based on upVotes)",
+                        required = false
+                ),
+                @Parameter(name = "title", description = "filter the news by specific title", required = false),
+                @Parameter(name = "tags", description = "filter the news by specific tags", required = false)
+            }
+    ) // #spring-doc
     @GetMapping("/preview")
     public ResponseEntity<Page<NewsPreviewDto>> getNewsPreview(
             @PageableDefault() Pageable pageable,
@@ -48,6 +68,7 @@ public class NewsController {
         return ResponseEntity.ok(page);
     }
 
+    @Operation(summary = "Get full news details based on id") // #spring-doc
     @GetMapping("/{id}")
     public ResponseEntity<NewsDetailingWUpVoteDto> getNewsById(
             @AuthenticationPrincipal Jwt tokenJWT,
@@ -57,6 +78,10 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
+    @Operation(
+            summary = "Publish an archived news",
+            description = "Only the author or user with 'ADMIN' role can publish a news"
+    ) // #spring-doc
     @PatchMapping("/{id}/publish")
     public ResponseEntity<NewsDetailingDto> publishNews(
             @AuthenticationPrincipal Jwt tokenJWT,
@@ -66,6 +91,10 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
+    @Operation(
+            summary = "Archive a published news",
+            description = "Only the author or user with 'ADMIN' role can archive a news"
+    ) // #spring-doc
     @PatchMapping("/{id}/archive")
     public ResponseEntity<NewsDetailingDto> archiveNews(
             @AuthenticationPrincipal Jwt tokenJWT,
@@ -75,6 +104,13 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
+    @Operation(
+            summary = "Get news based on author",
+            description = "Return the news based on the logged user, by the JWT token",
+            parameters = {
+                @Parameter(name = "sortBy",description = "choose between 'published' and 'archived'", required = false)
+            }
+    ) // #spring-doc
     @GetMapping("/author")
     public ResponseEntity<Page<NewsPreviewDto>> getNewsBasedOnAuthor(
             @AuthenticationPrincipal Jwt tokenJWT,
@@ -85,6 +121,10 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
+    @Operation(
+            summary = "Update a news",
+            description = "Only the author or user with 'ADMIN' role can update a news"
+    ) // #spring-doc
     @PatchMapping("/{id}")
     public ResponseEntity<NewsDetailingDto> updateNews(
             @AuthenticationPrincipal Jwt tokenJWT,
@@ -95,6 +135,23 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
+    @Operation(
+            summary = "Add or remove a upvote to measure news relevance",
+            description = """
+                    If you already upVoted the news, your upVote will be delete, 
+                    otherwise it will be created
+                    """
+    ) // #spring-doc
+    @PatchMapping("/{id}/upvote")
+    public ResponseEntity addUpVoteToNews(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @PathVariable UUID id
+    ) {
+        newsService.addUpVoteToNews(tokenJWT, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(hidden = true) // #spring-doc
     @GetMapping("/{id}/backup")
     public ResponseEntity<NewsBackupDto> getNewsBackup(
             @PathVariable UUID id,
@@ -104,6 +161,7 @@ public class NewsController {
         return ResponseEntity.ok(news);
     }
 
+    @Operation(hidden = true) // #spring-doc
     @PutMapping("/{id}/backup/{backupId}/restore")
     public ResponseEntity<NewsDetailingDto> restoreNewsFromABackup(
             @PathVariable UUID id,
@@ -111,14 +169,5 @@ public class NewsController {
     ) {
         NewsDetailingDto news = newsBackupService.restoreNewsFromABackup(id, backupId);
         return ResponseEntity.ok(news);
-    }
-
-    @PatchMapping("/{id}/upvote")
-    public ResponseEntity addUpVoteToNews(
-            @AuthenticationPrincipal Jwt tokenJWT,
-            @PathVariable UUID id
-    ) {
-        newsService.addUpVoteToNews(tokenJWT, id);
-        return ResponseEntity.noContent().build();
     }
 }
