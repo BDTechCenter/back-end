@@ -68,4 +68,22 @@ public interface NewsRepository extends JpaRepository<News, UUID> {
             AND n.isPublished = :isPublished
             """)
     Page<News> getNewsByAuthorAndPublication(String currentUserEmail, Pageable pageable, boolean isPublished);
+
+    @Query(
+            """
+            SELECT DISTINCT n FROM News n
+            JOIN n.tags t
+            WHERE t.name IN :tagNames
+            AND n.isPublished = true
+            GROUP BY n
+            HAVING COUNT(DISTINCT t) = :tagCount
+            AND LOWER(n.title) LIKE LOWER(CONCAT('%', :titleFilter, '%'))
+            """
+    )
+    Page<News> findNewsByTagsAndTitle(
+            Pageable pageable,
+            @Param("tagNames") List<String> tags,
+            @Param("tagCount") Long tagCount,
+            String titleFilter
+    );
 }
