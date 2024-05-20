@@ -97,7 +97,11 @@ public class NewsService {
 
         if(StringUtils.isNotBlank(tags)) {
             List<String> tagList = Arrays.asList(tags.split(","));
-            newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
+            if(StringUtils.isNotBlank(titleFilter)) {
+                newsPage = newsRepository.findNewsByTagsAndTitle(pageable, tagList, (long) tagList.size(), titleFilter);
+            }else {
+                newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
+            }
         } else if(StringUtils.isBlank(titleFilter)) {
             switch (filterOption) {
                 case VIEW:
