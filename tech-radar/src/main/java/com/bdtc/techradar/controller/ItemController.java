@@ -64,10 +64,20 @@ public class ItemController {
         return ResponseEntity.ok(itemPreviewDtos);
     }
 
-    @Operation(summary = "Get items for admin view")
-    @GetMapping("/admin")
-    public ResponseEntity<List<ItemAdminPreviewDto>> getItemsAdminPreview() {
-        List<ItemAdminPreviewDto> itemAdminPreviewDtos = itemService.getItemsAdminPreview();
+    @Operation(
+            summary = "Get items related to user",
+            description = "In case user has ADMIN role, it will return all items, otherwise will return only the items related to them"
+    )
+    @GetMapping("/me")
+    public ResponseEntity<List<ItemMePreviewDto>> getItemsMe(@AuthenticationPrincipal Jwt tokenJWT) {
+        List<ItemMePreviewDto> itemMePreviewDtos = itemService.getItemsMePreview(tokenJWT);
+        return ResponseEntity.ok(itemMePreviewDtos);
+    }
+
+    @Operation(summary = "Get items for admin review")
+    @GetMapping("/review")
+    public ResponseEntity<List<ItemAdminPreviewDto>> getItemsAdminReview() {
+        List<ItemAdminPreviewDto> itemAdminPreviewDtos = itemService.getItemsAdminReview();
         return ResponseEntity.ok(itemAdminPreviewDtos);
     }
 
@@ -81,7 +91,6 @@ public class ItemController {
     @Operation(summary = "Get item detail")
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemDetailDto> getItemDetail(
-            @AuthenticationPrincipal Jwt tokenJWT,
             @PathVariable UUID itemId
     ) {
         return ResponseEntity.ok(itemService.getItemDetail(itemId));

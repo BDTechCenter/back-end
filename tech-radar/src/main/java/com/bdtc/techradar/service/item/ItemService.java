@@ -44,7 +44,7 @@ public class ItemService {
         return itemPreviewDtos;
     }
 
-    public List<ItemAdminPreviewDto> getItemsAdminPreview() {
+    public List<ItemAdminPreviewDto> getItemsAdminReview() {
         List<ItemAdminPreviewDto> itemAdminPreviewDtos = new ArrayList<>();
         List<Item> items = itemRepository.findAllByNeedAdminReviewTrue();
 
@@ -52,6 +52,23 @@ public class ItemService {
             itemAdminPreviewDtos.add(new ItemAdminPreviewDto(item));
         }
         return itemAdminPreviewDtos;
+    }
+
+    public List<ItemMePreviewDto> getItemsMePreview(Jwt tokenJWT) {
+        List<ItemMePreviewDto> itemMePreviewDtos = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
+
+        UserDto authenticatedUser = new UserDto(tokenJWT);
+        // admin: return all
+        if (authenticatedUser.roles().contains(Roles.ADMIN)) {
+            items = itemRepository.findAll();
+        } else { // user: return related to them
+            items = itemRepository.findAllByAuthorEmail(authenticatedUser.networkUser());
+        }
+
+        for (Item item : items) itemMePreviewDtos.add(new ItemMePreviewDto(item));
+
+        return itemMePreviewDtos;
     }
 
     public List<ItemPreviewDto> getAllItemsPreview() {
