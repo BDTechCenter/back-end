@@ -111,7 +111,7 @@ public class NewsController {
                 @Parameter(name = "sortBy",description = "choose between 'published' and 'archived'", required = false)
             }
     ) // #spring-doc
-    @GetMapping("/author")
+    @GetMapping("/me")
     public ResponseEntity<Page<NewsPreviewDto>> getNewsBasedOnAuthor(
             @AuthenticationPrincipal Jwt tokenJWT,
             @PageableDefault() Pageable pageable,
