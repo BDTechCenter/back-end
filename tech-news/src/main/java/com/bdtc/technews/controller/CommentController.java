@@ -60,7 +60,7 @@ public class CommentController {
     @PatchMapping("/{id}")
     public ResponseEntity<CommentDetailingDto> updateComment(
             @AuthenticationPrincipal Jwt tokenJWT,
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @RequestBody @Valid CommentRequestDto commentRequestDto
     ) {
         CommentDetailingDto comment = commentService.updateComment(tokenJWT, id, commentRequestDto);
@@ -71,7 +71,7 @@ public class CommentController {
     @PatchMapping("/{id}/upvote")
     public ResponseEntity addUpVoteToComment(
             @AuthenticationPrincipal Jwt tokenJWT,
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         commentService.addUpVoteToComment(tokenJWT, id);
         return ResponseEntity.noContent().build();
@@ -94,7 +94,7 @@ public class CommentController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteComment(
             @AuthenticationPrincipal Jwt tokenJWT,
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         commentService.deleteComment(tokenJWT, id);
         return ResponseEntity.noContent().build();
