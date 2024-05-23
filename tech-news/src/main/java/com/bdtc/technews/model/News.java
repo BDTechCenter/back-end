@@ -39,7 +39,7 @@ public class News {
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    private long views;
+    private long views = 0;
 
     private String imageUrl;
 
@@ -59,7 +59,7 @@ public class News {
 
     private boolean isPublished;
 
-    private int upVotes;
+    private int upVotes = 0;
 
     @OneToMany(
             mappedBy = "news",
