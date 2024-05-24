@@ -66,17 +66,23 @@ public class NewsService {
         UserDto authenticatedUser = new UserDto(tokenJWT);
         authorizationHandler.validateUserRole(authenticatedUser);
 
-        News news = new News(newsDto);
         LocalDateTime dateNow = dateHandler.getCurrentDateTime();
         Set<Tag> tagSet = tagService.getTagSet(newsDto.tags());
         String imageUrl = imageHandler.saveImageToUploadDir(newsDto.image());
 
-        news.setAuthorEmail(authenticatedUser.networkUser());
-        news.setAuthor(authenticatedUser.username());
-        news.setCreationDate(dateNow);
-        news.setUpdateDate(dateNow);
-        news.setTags(tagSet);
-        news.setImageUrl(imageUrl);
+        News news = News.builder()
+                .author(authenticatedUser.username())
+                .authorEmail(authenticatedUser.networkUser())
+                .title(newsDto.title())
+                .body(newsDto.body())
+                .isPublished(Boolean.parseBoolean(newsDto.isPublished()))
+                .creationDate(dateNow)
+                .publicationDate(dateNow)
+                .updateDate(dateNow)
+                .tags(tagSet)
+                .imageUrl(imageUrl)
+                .build();
+
         if(news.isPublished()) news.setPublicationDate(dateNow);
 
         newsRepository.save(news);
