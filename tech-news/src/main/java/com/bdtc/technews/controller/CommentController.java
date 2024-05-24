@@ -78,7 +78,7 @@ public class CommentController {
     }
 
     @Operation(summary = "Get comment based on author (logged user)")
-    @GetMapping("/author")
+    @GetMapping("/me")
     public ResponseEntity<Page<CommentDetailingDto>> getCommentsByAuthor(
             @AuthenticationPrincipal Jwt tokenJWT,
             @PageableDefault() Pageable pageable
