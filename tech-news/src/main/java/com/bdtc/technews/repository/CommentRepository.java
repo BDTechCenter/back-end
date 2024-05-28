@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.UUID;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, UUID> {
     Page<Comment> findAllByNews(News news, Pageable pageable);
 
     @Query(

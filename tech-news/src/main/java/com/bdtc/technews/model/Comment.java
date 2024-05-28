@@ -2,13 +2,11 @@ package com.bdtc.technews.model;
 
 import com.bdtc.technews.dto.comment.CommentRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "comment")
@@ -16,11 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Getter
+@Builder
 public class Comment {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     private String author;
 
@@ -35,7 +33,7 @@ public class Comment {
     @JoinColumn(name = "news_id")
     private News news;
 
-    private int upVotes;
+    private int upVotes = 0;
 
     @OneToMany(
             mappedBy = "comment",

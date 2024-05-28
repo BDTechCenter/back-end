@@ -10,7 +10,7 @@ public record NewsPreviewDto(
         String updateDate,
         String title,
         String author,
-        Long views,
+        long views,
         int upVotes,
         String imageUrl,
         boolean isPublished

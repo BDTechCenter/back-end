@@ -44,15 +44,18 @@ public class CommentService {
 
     @Transactional
     public CommentDetailingDto createComment(Jwt tokenJWT, UUID newsId, CommentRequestDto commentRequestDto) {
-        Comment comment = new Comment(commentRequestDto);
         UserDto authenticatedUser = new UserDto(tokenJWT);
-        LocalDateTime date = dateHandler.getCurrentDateTime();
+        LocalDateTime dateNow = dateHandler.getCurrentDateTime();
         News news = newsService.getNews(newsId);
 
-        comment.setAuthorEmail(authenticatedUser.networkUser());
-        comment.setAuthor(authenticatedUser.username());
-        comment.setPublicationDate(date);
-        comment.setNews(news);
+        Comment comment = Comment.builder()
+                .comment(commentRequestDto.comment())
+                .author(authenticatedUser.networkUser())
+                .authorEmail(authenticatedUser.networkUser())
+                .publicationDate(dateNow)
+                .news(news)
+                .build();
+
         commentRepository.save(comment);
 
         return new CommentDetailingDto(comment, dateHandler.formatDate(comment.getPublicationDate()));
@@ -71,7 +74,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void addUpVoteToComment(Jwt tokenJWT, Long id) {
+    public void addUpVoteToComment(Jwt tokenJWT, UUID id) {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
         Comment comment = commentRepository.getReferenceById(id);
@@ -89,7 +92,7 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDetailingDto updateComment(Jwt tokenJWT, Long id, CommentRequestDto commentRequestDto) {
+    public CommentDetailingDto updateComment(Jwt tokenJWT, UUID id, CommentRequestDto commentRequestDto) {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
         Comment comment = commentRepository.getReferenceById(id);
@@ -114,7 +117,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Jwt tokenJWT, Long id) {
+    public void deleteComment(Jwt tokenJWT, UUID id) {
         if(!commentRepository.existsById(id)) throw new EntityNotFoundException();
 
         String currentUserEmail = new UserDto(tokenJWT).networkUser();

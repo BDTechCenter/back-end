@@ -2,10 +2,7 @@ package com.bdtc.technews.model;
 
 import com.bdtc.technews.dto.news.NewsRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -19,6 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Getter
+@Builder
 public class News {
 
     @Id
@@ -41,7 +39,7 @@ public class News {
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    private Long views;
+    private long views = 0;
 
     private String imageUrl;
 
@@ -61,7 +59,7 @@ public class News {
 
     private boolean isPublished;
 
-    private int upVotes;
+    private int upVotes = 0;
 
     @OneToMany(
             mappedBy = "news",
@@ -72,7 +70,6 @@ public class News {
     public News(NewsRequestDto newsDto) {
         this.title = newsDto.title();
         this.body = newsDto.body();
-        this.views = 0L;
         this.isPublished = Boolean.parseBoolean(newsDto.isPublished());
     }
 

@@ -5,8 +5,8 @@ import com.bdtc.technews.model.Comment;
 import java.util.UUID;
 
 public record CommentDetailingWUpVoteDto(
-        Long id,
-         UUID newsId,
+        UUID id,
+        UUID newsId,
         String author,
         String publicationDate,
         String comment,
