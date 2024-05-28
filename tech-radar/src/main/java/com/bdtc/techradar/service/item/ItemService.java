@@ -44,10 +44,16 @@ public class ItemService {
         return itemPreviewDtos;
     }
 
-    public List<ItemAdminPreviewDto> getItemsAdminReview() {
+    public List<ItemAdminPreviewDto> getItemsAdminReview(Jwt tokenJwt) {
         List<ItemAdminPreviewDto> itemAdminPreviewDtos = new ArrayList<>();
-        List<Item> items = itemRepository.findAllByNeedAdminReviewTrue();
+        List<Item> items;
 
+        UserDto authenticatedUser = new UserDto(tokenJwt);
+        if (authenticatedUser.roles().contains(Roles.ADMIN)) {
+            items = itemRepository.findAllByNeedAdminReviewTrue();
+        } else {
+            items = itemRepository.findAllByNeedAdminReviewTrueNotAdmin(authenticatedUser.networkUser());
+        }
         for (Item item : items) {
             itemAdminPreviewDtos.add(new ItemAdminPreviewDto(item));
         }
@@ -56,7 +62,7 @@ public class ItemService {
 
     public List<ItemMePreviewDto> getItemsMePreview(Jwt tokenJWT) {
         List<ItemMePreviewDto> itemMePreviewDtos = new ArrayList<>();
-        List<Item> items = new ArrayList<>();
+        List<Item> items;
 
         UserDto authenticatedUser = new UserDto(tokenJWT);
         // admin: return all
@@ -180,7 +186,7 @@ public class ItemService {
         LocalDate oneWeekAgo = LocalDate.now().minusWeeks(1);
 
         for (Item item : items) {
-            if (item.getCreationDate().isBefore(oneWeekAgo) && item.getUpdateDate().isBefore(oneWeekAgo)) {
+            if (item.getUpdateDate() != null && item.getCreationDate().isBefore(oneWeekAgo) && item.getUpdateDate().isBefore(oneWeekAgo)) {
                 item.setFlag(Flag.DEFAULT);
             }
         }

@@ -14,9 +14,18 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
 
     @Query(
             """
-            SELECT i FROM Items i
+            SELECT i FROM Item i
             WHERE i.authorEmail = :authorEmail
-            ORDER BY i.needAdminReview = true
+            AND i.needAdminReview = true
+            """
+    )
+    List<Item> findAllByNeedAdminReviewTrueNotAdmin(String authorEmail);
+
+    @Query(
+            """
+            SELECT i FROM Item i
+            WHERE i.authorEmail = :authorEmail
+            ORDER BY i.needAdminReview
             """
     )
     List<Item> findAllByAuthorEmail(String authorEmail);

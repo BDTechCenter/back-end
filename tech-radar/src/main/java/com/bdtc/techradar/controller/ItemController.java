@@ -76,8 +76,8 @@ public class ItemController {
 
     @Operation(summary = "Get items for admin review")
     @GetMapping("/review")
-    public ResponseEntity<List<ItemAdminPreviewDto>> getItemsAdminReview() {
-        List<ItemAdminPreviewDto> itemAdminPreviewDtos = itemService.getItemsAdminReview();
+    public ResponseEntity<List<ItemAdminPreviewDto>> getItemsAdminReview(@AuthenticationPrincipal Jwt tokenJWT) {
+        List<ItemAdminPreviewDto> itemAdminPreviewDtos = itemService.getItemsAdminReview(tokenJWT);
         return ResponseEntity.ok(itemAdminPreviewDtos);
     }
 
