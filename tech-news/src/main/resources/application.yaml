@@ -39,12 +39,7 @@ server:
 
   port: 0
 
+  shutdown: graceful
+
 upload:
   dir: ${user.dir}/newsUpload
-
-populate:
-  url: ${BASE_URL}
-
-frontend:
-  host: http://127.0.0.1:3000
-
