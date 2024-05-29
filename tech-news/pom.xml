@@ -90,6 +90,11 @@
 			<version>4.0.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+
 <!--		DB FOR TESTS-->
 		<dependency>
 			<groupId>com.h2database</groupId>
