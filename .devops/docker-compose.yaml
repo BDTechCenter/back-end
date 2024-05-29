@@ -22,10 +22,22 @@ services:
     networks:
       - bdtc-net
 
-  tech-news:
+  image-service:
     depends_on:
       - api-gateway
-      - tech-news-db
+    container_name: image-service
+    build:
+      context: ../image-service
+    env_file:
+      - ../image-service/.env
+    volumes:
+      - uploads-volume:/app/uploads
+    networks:
+      - bdtc-net
+
+  tech-news:
+    depends_on:
+      - image-service
     container_name: tech-news
     build:
       context: ../tech-news
@@ -84,6 +96,8 @@ services:
       - bdtc-net
 
 volumes:
+  uploads-volume:
+
   tech-news-db-volume:
 
   news-upload-volume:
