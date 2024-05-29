@@ -10,10 +10,10 @@ import com.bdtc.technews.model.Tag;
 import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.repository.NewsUpVoterRepository;
 import com.bdtc.technews.service.auth.AuthorizationHandler;
+import com.bdtc.technews.service.image.service.ImageService;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
 import com.bdtc.technews.service.news.utils.DateHandler;
 import com.bdtc.technews.service.news.utils.FilterHandler;
-import com.bdtc.technews.service.news.utils.ImageHandler;
 import com.bdtc.technews.service.news.utils.TagHandler;
 import com.bdtc.technews.service.tag.TagService;
 import jakarta.persistence.EntityNotFoundException;
@@ -50,7 +50,7 @@ public class NewsService {
     private TagHandler tagHandler;
 
     @Autowired
-    private ImageHandler imageHandler;
+    private ImageService imageService;
 
     @Autowired
     private NewsBackupService newsBackupService;
@@ -68,7 +68,7 @@ public class NewsService {
 
         LocalDateTime dateNow = dateHandler.getCurrentDateTime();
         Set<Tag> tagSet = tagService.getTagSet(newsDto.tags());
-        String imageUrl = imageHandler.saveImageToUploadDir(newsDto.image());
+        String imageUrl = imageService.uploadImage(newsDto.image()).imageUrl();
 
         News news = News.builder()
                 .author(authenticatedUser.username())
@@ -236,7 +236,7 @@ public class NewsService {
         }
 
         if(updateDto.image() !=null) {
-            String imageUrl = imageHandler.saveImageToUploadDir(updateDto.image());
+            String imageUrl = imageService.uploadImage(updateDto.image()).imageUrl();
             news.setImageUrl(imageUrl);
         }
 
