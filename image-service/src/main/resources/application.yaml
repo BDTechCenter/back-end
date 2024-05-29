@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: docker
+
+  application:
+    name: image-service
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 200MB
+
+server:
+  error:
+    include-stacktrace: never
+
+  port: 0
+
+  shutdown: graceful
+
+upload:
+  dir: ${user.dir}/uploads
