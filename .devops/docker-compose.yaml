@@ -30,7 +30,7 @@ services:
       context: ../image-service
     environment:
       - EUREKA_URL=http://service-discovery:8765/eureka
-      - GATEWAY_URL=http://10.234.84.58:8766/tech-news
+      - GATEWAY_URL=http://10.234.84.58:8766
     volumes:
       - uploads-volume:/app/uploads
     networks:
