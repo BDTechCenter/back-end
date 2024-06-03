@@ -28,39 +28,40 @@ services:
     container_name: image-service
     build:
       context: ../image-service
-    env_file:
-      - ../image-service/.env
+    environment:
+      - EUREKA_URL=http://service-discovery:8765/eureka
+      - GATEWAY_URL=http://10.234.84.58:8766/tech-news
     volumes:
       - uploads-volume:/app/uploads
     networks:
       - bdtc-net
 
-  tech-news:
+  tech-articles:
     depends_on:
       - image-service
+      - tech-articles-db
     container_name: tech-news
     build:
       context: ../tech-news
     env_file:
       - ../tech-news/.env
     environment:
-      - DATABASE_URL=jdbc:postgresql://tech-news-db:5432/tech_news
+      - DATABASE_URL=jdbc:postgresql://tech-articles-db:5432/tech-articles
       - EUREKA_URL=http://service-discovery:8765/eureka
-      - GATEWAY_URL=http://10.234.90.77:8766/tech-news
     networks:
       - bdtc-net
 
-  tech-news-db:
+  tech-articles-db:
     image: postgres
-    container_name: tech-news-db
+    container_name: tech-articles-db
     environment:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: postgres
-      POSTGRES_DB: tech_news
+      POSTGRES_DB: tech-articles
     ports:
       - 6968:5432
     volumes:
-      - tech-news-db-volume:/var/lib/postgresql/data/
+      - tech-articles-db-volume:/var/lib/postgresql/data/
     networks:
       - bdtc-net
 
@@ -96,7 +97,7 @@ services:
 volumes:
   uploads-volume:
 
-  tech-news-db-volume:
+  tech-articles-db-volume:
 
   tech-radar-db-volume:
 
