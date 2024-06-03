@@ -28,17 +28,17 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @Operation(summary = "Create comment for news")
-    @PostMapping("/{newsId}")
+    @Operation(summary = "Create comment for article")
+    @PostMapping("/{articleId}")
     @Transactional
     public ResponseEntity<CommentDetailingDto> createComment(
             @AuthenticationPrincipal Jwt tokenJWT,
-            @PathVariable UUID newsId,
+            @PathVariable UUID articleId,
             @RequestBody @Valid CommentRequestDto commentRequestDto,
             UriComponentsBuilder uriBuilder
     ) {
-        CommentDetailingDto comment = commentService.createComment(tokenJWT, newsId, commentRequestDto);
-        var uri = uriBuilder.path("tech-news/comments/{id}").build(comment.id());
+        CommentDetailingDto comment = commentService.createComment(tokenJWT, articleId, commentRequestDto);
+        var uri = uriBuilder.path("tech-articles/comments/{id}").build(comment.id());
         return ResponseEntity.created(uri).body(comment);
     }
 

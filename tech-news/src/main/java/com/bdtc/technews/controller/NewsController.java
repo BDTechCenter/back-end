@@ -19,9 +19,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.UUID;
 
-@Tag(name = "News Controller", description = "Handle all news related requests") // #spring-doc
+@Tag(name = "Articles Controller", description = "Handle all articles related requests") // #spring-doc
 @RestController
-@RequestMapping("/news")
+@RequestMapping("/articles")
 public class NewsController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class NewsController {
     private NewsBackupService newsBackupService;
 
     @Operation(
-            summary = "Create a new News",
+            summary = "Create a new article",
             description = "For this transaction you need the role 'BDUSER'"
     ) // #spring-doc
     @PostMapping
@@ -41,20 +41,20 @@ public class NewsController {
             UriComponentsBuilder uriBuilder
     ) {
         NewsDetailingDto news = newsService.createNews(tokenJWT, newsRequestDto);
-        var uri = uriBuilder.path("tech-news/news/{id}").build(news.id());
+        var uri = uriBuilder.path("tech-articles/articles/{id}").build(news.id());
         return ResponseEntity.created(uri).body(news);
     }
 
     @Operation(
-            summary = "Get published news preview",
+            summary = "Get published articles",
             parameters = {
                 @Parameter(
                         name = "sortBy",
                         description = "choose between: 'view' (most viewed), 'latest' and 'relevance' (based on upVotes)",
                         required = false
                 ),
-                @Parameter(name = "title", description = "filter the news by specific title", required = false),
-                @Parameter(name = "tags", description = "filter the news by specific tags", required = false)
+                @Parameter(name = "title", description = "filter the articles by specific title", required = false),
+                @Parameter(name = "tags", description = "filter the articles by specific tags", required = false)
             }
     ) // #spring-doc
     @GetMapping("/preview")
@@ -68,7 +68,7 @@ public class NewsController {
         return ResponseEntity.ok(page);
     }
 
-    @Operation(summary = "Get full news details based on id") // #spring-doc
+    @Operation(summary = "Get full article details based on id") // #spring-doc
     @GetMapping("/{id}")
     public ResponseEntity<NewsDetailingWUpVoteDto> getNewsById(
             @AuthenticationPrincipal Jwt tokenJWT,
@@ -79,8 +79,8 @@ public class NewsController {
     }
 
     @Operation(
-            summary = "Publish an archived news",
-            description = "Only the author or user with 'ADMIN' role can publish a news"
+            summary = "Publish an archived article",
+            description = "Only the author or user with 'ADMIN' role can publish an article"
     ) // #spring-doc
     @PatchMapping("/{id}/publish")
     public ResponseEntity<NewsDetailingDto> publishNews(
@@ -92,8 +92,8 @@ public class NewsController {
     }
 
     @Operation(
-            summary = "Archive a published news",
-            description = "Only the author or user with 'ADMIN' role can archive a news"
+            summary = "Archive a published article",
+            description = "Only the author or user with 'ADMIN' role can archive an article"
     ) // #spring-doc
     @PatchMapping("/{id}/archive")
     public ResponseEntity<NewsDetailingDto> archiveNews(
@@ -105,8 +105,8 @@ public class NewsController {
     }
 
     @Operation(
-            summary = "Get news based on author",
-            description = "Return the news based on the logged user, by the JWT token",
+            summary = "Get articles based on author",
+            description = "Return the articles based on the logged user, by the JWT token",
             parameters = {
                 @Parameter(name = "sortBy",description = "choose between 'published' and 'archived'", required = false)
             }
@@ -122,8 +122,8 @@ public class NewsController {
     }
 
     @Operation(
-            summary = "Update a news",
-            description = "Only the author or user with 'ADMIN' role can update a news"
+            summary = "Update a article",
+            description = "Only the author or user with 'ADMIN' role can update an article"
     ) // #spring-doc
     @PatchMapping("/{id}")
     public ResponseEntity<NewsDetailingDto> updateNews(
@@ -136,9 +136,9 @@ public class NewsController {
     }
 
     @Operation(
-            summary = "Add or remove a upvote to measure news relevance",
+            summary = "Add or remove a upvote to measure article relevance",
             description = """
-                    If you already upVoted the news, your upVote will be delete, 
+                    If you already upVoted the article, your upVote will be delete, 
                     otherwise it will be created
                     """
     ) // #spring-doc
