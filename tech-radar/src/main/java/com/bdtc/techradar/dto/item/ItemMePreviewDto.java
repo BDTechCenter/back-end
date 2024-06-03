@@ -8,10 +8,11 @@ public record ItemMePreviewDto(
         UUID id,
         String title,
         String authorEmail,
+        String quadrantId,
         boolean isActive,
         boolean needAdminReview
 ) {
     public ItemMePreviewDto(Item item) {
-        this(item.getId(), item.getTitle(), item.getAuthorEmail(), item.isActive(), item.isNeedAdminReview());
+        this(item.getId(), item.getTitle(), item.getAuthorEmail(), item.getQuadrant().getId(), item.isActive(), item.isNeedAdminReview());
     }
 }
