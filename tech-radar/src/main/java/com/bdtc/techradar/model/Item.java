@@ -29,7 +29,7 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private Flag flag;
 
-    private boolean isActive;  // featured
+    private boolean isActive;  // published
     private boolean needAdminReview = true;
 
     private String author;

@@ -3,6 +3,7 @@ package com.bdtc.techradar.controller;
 import com.bdtc.techradar.dto.item.*;
 import com.bdtc.techradar.service.item.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name = "Items Controller", description = "Handle all items related requests")
 @RestController
 @RequestMapping("/items")
 public class ItemController {
@@ -69,14 +71,20 @@ public class ItemController {
             description = "In case user has ADMIN role, it will return all items, otherwise will return only the items related to them"
     )
     @GetMapping("/me")
-    public ResponseEntity<List<ItemMePreviewDto>> getItemsMe(@AuthenticationPrincipal Jwt tokenJWT) {
-        List<ItemMePreviewDto> itemMePreviewDtos = itemService.getItemsMePreview(tokenJWT);
+    public ResponseEntity<List<ItemMePreviewDto>> getItemsMe(
+            @AuthenticationPrincipal Jwt tokenJWT,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "all") String sortBy
+//            @Parameter(name = "sortBy", required = false, description = "choose between: 'published', 'archived' and 'all'") String sortBy
+    ) {
+        List<ItemMePreviewDto> itemMePreviewDtos = itemService.getItemsMePreview(tokenJWT, sortBy);
         return ResponseEntity.ok(itemMePreviewDtos);
     }
 
     @Operation(summary = "Get items for admin review")
     @GetMapping("/review")
-    public ResponseEntity<List<ItemAdminPreviewDto>> getItemsAdminReview(@AuthenticationPrincipal Jwt tokenJWT) {
+    public ResponseEntity<List<ItemAdminPreviewDto>> getItemsAdminReview(
+            @AuthenticationPrincipal Jwt tokenJWT
+    ) {
         List<ItemAdminPreviewDto> itemAdminPreviewDtos = itemService.getItemsAdminReview(tokenJWT);
         return ResponseEntity.ok(itemAdminPreviewDtos);
     }

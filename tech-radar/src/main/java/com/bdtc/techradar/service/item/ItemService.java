@@ -1,6 +1,7 @@
 package com.bdtc.techradar.service.item;
 
 import com.bdtc.techradar.constant.Flag;
+import com.bdtc.techradar.constant.ItemFilter;
 import com.bdtc.techradar.constant.Roles;
 import com.bdtc.techradar.dto.item.*;
 import com.bdtc.techradar.dto.user.UserDto;
@@ -10,6 +11,7 @@ import com.bdtc.techradar.model.Item;
 import com.bdtc.techradar.model.Quadrant;
 import com.bdtc.techradar.repository.ItemRepository;
 import com.bdtc.techradar.service.auth.AuthHandler;
+import com.bdtc.techradar.service.item.util.FilterHandler;
 import com.bdtc.techradar.service.quadrant.QuadrantService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class ItemService {
 
     @Autowired
     private AuthHandler authHandler;
+
+    @Autowired
+    private FilterHandler filterHandler;
 
 
     public List<ItemPreviewDto> getItemsPreview() {
@@ -60,16 +65,39 @@ public class ItemService {
         return itemAdminPreviewDtos;
     }
 
-    public List<ItemMePreviewDto> getItemsMePreview(Jwt tokenJWT) {
+    public List<ItemMePreviewDto> getItemsMePreview(Jwt tokenJWT, String filter) {
+        List<ItemFilter> itemFilters = List.of(ItemFilter.PUBLISHED, ItemFilter.ARCHIVED, ItemFilter.ALL);
+        ItemFilter itemFilter = ItemFilter.stringToFilterOption(filter);
+        filterHandler.validateFilter(itemFilters, itemFilter);
+
         List<ItemMePreviewDto> itemMePreviewDtos = new ArrayList<>();
-        List<Item> items;
+        List<Item> items = new ArrayList<>();
 
         UserDto authenticatedUser = new UserDto(tokenJWT);
-        // admin: return all
-        if (authenticatedUser.roles().contains(Roles.ADMIN)) {
-            items = itemRepository.findAll();
-        } else { // user: return related to them
-            items = itemRepository.findAllByAuthorEmail(authenticatedUser.networkUser());
+        boolean isAdmin = authenticatedUser.roles().contains(Roles.ADMIN);
+
+        switch (itemFilter) {
+            case ALL:
+                if (isAdmin) {
+                    items = itemRepository.findAll();
+                } else {
+                    items = itemRepository.findAllByAuthorEmail(authenticatedUser.networkUser());
+                }
+                break;
+            case PUBLISHED:
+                if (isAdmin) {
+                    items = itemRepository.findAllByIsActiveTrue();
+                } else {
+                    items = itemRepository.findAllByAuthorEmailByIsActive(authenticatedUser.networkUser(), true);
+                }
+                break;
+            case ARCHIVED:
+                if (isAdmin) {
+                    items = itemRepository.findAllByIsActiveFalse();
+                } else {
+                    items = itemRepository.findAllByAuthorEmailByIsActive(authenticatedUser.networkUser(), false);
+                }
+                break;
         }
 
         for (Item item : items) itemMePreviewDtos.add(new ItemMePreviewDto(item));
