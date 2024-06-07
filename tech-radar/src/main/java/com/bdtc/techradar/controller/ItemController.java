@@ -74,7 +74,6 @@ public class ItemController {
     public ResponseEntity<List<ItemMePreviewDto>> getItemsMe(
             @AuthenticationPrincipal Jwt tokenJWT,
             @RequestParam(name = "sortBy", required = false, defaultValue = "all") String sortBy
-//            @Parameter(name = "sortBy", required = false, description = "choose between: 'published', 'archived' and 'all'") String sortBy
     ) {
         List<ItemMePreviewDto> itemMePreviewDtos = itemService.getItemsMePreview(tokenJWT, sortBy);
         return ResponseEntity.ok(itemMePreviewDtos);
