@@ -10,6 +10,8 @@ import java.util.UUID;
 public interface ItemRepository extends JpaRepository<Item, UUID> {
     List<Item> findAllByIsActiveTrue();
 
+    List<Item> findAllByIsActiveFalse();
+
     List<Item> findAllByNeedAdminReviewTrue();
 
     @Query(
@@ -29,4 +31,14 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             """
     )
     List<Item> findAllByAuthorEmail(String authorEmail);
+
+    @Query(
+            """
+            SELECT i FROM Item i
+            WHERE i.authorEmail = :authorEmail
+            AND i.isActive = :isActive
+            ORDER BY i.needAdminReview
+            """
+    )
+    List<Item> findAllByAuthorEmailByIsActive(String authorEmail, boolean isActive);
 }
