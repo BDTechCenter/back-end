@@ -1,10 +1,10 @@
 spring:
   datasource:
     username: postgres
-    url: jdbc:postgresql://localhost:5433/tech_radar
+    url: jdbc:postgresql://10.234.92.194:5433/tech_radar
     password: root
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8765/eureka
+      defaultZone: http://10.234.84.58:8765/eureka

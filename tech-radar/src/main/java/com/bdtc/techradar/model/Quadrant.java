@@ -28,8 +28,6 @@ public class Quadrant {
     // QuadrantMap
     private String color;
 
-    private String txtColor;
-
     @Column(unique = true)
     private Integer position;
 
@@ -41,7 +39,6 @@ public class Quadrant {
         this.name = quadrantRequestDto.name();
         this.title = quadrantRequestDto.title();
         this.color = quadrantRequestDto.color();
-        this.txtColor = quadrantRequestDto.txtColor();
         this.position = quadrantRequestDto.position();
         this.description = quadrantRequestDto.description();
     }

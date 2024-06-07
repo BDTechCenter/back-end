@@ -5,7 +5,7 @@ import com.bdtc.technews.model.Comment;
 import java.util.UUID;
 
 public record CommentDetailingDto(
-        Long id,
+        UUID id,
         UUID newsId,
         String author,
         String publicationDate,

@@ -17,9 +17,6 @@ public record QuadrantRequestDto(
         @NotBlank
         String color,
 
-        @NotBlank
-        String txtColor,
-
         @NotNull
         Integer position,
 

@@ -10,10 +10,10 @@ import com.bdtc.technews.model.Tag;
 import com.bdtc.technews.repository.NewsRepository;
 import com.bdtc.technews.repository.NewsUpVoterRepository;
 import com.bdtc.technews.service.auth.AuthorizationHandler;
+import com.bdtc.technews.service.image.service.ImageService;
 import com.bdtc.technews.service.news.backup.NewsBackupService;
 import com.bdtc.technews.service.news.utils.DateHandler;
 import com.bdtc.technews.service.news.utils.FilterHandler;
-import com.bdtc.technews.service.news.utils.ImageHandler;
 import com.bdtc.technews.service.news.utils.TagHandler;
 import com.bdtc.technews.service.tag.TagService;
 import jakarta.persistence.EntityNotFoundException;
@@ -50,7 +50,7 @@ public class NewsService {
     private TagHandler tagHandler;
 
     @Autowired
-    private ImageHandler imageHandler;
+    private ImageService imageService;
 
     @Autowired
     private NewsBackupService newsBackupService;
@@ -66,17 +66,23 @@ public class NewsService {
         UserDto authenticatedUser = new UserDto(tokenJWT);
         authorizationHandler.validateUserRole(authenticatedUser);
 
-        News news = new News(newsDto);
         LocalDateTime dateNow = dateHandler.getCurrentDateTime();
         Set<Tag> tagSet = tagService.getTagSet(newsDto.tags());
-        String imageUrl = imageHandler.saveImageToUploadDir(newsDto.image());
+        String imageUrl = imageService.uploadImage(newsDto.image()).imageUrl();
 
-        news.setAuthorEmail(authenticatedUser.networkUser());
-        news.setAuthor(authenticatedUser.username());
-        news.setCreationDate(dateNow);
-        news.setUpdateDate(dateNow);
-        news.setTags(tagSet);
-        news.setImageUrl(imageUrl);
+        News news = News.builder()
+                .author(authenticatedUser.username())
+                .authorEmail(authenticatedUser.networkUser())
+                .title(newsDto.title())
+                .body(newsDto.body())
+                .isPublished(Boolean.parseBoolean(newsDto.isPublished()))
+                .creationDate(dateNow)
+                .publicationDate(dateNow)
+                .updateDate(dateNow)
+                .tags(tagSet)
+                .imageUrl(imageUrl)
+                .build();
+
         if(news.isPublished()) news.setPublicationDate(dateNow);
 
         newsRepository.save(news);
@@ -97,7 +103,11 @@ public class NewsService {
 
         if(StringUtils.isNotBlank(tags)) {
             List<String> tagList = Arrays.asList(tags.split(","));
-            newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
+            if(StringUtils.isNotBlank(titleFilter)) {
+                newsPage = newsRepository.findNewsByTagsAndTitle(pageable, tagList, (long) tagList.size(), titleFilter);
+            }else {
+                newsPage = newsRepository.findByTagNames(pageable, tagList, (long) tagList.size());
+            }
         } else if(StringUtils.isBlank(titleFilter)) {
             switch (filterOption) {
                 case VIEW:
@@ -226,7 +236,7 @@ public class NewsService {
         }
 
         if(updateDto.image() !=null) {
-            String imageUrl = imageHandler.saveImageToUploadDir(updateDto.image());
+            String imageUrl = imageService.uploadImage(updateDto.image()).imageUrl();
             news.setImageUrl(imageUrl);
         }
 

@@ -3,7 +3,7 @@ services:
   service-discovery:
     container_name: service-discovery
     build:
-      context: ./service-discovery
+      context: ../service-discovery
     ports:
       - "0.0.0.0:8765:8765"
     networks:
@@ -14,7 +14,7 @@ services:
       - service-discovery
     container_name: api-gateway
     build:
-      context: ./api-gateway
+      context: ../api-gateway
     environment:
       - EUREKA_URL=http://service-discovery:8765/eureka
     ports:
@@ -22,33 +22,46 @@ services:
     networks:
       - bdtc-net
 
-  tech-news:
+  image-service:
     depends_on:
       - api-gateway
-      - tech-news-db
-    container_name: tech-news
+    container_name: image-service
     build:
-      context: ./tech-news
-    env_file:
-      - ./tech-news/.env
+      context: ../image-service
     environment:
-      - DATABASE_URL=jdbc:postgresql://tech-news-db:5432/tech_news
       - EUREKA_URL=http://service-discovery:8765/eureka
-      - GATEWAY_URL=http://10.234.90.77:8766/tech-news
+      - GATEWAY_URL=http://10.234.84.58:8766
+    volumes:
+      - uploads-volume:/app/uploads
     networks:
       - bdtc-net
 
-  tech-news-db:
+  tech-articles:
+    depends_on:
+      - image-service
+      - tech-articles-db
+    container_name: tech-news
+    build:
+      context: ../tech-news
+    env_file:
+      - ../tech-news/.env
+    environment:
+      - DATABASE_URL=jdbc:postgresql://tech-articles-db:5432/tech-articles
+      - EUREKA_URL=http://service-discovery:8765/eureka
+    networks:
+      - bdtc-net
+
+  tech-articles-db:
     image: postgres
-    container_name: tech-news-db
+    container_name: tech-articles-db
     environment:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: postgres
-      POSTGRES_DB: tech_news
+      POSTGRES_DB: tech-articles
     ports:
       - 6968:5432
     volumes:
-      - tech-news-db-volume:/var/lib/postgresql/data/
+      - tech-articles-db-volume:/var/lib/postgresql/data/
     networks:
       - bdtc-net
 
@@ -58,9 +71,9 @@ services:
       - tech-radar-db
     container_name: tech-radar
     build:
-      context: ./tech-radar
+      context: ../tech-radar
     env_file:
-      - ./tech-radar/.env
+      - ../tech-radar/.env
     environment:
       - DATABASE_URL=jdbc:postgresql://tech-radar-db:5432/tech_radar
       - EUREKA_URL=http://service-discovery:8765/eureka
@@ -82,7 +95,9 @@ services:
       - bdtc-net
 
 volumes:
-  tech-news-db-volume:
+  uploads-volume:
+
+  tech-articles-db-volume:
 
   tech-radar-db-volume:
 
